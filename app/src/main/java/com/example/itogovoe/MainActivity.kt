@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.itogovoe.data.repository.Repository
+import com.example.itogovoe.data.api.RetrofitInstance.repository
 import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.main.MainViewModelFactory
 
@@ -16,12 +16,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val repository = Repository()
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.getCurrency()
         viewModel.myResponce.observe(this) { response ->
             if (response.isSuccessful) {
+                Log.d("MY_TAG", response.body()?.success.toString())
+                Log.d("MY_TAG", response.body()?.timestamp.toString())
+                Log.d("MY_TAG", response.body()?.base.toString())
+                Log.d("MY_TAG", response.body()?.date.toString())
+                Log.d("MY_TAG", response.body()?.rates.toString())
                 Log.d("MY_TAG", response.body().toString())
             } else {
                 Log.d("MY_TAG", response.errorBody().toString())

@@ -1,6 +1,5 @@
 package com.example.itogovoe.data.api
 
-import com.example.itogovoe.model.Currency
 import retrofit2.Response
 import retrofit2.http.GET
 
