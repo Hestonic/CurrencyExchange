@@ -21,33 +21,6 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        /*supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, HomeFragment())
-            .commit()
-
-        binding.home.setOnClickListener {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, HomeFragment())
-                .commit()
-        }
-
-        binding.history.setOnClickListener {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, HistoryFragment())
-                .commit()
-        }
-
-        binding.analytics.setOnClickListener {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, AnalyticsFragment())
-                .commit()
-        }*/
-
-
         val navController = findNavController(R.id.fragmentContainerView)
         binding.bottomNavigationView.setupWithNavController(navController)
 
@@ -55,11 +28,9 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.getCurrency()
-        viewModel.myResponce.observe(this) { response ->
+        viewModel.liveData.observe(this) { response ->
             if (response != null) {
-                Log.d("MY_TAG", response.base)
-                Log.d("MY_TAG", response.date.toString())
-                Log.d("MY_TAG", response.rates.toString())
+                Log.d("MY_TAG", response.currencyList.toString())
             } else {
                 Log.d("MY_TAG", "response = null")
             }
