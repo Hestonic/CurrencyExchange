@@ -1,9 +1,9 @@
 package com.example.itogovoe.domain.model
 
-import java.util.*
+import java.time.LocalDateTime
 
 data class Currencies(
-    val data: Date,
+    val date: LocalDateTime,
     val base: String,
     val rates: List<Currency>
 )

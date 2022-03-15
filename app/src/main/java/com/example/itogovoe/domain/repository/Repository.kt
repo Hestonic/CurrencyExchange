@@ -1,9 +1,10 @@
 package com.example.itogovoe.domain.repository
 
-import com.example.itogovoe.data.api.RetrofitInstance
-import com.example.itogovoe.data.api.Currency
+import com.example.itogovoe.data.api.CurrencyR
 import com.example.itogovoe.data.source.LocalDataSource
 import com.example.itogovoe.data.source.RemoteDataSource
+import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
+import com.example.itogovoe.domain.model.Currencies
 import retrofit2.Response
 import java.lang.Exception
 
@@ -12,8 +13,14 @@ class Repository(
     private val remoteDataSource: RemoteDataSource
 ) {
 
-    suspend fun getCurrencies(): Response<Currency> {
-        return RetrofitInstance.repository.remoteDataSource.getCurrencies()
+    suspend fun getCurrencies(): Currencies? {
+
+        return try {
+            val response = remoteDataSource.getCurrencies()
+            CurrencyDtoMapper.mapResponseToDomainModel(response)
+        } catch (e: Exception) {
+            null
+        }
 
         /*данные могут быть "свежие" - 5 минут*/
         /*Данные могут быть "свежие" - 5 минут
@@ -32,11 +39,6 @@ class Repository(
 
         // Маппинг данных
         // Заменить getCurrencies(): Response<Currency> -> getCurrencies(): Currencies?
-        /*return try {
-            val response = remoteDataSource.getCurrencies()
-            CurrencyDtoMapper.mapResponseToDomainModel(response)
-        } catch (e: Exception) {
-            null
-        }*/
+
     }
 }

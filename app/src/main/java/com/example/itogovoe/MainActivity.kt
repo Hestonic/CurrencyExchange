@@ -56,15 +56,12 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.getCurrency()
         viewModel.myResponce.observe(this) { response ->
-            if (response.isSuccessful) {
-                Log.d("MY_TAG", response.body()?.success.toString())
-                Log.d("MY_TAG", response.body()?.timestamp.toString())
-                Log.d("MY_TAG", response.body()?.base.toString())
-                Log.d("MY_TAG", response.body()?.date.toString())
-                Log.d("MY_TAG", response.body()?.rates.toString())
-                Log.d("MY_TAG", response.body().toString())
+            if (response != null) {
+                Log.d("MY_TAG", response.base)
+                Log.d("MY_TAG", response.date.toString())
+                Log.d("MY_TAG", response.rates.toString())
             } else {
-                Log.d("MY_TAG", response.errorBody().toString())
+                Log.d("MY_TAG", "response = null")
             }
         }
     }
