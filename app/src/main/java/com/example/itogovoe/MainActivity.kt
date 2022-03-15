@@ -4,17 +4,53 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.itogovoe.data.api.RetrofitInstance.repository
+import com.example.itogovoe.databinding.ActivityMainBinding
 import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.main.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        /*supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragment_container, HomeFragment())
+            .commit()
+
+        binding.home.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment())
+                .commit()
+        }
+
+        binding.history.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, HistoryFragment())
+                .commit()
+        }
+
+        binding.analytics.setOnClickListener {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, AnalyticsFragment())
+                .commit()
+        }*/
+
+
+        val navController = findNavController(R.id.fragmentContainerView)
+        binding.bottomNavigationView.setupWithNavController(navController)
+
 
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
@@ -31,35 +67,5 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MY_TAG", response.errorBody().toString())
             }
         }
-
-        /*
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-
-        val retrofit = Retrofit.Builder()
-            .client(client)
-            .baseUrl("http://data.fixer.io/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(CurrencyApi::class.java)
-
-        GlobalScope.launch(Dispatchers.IO) {
-            val currencies = service.getCurrencies()
-            Log.d("MY_TAG", "$currencies")
-        }*/
-
-        /*val retrofit = Retrofit.Builder()
-            .baseUrl("http://data.fixer.io/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(CurrencyApi::class.java)
-
-        GlobalScope.launch(Dispatchers.IO) {
-            val currencies = service.getCurrencies()
-            print(currencies)
-        }*/
     }
 }
