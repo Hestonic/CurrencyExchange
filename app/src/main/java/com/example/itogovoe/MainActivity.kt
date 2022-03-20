@@ -5,11 +5,16 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.itogovoe.data.api.RetrofitInstance.repository
 import com.example.itogovoe.databinding.ActivityMainBinding
 import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.main.MainViewModelFactory
+
+// TODO: Сделать адаптер и вывод на главный экран валют
+// TODO: Сделать БД на корутинах с localDataSource
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -22,10 +27,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         val navController = findNavController(R.id.fragmentContainerView)
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.historyFragment,
+                R.id.analyticsFragment
+            )
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigationView.setupWithNavController(navController)
 
 
-        val viewModelFactory = MainViewModelFactory(repository)
+        /*val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.getCurrency()
         viewModel.liveData.observe(this) { response ->
@@ -34,6 +47,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d("MY_TAG", "response = null")
             }
-        }
+        }*/
     }
 }

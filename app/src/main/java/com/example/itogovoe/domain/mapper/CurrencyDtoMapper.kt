@@ -11,7 +11,7 @@ import java.time.ZoneId
 Маппер преобразовывает данные, которые ему возвращает api в Response<Currency> в
 те данные, что нам нужны в Repository (данные типа data class Currencies)
 
-Т.е. берём поле из Currency и сетим в новый объект Carrencies
+Т.е. берём поле из Currency и сетим в новый объект Currencies
 */
 
 object CurrencyDtoMapper {
@@ -21,13 +21,12 @@ object CurrencyDtoMapper {
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
 
-        var rates: MutableList<Currency> = mutableListOf()
-        for ((name, value) in response.body()?.rates!!) {
-            rates.add(Currency(name, value))
-        }
+        val rates: MutableList<Currency> = mutableListOf()
+        for ((name, value) in response.body()?.rates!!) rates.add(Currency(name, value))
 
 
-        return Currencies(localDateTime, response.body()?.base!!, rates
+        return Currencies(
+            localDateTime, response.body()?.base!!, rates
         )
     }
 }

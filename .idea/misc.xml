@@ -3,9 +3,28 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2105" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_analytics.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_exchange.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_filter.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_history.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_home.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2105" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_star_outline.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/ic_star_rate.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/round_bg.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/round_bg_button.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/round_bg_currency.xml" value="0.2105" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/drawable/round_bg_filter.xml" value="0.1905" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/activity_main.xml" value="0.18229166666666666" />
         <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/fragment_analytics.xml" value="0.25" />
-        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/fragment_history.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/fragment_exchange.xml" value="0.264" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/fragment_filter.xml" value="0.264" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/fragment_history.xml" value="0.264" />
         <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/fragment_home.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/item_currency.xml" value="0.176" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/item_currency_filter.xml" value="1.2" />
+        <entry key="..\:/Users/danii/AndroidStudioProjects/CurrencyExchanger/app/src/main/res/layout/item_history.xml" value="0.4" />
         <entry key="..\:/mobdev/CurrencyExchanger/CurrencyExchanger/app/src/main/res/drawable/ic_home.xml" value="0.2265" />
         <entry key="..\:/mobdev/CurrencyExchanger/CurrencyExchanger/app/src/main/res/drawable/ic_star_rate.xml" value="0.1425" />
         <entry key="..\:/mobdev/CurrencyExchanger/CurrencyExchanger/app/src/main/res/drawable/round_bg.xml" value="0.1425" />

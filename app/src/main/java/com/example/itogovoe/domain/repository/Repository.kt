@@ -1,12 +1,9 @@
 package com.example.itogovoe.domain.repository
 
-import com.example.itogovoe.data.api.CurrencyR
 import com.example.itogovoe.data.source.LocalDataSource
 import com.example.itogovoe.data.source.RemoteDataSource
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.Currencies
-import retrofit2.Response
-import java.lang.Exception
 
 class Repository(
     private val localDateSource: LocalDataSource,

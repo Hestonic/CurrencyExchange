@@ -11,19 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    /*private val interceptor = HttpLoggingInterceptor().also {
-        it.level = HttpLoggingInterceptor.Level.BODY
-    }
-    private val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
-
-    private val retrofit = Retrofit.Builder()
-        .client(client)
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val service = retrofit.create(CurrencyApi::class.java)*/
-
     private val retrofit by lazy {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY

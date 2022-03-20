@@ -8,7 +8,6 @@ data class Currencies(
     val rates: List<Currency>
 )
 
-
 data class Currency(
     val name: String,
     val value: Double
