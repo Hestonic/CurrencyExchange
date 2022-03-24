@@ -36,13 +36,13 @@
     </style>
 
     <style name="filter_currency">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="fontWeight">600</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="date">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="fontWeight">600</item>
         <item name="android:textColor">@color/black</item>
     </style>

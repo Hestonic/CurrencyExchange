@@ -1,24 +1,19 @@
 package com.example.itogovoe
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.core.view.isGone
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.itogovoe.data.api.RetrofitInstance.repository
 import com.example.itogovoe.databinding.ActivityMainBinding
-import com.example.itogovoe.ui.main.MainViewModel
-import com.example.itogovoe.ui.main.MainViewModelFactory
-
-// TODO: Сделать адаптер и вывод на главный экран валют
-// TODO: Сделать БД на корутинах с localDataSource
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val navController = findNavController(R.id.fragmentContainerView)
+        navController = Navigation.findNavController(this, R.id.fragmentContainerView)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeFragment,
@@ -37,16 +32,25 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigationView.setupWithNavController(navController)
 
-
-        /*val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
-        viewModel.getCurrency()
-        viewModel.liveData.observe(this) { response ->
-            if (response != null) {
-                Log.d("MY_TAG", response.currencyList.toString())
-            } else {
-                Log.d("MY_TAG", "response = null")
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment -> showBottomNav()
+                R.id.historyFragment -> showBottomNav()
+                R.id.analyticsFragment -> showBottomNav()
+                else -> goneBottomNav()
             }
-        }*/
+        }
+    }
+
+    private fun showBottomNav() {
+        binding.bottomNavigationView.isGone = false
+    }
+
+    private fun goneBottomNav() {
+        binding.bottomNavigationView.isGone = true
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, null)
     }
 }

@@ -4,17 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemHistoryBinding
-import com.example.itogovoe.ui.model.CurrencyUiModel
+import com.example.itogovoe.ui.model.History
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
-    var historyList: List<CurrencyUiModel> = emptyList()
+    var historyList: List<History> = emptyList()
 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
-            // TODO: вместо currencyUiModel сделать UiModel для истории
+        fun bind(history: History) = binding.run {
 
+            binding.date.text = history.date.toString()
+            binding.currencyNameChild.text = history.currencyNameChild
+            binding.currencyValueChild.text = history.currencyValueChild.toString()
+            binding.currencyNameParent.text = history.currencyNameParent
+            binding.currencyValueParent.text = history.currencyValueParent.toString()
         }
     }
 
