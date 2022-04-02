@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginVertical="12dp">
+
+    <TextView
+        android:id="@+id/filter_all_time"
+        style="@style/filter_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_bg_filter"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:text="@string/filter_all_time"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/filter_week"
+        style="@style/filter_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:layout_marginStart="8dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_bg_filter"
+        android:text="@string/filter_week"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/filter_all_time"/>
+
+    <TextView
+        android:id="@+id/filter_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:layout_marginStart="8dp"
+        android:layout_centerInParent="true"
+        style="@style/filter_currency"
+        android:background="@drawable/round_bg_filter"
+        android:text="@string/filter_month"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/filter_week"/>
+
+    <TextView
+        android:id="@+id/date_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/date_word"
+        android:layout_marginTop="16dp"
+        android:text="@string/date_word"
+        app:layout_constraintTop_toBottomOf="@id/filter_all_time"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/date_choose1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/date_choose"
+        android:layout_marginTop="8dp"
+        android:text="@string/date"
+        app:layout_constraintTop_toBottomOf="@id/date_word"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/dash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/date_choose"
+        android:layout_marginStart="12dp"
+        android:text="@string/dash"
+        app:layout_constraintTop_toTopOf="@id/date_choose1"
+        app:layout_constraintLeft_toRightOf="@id/date_choose1"
+        app:layout_constraintBottom_toBottomOf="@id/date_choose1"
+        />
+
+    <TextView
+        android:id="@+id/date_choose2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/date_choose"
+        android:layout_marginStart="12dp"
+        android:text="@string/date"
+        app:layout_constraintTop_toTopOf="@id/dash"
+        app:layout_constraintLeft_toRightOf="@id/dash"
+        app:layout_constraintBottom_toBottomOf="@id/dash"
+        />
+
+    <TextView
+        android:id="@+id/currency_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/date_word"
+        android:layout_marginTop="12dp"
+        android:text="@string/currency_word"
+        app:layout_constraintTop_toBottomOf="@id/date_choose1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/currency_word"
+        app:layout_constraintTop_toBottomOf="@id/currency_word"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
