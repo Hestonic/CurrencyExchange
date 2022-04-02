@@ -1,6 +1,6 @@
 package com.example.itogovoe.data.api
 
-data class CurrencyR(
+data class CurrencyResponse(
     val success: Boolean,
     val timestamp: Long,
     val base: String,

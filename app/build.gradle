@@ -35,6 +35,9 @@ android {
     viewBinding {
         enabled = true
     }
+    lintOptions {
+        disable 'ContentDescription'
+    }
 }
 
 dependencies {

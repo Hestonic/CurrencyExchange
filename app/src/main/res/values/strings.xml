@@ -12,4 +12,7 @@
     <string name="date_word">Дата</string>
     <string name="currency_word">Валюта</string>
     <string name="choose">Выбрать</string>
+    <string name="analytics">analytics</string>
+    <string name="history">history</string>
+    <string name="home">home</string>
 </resources>

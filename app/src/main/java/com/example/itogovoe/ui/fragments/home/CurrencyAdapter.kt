@@ -11,24 +11,6 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
     var currencyList: List<CurrencyUiModel> = emptyList()
 
-    inner class HomeViewHolder(private val binding: ItemCurrencyBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
-            currency.text = currencyUiModel.name
-
-            currencyLayout.setOnClickListener {
-                val currencyName = currencyUiModel.name
-                val currencyValue = currencyUiModel.value.toFloat()
-
-                val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
-                    currencyName,
-                    currencyValue
-                )
-                currencyLayout.findNavController().navigate(action)
-            }
-        }
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -45,4 +27,22 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
     override fun getItemCount(): Int = currencyList.size
 
+    inner class HomeViewHolder(private val binding: ItemCurrencyBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
+            currency.text = currencyUiModel.name
+
+            currencyLayout.setOnClickListener {
+                val currencyName = currencyUiModel.name
+                val currencyValue = currencyUiModel.value.toFloat()
+
+                val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
+                    currencyName,
+                    currencyValue
+                )
+                currencyLayout.findNavController().navigate(action)
+            }
+        }
+    }
 }

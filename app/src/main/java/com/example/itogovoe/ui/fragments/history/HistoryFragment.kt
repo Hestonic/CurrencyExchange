@@ -14,10 +14,6 @@ class HistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,7 +77,6 @@ class HistoryFragment : Fragment() {
             )
         )
         adapter.historyList = historyList
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -95,9 +90,5 @@ class HistoryFragment : Fragment() {
             findNavController().navigate(action)
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        // fun newInstance(param1: String, param2: String) = HistoryFragment()
     }
 }

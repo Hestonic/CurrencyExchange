@@ -28,8 +28,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Recyclerview Adapter
         val adapter = CurrencyAdapter()
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)
@@ -39,6 +37,7 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.getCurrency()
         viewModel.itemsLiveData.observe(viewLifecycleOwner) { response ->
+
             adapter.currencyList = response
             Log.d("MY_TAG", response.toString())
         }

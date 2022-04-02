@@ -10,18 +10,6 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
 
     var historyList: List<History> = emptyList()
 
-    inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(history: History) = binding.run {
-
-            binding.date.text = history.date.toString()
-            binding.currencyNameChild.text = history.currencyNameChild
-            binding.currencyValueChild.text = history.currencyValueChild.toString()
-            binding.currencyNameParent.text = history.currencyNameParent
-            binding.currencyValueParent.text = history.currencyValueParent.toString()
-        }
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -36,4 +24,16 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     }
 
     override fun getItemCount(): Int = historyList.size
+
+    inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(history: History) = binding.run {
+
+            binding.date.text = history.date.toString()
+            binding.currencyNameChild.text = history.currencyNameChild
+            binding.currencyValueChild.text = history.currencyValueChild.toString()
+            binding.currencyNameParent.text = history.currencyNameParent
+            binding.currencyValueParent.text = history.currencyValueParent.toString()
+        }
+    }
 }

@@ -9,13 +9,6 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
 
     var currencyFilterList: MutableList<String> = mutableListOf()
 
-    inner class FilterViewHolder(private val binding: ItemCurrencyFilterBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(currency: String) = binding.run {
-            currencyName.text = currency
-        }
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,4 +24,11 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
     }
 
     override fun getItemCount(): Int = currencyFilterList.size
+
+    inner class FilterViewHolder(private val binding: ItemCurrencyFilterBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(currency: String) = binding.run {
+            currencyName.text = currency
+        }
+    }
 }

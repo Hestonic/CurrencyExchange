@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginHorizontal="24dp">
+    android:layout_marginVertical="12dp">
 
     <TextView
         android:id="@+id/filter_all_time"
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:paddingHorizontal="10dp"
         android:paddingVertical="6dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_centerInParent="true"
         android:background="@drawable/round_bg_filter"
         android:text="@string/filter_week"
@@ -42,7 +42,7 @@
         android:gravity="center"
         android:paddingHorizontal="10dp"
         android:paddingVertical="6dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_centerInParent="true"
         style="@style/filter_currency"
         android:background="@drawable/round_bg_filter"
@@ -77,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/date_choose"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:text="@string/dash"
         app:layout_constraintTop_toTopOf="@id/date_choose1"
         app:layout_constraintLeft_toRightOf="@id/date_choose1"
@@ -89,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/date_choose"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:text="@string/date"
         app:layout_constraintTop_toTopOf="@id/dash"
         app:layout_constraintLeft_toRightOf="@id/dash"
@@ -106,7 +106,6 @@
         app:layout_constraintTop_toBottomOf="@id/date_choose1"
         app:layout_constraintLeft_toLeftOf="parent"
         />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

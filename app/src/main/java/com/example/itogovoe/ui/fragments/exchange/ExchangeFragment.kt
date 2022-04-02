@@ -8,16 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.itogovoe.databinding.FragmentExchangeBinding
 
-
 class ExchangeFragment : Fragment() {
-
 
     private lateinit var binding: FragmentExchangeBinding
     private val args by navArgs<ExchangeFragmentArgs>()
-
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,15 +30,5 @@ class ExchangeFragment : Fragment() {
 
         binding.currencyValueParent.setText("1")
         binding.currencyValueChild.setText(args.currencyValue.toString())
-
-        /*binding.exchangeButton.setOnClickListener {
-            val action = ExchangeFragmentDirections.actionExchangeFragmentToFilterFragment()
-            binding.exchangeButton.findNavController().navigate(action)
-        }*/
-    }
-
-
-    companion object {
-        // fun newInstance(param1: String, param2: String) = ExchangeFragment()
     }
 }

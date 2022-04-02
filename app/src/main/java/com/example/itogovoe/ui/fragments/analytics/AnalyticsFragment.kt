@@ -11,19 +11,11 @@ class AnalyticsFragment : Fragment() {
 
     private lateinit var binding: FragmentAnalyticsBinding
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAnalyticsBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    companion object {
-        // fun newInstance(param1: String, param2: String) = AnalyticsFragment()
     }
 }
