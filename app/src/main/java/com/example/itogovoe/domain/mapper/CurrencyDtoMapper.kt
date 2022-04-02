@@ -17,15 +17,21 @@ import java.time.ZoneId
 object CurrencyDtoMapper {
 
     fun mapResponseToDomainModel(response: Response<CurrencyResponse>): Currencies {
-        val localDateTime = Instant.ofEpochSecond(response.body()?.timestamp!!.toLong())
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
+        val localDateTime = response.body()?.timestamp?.let {
+            Instant.ofEpochSecond(it)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+        }
 
         val rates: MutableList<Currency> = mutableListOf()
-        for ((name, value) in response.body()?.rates!!) rates.add(Currency(name, value))
+        response.body()?.rates?.let {
+            for ((name, value) in it) rates.add(Currency(name, value))
+        }
 
-        return Currencies(
-            localDateTime, response.body()?.base!!, rates
-        )
+        response.body()?.base?.let {
+            return Currencies(localDateTime, it, rates)
+        }
+
+        return Currencies(null, null, null)
     }
 }
