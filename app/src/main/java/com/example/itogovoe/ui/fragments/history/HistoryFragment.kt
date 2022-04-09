@@ -13,6 +13,7 @@ import java.time.LocalDate
 class HistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
+    private val adapter = HistoryAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,63 +21,9 @@ class HistoryFragment : Fragment() {
     ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val adapter = HistoryAdapter()
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
-
-        // TODO: сделать RoomDB данных для History
-        val date = LocalDate.parse("2018-12-12")
-        val historyList: List<History> = listOf(
-            History(
-                date,
-                "EUR",
-                3.22,
-                "RUB",
-                331.02
-            ),
-            History(
-                date,
-                "ASF",
-                4.43,
-                "FSA",
-                53.23
-            ),
-            History(
-                date,
-                "BNF",
-                3.10,
-                "HTR",
-                2.89
-            ),
-            History(
-                date,
-                "HGE",
-                234453.78,
-                "XZC",
-                202.09
-            ),
-            History(
-                date,
-                "NBV",
-                2.23,
-                "RUB",
-                21.09
-            ),
-            History(
-                date,
-                "TRE",
-                22.00,
-                "MJU",
-                12.42
-            )
-        )
-        adapter.historyList = historyList
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

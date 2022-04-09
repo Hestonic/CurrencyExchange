@@ -2,10 +2,13 @@ package com.example.itogovoe.ui.fragments.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.itogovoe.R
 import com.example.itogovoe.databinding.ItemCurrencyBinding
+import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.model.CurrencyUiModel
+import java.util.*
+
 
 class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
@@ -33,16 +36,50 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
 
-            currencyLayout.setOnClickListener {
-                val currencyName = currencyUiModel.name
-                val currencyValue = currencyUiModel.value.toFloat()
+            itemView.setOnClickListener {
+                // TODO: Сделать, чтобы цвет переживал переворот экрана и доделать
+                if (currencyUiModel.isNotChecked) {
+                    currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
+                    currencyUiModel.isNotChecked = false
+                } else {
+                    currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
+                    notifyDataSetChanged()
+                }
 
-                val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
-                    currencyName,
-                    currencyValue
-                )
-                currencyLayout.findNavController().navigate(action)
             }
+        }
+
+        private fun swapItem(fromPosition: Int, toPosition: Int) {
+            Collections.swap(currencyList, fromPosition, toPosition)
+            notifyItemMoved(fromPosition, toPosition)
         }
     }
 }
+
+
+// TODO: удалить
+/*if (firstItemPosition == -1) {
+                    swapItem(position, 0)
+                    currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
+                    firstItemPosition = position
+                    checkedItemName = currencyUiModel.name
+                    currencyParentName = currencyUiModel.name
+                    currencyParentValue = currencyUiModel.value.toFloat()
+                } else if (checkedItemName == binding.currency.text) {
+                    swapItem(0, firstItemPosition)
+                    currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
+                    firstItemPosition = -1
+                    checkedItemName = ""
+                } else {
+                    firstItemPosition = -1
+                    checkedItemName = ""
+                    currencyChildName = currencyUiModel.name
+                    currencyChildValue = currencyUiModel.value.toFloat()
+                    val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
+                        currencyParentName = currencyParentName,
+                        currencyParentValue = currencyParentValue,
+                        currencyChildName = currencyChildName,
+                        currencyChildValue = currencyChildValue
+                    )
+                    currencyLayout.findNavController().navigate(action)
+                }*/

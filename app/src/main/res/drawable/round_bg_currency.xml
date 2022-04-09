@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/silver"/>
-    <corners android:radius="5dp"/>
-</shape>
+<!--TODO: Удалить ненужное-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/green" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+
+    <item >
+        <shape>
+            <solid android:color="@color/silver" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+</selector>

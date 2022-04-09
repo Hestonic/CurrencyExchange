@@ -2,17 +2,13 @@ package com.example.itogovoe.domain.mapper
 
 import com.example.itogovoe.domain.model.Currencies
 import com.example.itogovoe.data.api.CurrencyResponse
+import com.example.itogovoe.data.source.local_source.entities.CurrenciesEntity
+import com.example.itogovoe.data.source.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.model.Currency
+import com.example.itogovoe.ui.model.CurrencyUiModel
 import retrofit2.Response
 import java.time.Instant
 import java.time.ZoneId
-
-/*
-Маппер преобразовывает данные, которые ему возвращает api в Response<Currency> в
-те данные, что нам нужны в Repository (данные типа data class Currencies)
-
-Т.е. берём поле из Currency и сетим в новый объект Currencies
-*/
 
 object CurrencyDtoMapper {
 
@@ -33,5 +29,14 @@ object CurrencyDtoMapper {
         }
 
         return Currencies(null, null, null)
+    }
+
+    fun mapDomainModelToCurrenciesEntity(currencies: Currencies): List<CurrenciesEntity>? {
+        return currencies.rates?.map { CurrenciesEntity(0, it.name, it.value) }
+    }
+
+    // TODO: Избавиться от !!
+    fun mapDomainModelToInfoEntity(currencies: Currencies): InfoEntity {
+        return InfoEntity(0, currencies.date!!, currencies.base!!)
     }
 }

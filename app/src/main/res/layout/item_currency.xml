@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/currency_layout"
-    android:layout_width="116dp"
-    android:layout_height="40dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/round_bg_currency"
     android:paddingHorizontal="12dp"
@@ -26,8 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_star_outline"
+        android:layout_marginLeft="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/currency"
+        app:layout_constraintStart_toEndOf="@id/currency"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 

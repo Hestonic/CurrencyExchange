@@ -18,17 +18,11 @@ class ExchangeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
+        binding.currencyTextChild.text = args.currencyChildName
+        binding.currencyTextParent.text = args.currencyParentName
+
+        binding.currencyValueParent.setText(args.currencyParentValue.toString())
+        binding.currencyValueChild.setText(args.currencyChildValue.toString())
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // TODO: сделать подсчёт валюты и выводить правильные значения
-        binding.currencyTextChild.text = args.currencyName
-        binding.currencyTextParent.text = args.currencyName
-
-        binding.currencyValueParent.setText("1")
-        binding.currencyValueChild.setText(args.currencyValue.toString())
     }
 }
