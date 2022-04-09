@@ -8,24 +8,33 @@ import com.example.itogovoe.data.source.local_source.entities.InfoEntity
 
 class LocalDataSource(private val currencyDao: CurrencyDao) {
 
-    // private val currencyDao = App().getInstance().getCurrencyDatabase().currencyDao
-
-    // CurrenciesEntity
-    fun readAllCurrencies() : List<CurrenciesEntity> {
-        return currencyDao.readAllCurrencies()
+    // InfoEntity
+    suspend fun addInfo(info: InfoEntity) {
+        currencyDao.addInfo(info)
     }
 
+    fun readAllInfo() : InfoEntity{
+        return currencyDao.readAllInfo()
+    }
+
+    fun deleteAllInfo() {
+        currencyDao.deleteAllInfo()
+    }
+
+
+    // CurrenciesEntity
     suspend fun addCurrencyItem(currencies: CurrenciesEntity) {
         currencyDao.addCurrencyItem(currencies)
+    }
+
+    fun readAllCurrencies() : List<CurrenciesEntity> {
+        return currencyDao.readAllCurrencies()
     }
 
     fun deleteAllCurrencies() {
         currencyDao.deleteAllCurrencies()
     }
 
-    // InfoEntity
-    suspend fun addInfo(info: InfoEntity) {
-        currencyDao.addInfo(info)
-    }
+
 }
 

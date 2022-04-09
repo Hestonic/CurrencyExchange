@@ -5,6 +5,10 @@ import com.example.itogovoe.data.source.LocalDataSource
 import com.example.itogovoe.data.source.RemoteDataSource
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.Currencies
+import java.time.LocalDateTime
+import java.time.Period
+import java.time.temporal.ChronoUnit
+import java.util.*
 
 class Repository(
     private val localDataSource: LocalDataSource,
@@ -12,34 +16,42 @@ class Repository(
 ) {
 
     suspend fun getCurrencies(): Currencies? {
-/*
-* Проверяем пустая ли БД
-* Если БД пустая - берём данные из сети и загружаем в БД currencies
-* Иначе берём данные из БД и выгружаем их, смотрим на дату данных
-* Если данные старые, то идём в сеть
-* Загружаем полученные данные в бд и возвращаем пользователю данные из сети
-* Иначе возвращаем данные из Бд */
         try {
+            // Получаем данные из сети
+            val localCurrencies = localDataSource.readAllCurrencies()
             val response = remoteDataSource.getCurrencies()
             val domainModel = CurrencyDtoMapper.mapResponseToDomainModel(response)
-            val localCurrencies = localDataSource.readAllCurrencies()
-            val currenciesEntity = CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
+            // Если БД пустая - берём данные из сети и загружаем в БД
             if (localCurrencies.isEmpty()) {
-                Log.d("MY_LOCAL_TAG 2", localCurrencies.toString())
-                currenciesEntity?.forEach { currency ->
-                    localDataSource.addCurrencyItem(currency)
+                val currenciesEntity =
+                    CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
+                currenciesEntity?.forEach { localDataSource.addCurrencyItem(it) }
+                val infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
+                localDataSource.addInfo(infoEntity)
+                Log.d("repository_return_tag", "добавляем данные в БД")
+            } else if (localCurrencies.isNotEmpty()) {
+                val infoEntity = localDataSource.readAllInfo()
+                val dateNow = LocalDateTime.now()
+                val minutes = ChronoUnit.MINUTES.between(infoEntity.lastUploadDate, dateNow)
+                Log.d("difference_date", minutes.toString())
+                // Проверяем данные на "старость"
+                return if (minutes < 5) {
+                    Log.d("repository_return_tag", "вернули старые данные")
+                    val currenciesEntity =
+                        CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
+                    CurrencyDtoMapper.mapCurrenciesEntityToDomainModel(currenciesEntity, infoEntity)
+                } else {
+                    Log.d("repository_return_tag", "вернули новые данные")
+                    localDataSource.deleteAllCurrencies()
+                    localDataSource.deleteAllInfo()
+                    val infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
+                    val currenciesEntity =
+                        CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
+                    currenciesEntity?.forEach { localDataSource.addCurrencyItem(it) }
+                    localDataSource.addInfo(infoEntity)
+                    domainModel
                 }
             }
-            //localDataSource.deleteAllCurrencies()
-
-            /*
-            Log.d("MY_LOCAL_TAG 1", currenciesEntity.toString())
-
-            localDataSource.deleteAllCurrencies()
-
-            Log.d("MY_LOCAL_TAG 2", localCurrencies.toString())
-            val infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
-            localDataSource.addInfo(infoEntity)*/
             return domainModel
         } catch (e: Exception) {
             e.printStackTrace()

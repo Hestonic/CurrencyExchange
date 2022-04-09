@@ -24,8 +24,8 @@ interface CurrencyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addInfo(info: InfoEntity)
 
-    @Query("SELECT * FROM InfoEntity ORDER BY id ASC")
-    fun readAllInfo(): LiveData<InfoEntity>
+    @Query("SELECT * FROM InfoEntity")
+    fun readAllInfo(): InfoEntity
 
     @Query("DELETE FROM InfoEntity")
     fun deleteAllInfo()
@@ -34,7 +34,7 @@ interface CurrencyDao {
     fun readLastUploadInfoFromInfoEntity(key: Int): LiveData<InfoEntity>*/
 
 
-    // Currencies
+    // CurrenciesEntity
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCurrencyItem(currencies: CurrenciesEntity)
 
