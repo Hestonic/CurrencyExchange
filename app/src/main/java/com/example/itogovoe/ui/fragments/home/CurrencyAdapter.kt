@@ -2,12 +2,10 @@ package com.example.itogovoe.ui.fragments.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.itogovoe.R
 import com.example.itogovoe.databinding.ItemCurrencyBinding
-import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.model.CurrencyUiModel
-import java.util.*
 
 
 class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
@@ -36,28 +34,33 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
 
-            itemView.setOnClickListener {
-                // TODO: Сделать, чтобы цвет переживал переворот экрана и доделать
-                if (currencyUiModel.isNotChecked) {
+            currencyLayout.setOnClickListener {
+                val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
+                    currencyChildName = currencyUiModel.name,
+                    currencyChildValue = currencyUiModel.value.toFloat(),
+                )
+                currencyLayout.findNavController().navigate(action)
+
+
+                /*if (currencyUiModel.isNotChecked) {
                     currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
                     currencyUiModel.isNotChecked = false
                 } else {
                     currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
                     notifyDataSetChanged()
-                }
-
+                }*/
             }
         }
 
-        private fun swapItem(fromPosition: Int, toPosition: Int) {
+        /*private fun swapItem(fromPosition: Int, toPosition: Int) {
             Collections.swap(currencyList, fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
-        }
+        }*/
     }
 }
 
 
-// TODO: удалить
+// TODO: удалить как доделаю
 /*if (firstItemPosition == -1) {
                     swapItem(position, 0)
                     currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)

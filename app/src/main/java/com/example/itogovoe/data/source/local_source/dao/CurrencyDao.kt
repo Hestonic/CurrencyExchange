@@ -9,12 +9,12 @@ import com.example.itogovoe.data.source.local_source.entities.InfoEntity
 @Dao
 interface CurrencyDao {
 
-    // History
+    // HistoryEntity
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addHistoryItem(history: HistoryEntity)
 
     @Query("SELECT * FROM HistoryEntity ORDER BY id ASC")
-    fun readAllHistory(): LiveData<List<HistoryEntity>>
+    fun readAllHistory(): List<HistoryEntity>
 
     @Query("DELETE FROM HistoryEntity")
     fun deleteAllHistory()
