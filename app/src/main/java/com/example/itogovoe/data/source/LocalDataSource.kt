@@ -1,5 +1,6 @@
 package com.example.itogovoe.data.source
 
+import androidx.lifecycle.LiveData
 import com.example.itogovoe.data.source.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.source.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
@@ -12,7 +13,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.addHistoryItem(history)
     }
 
-    fun readAllHistory(): List<HistoryEntity> {
+    fun readAllHistory(): LiveData<List<HistoryEntity>> {
         return currencyDao.readAllHistory()
     }
 

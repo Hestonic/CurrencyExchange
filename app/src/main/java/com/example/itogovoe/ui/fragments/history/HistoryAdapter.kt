@@ -3,12 +3,12 @@ package com.example.itogovoe.ui.fragments.history
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
 import com.example.itogovoe.databinding.ItemHistoryBinding
-import com.example.itogovoe.ui.model.History
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
-    var historyList: List<History> = emptyList()
+    private var historyList: List<HistoryEntity> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,7 +27,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(history: History) = binding.run {
+        fun bind(history: HistoryEntity) = binding.run {
 
             binding.date.text = history.date.toString()
             binding.currencyNameChild.text = history.currencyNameChild
@@ -35,5 +35,10 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
             binding.currencyNameParent.text = history.currencyNameParent
             binding.currencyValueParent.text = history.currencyValueParent.toString()
         }
+    }
+
+    fun setData(historyEntity: List<HistoryEntity>) {
+        this.historyList = historyEntity
+        notifyDataSetChanged()
     }
 }

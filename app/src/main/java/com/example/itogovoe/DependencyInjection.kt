@@ -33,7 +33,6 @@ class DependencyInjection {
 
     val remoteDataSource = RemoteDataSource(api)
     lateinit var currencyDao: CurrencyDao
-    // lateinit var remoteDataSource: RemoteDataSource
     lateinit var localDataSource: LocalDataSource
     lateinit var repository: Repository
 
@@ -44,10 +43,6 @@ class DependencyInjection {
     fun initLocal(currencyDao: CurrencyDao) {
         localDataSource = LocalDataSource(currencyDao)
     }
-
-    /*fun initRemote(api: CurrencyApi) {
-        remoteDataSource = RemoteDataSource(api)
-    }*/
 
     fun initRepository(localDataSource: LocalDataSource, remoteDataSource: RemoteDataSource) {
         repository = Repository(localDataSource, remoteDataSource)

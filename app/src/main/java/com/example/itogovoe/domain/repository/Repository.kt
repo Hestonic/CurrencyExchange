@@ -1,9 +1,11 @@
 package com.example.itogovoe.domain.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.source.LocalDataSource
 import com.example.itogovoe.data.source.RemoteDataSource
+import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.source.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.Currencies
@@ -16,6 +18,7 @@ class Repository(
     private val remoteDataSource: RemoteDataSource
 ) {
 
+    val readAllHistory: LiveData<List<HistoryEntity>> = localDataSource.readAllHistory()
     private lateinit var response: Response<CurrencyResponse>
     private lateinit var domainModel: Currencies
     private lateinit var infoEntity: InfoEntity
@@ -66,6 +69,11 @@ class Repository(
             e.printStackTrace()
             return null
         }
-
     }
+
+    suspend fun addHistoryItem(historyEntity: HistoryEntity) {
+        localDataSource.addHistoryItem(historyEntity)
+    }
+
+
 }
