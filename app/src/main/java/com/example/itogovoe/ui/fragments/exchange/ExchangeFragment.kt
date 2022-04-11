@@ -1,7 +1,7 @@
 package com.example.itogovoe.ui.fragments.exchange
 
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,15 +26,14 @@ class ExchangeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        initViewModel()
 
-        val valueParent = args.currencyParentValue
-        val valueChild = args.currencyChildValue
-        val nameParent = args.currencyParentName
         val base = args.base
-        coefficient = if (nameParent == "EUR") valueChild else valueChild / valueParent
+        coefficient = calculateCrossCoefficient(
+            args.currencyParentValue,
+            args.currencyChildValue,
+            args.currencyParentName
+        )
     }
 
     override fun onCreateView(
@@ -48,32 +47,93 @@ class ExchangeFragment : Fragment() {
         binding.currencyValueParent.setText("1.0")
         binding.currencyValueChild.text = coefficient.toString()
 
+        viewModel.itemsLiveData.observe(viewLifecycleOwner) { currencyList ->
+            var valueParent = 0f
+            var valueChild = 0f
+            currencyList.forEach {
+                if (it.name == args.currencyParentName) {
+                    valueParent = it.value.toFloat()
+                }
+                if (it.name == args.currencyChildName) {
+                    valueChild = it.value.toFloat()
+                }
+            }
+            coefficient = calculateCrossCoefficient(
+                valueParent,
+                valueChild,
+                args.currencyParentName
+            )
+
+            val currentParentValue = binding.currencyValueParent.text.toString().toFloat()
+            binding.currencyValueChild.text = (currentParentValue * coefficient).toString()
+        }
+
         binding.currencyValueParent.addTextChangedListener {
-            try {
-                val valueParent = binding.currencyValueParent.text.toString().toFloat()
-                val valueChild = valueParent * coefficient
-                binding.currencyValueChild.text = valueChild.toString()
-            } catch (e: Exception) {
-                e.printStackTrace()
+            viewModel.isFresh().observe(viewLifecycleOwner) { isFresh ->
+                if (isFresh) {
+                    try {
+                        val valueParent = binding.currencyValueParent.text.toString().toFloat()
+                        val valueChild = valueParent * coefficient
+                        binding.currencyValueChild.text = valueChild.toString()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Обновить данные")
+                        .setMessage("Данные устарели, поэтому перед операцией их необходимо обновить")
+                        .setPositiveButton("Хорошо") { _, _ ->
+                            viewModel.getCurrency()
+                            // TODO: логика обновления данных
+                            makeToast("Данные обновлены")
+                        }.create().show()
+                }
             }
         }
 
         binding.exchangeButton.setOnClickListener {
-            val historyEntity = HistoryEntity(
-                id = 0,
-                currencyNameChild = binding.currencyTextChild.text.toString(),
-                currencyNameParent = binding.currencyTextParent.text.toString(),
-                currencyValueChild = binding.currencyValueChild.text.toString().toDouble(),
-                currencyValueParent = binding.currencyValueParent.text.toString().toDouble(),
-                date = LocalDateTime.now()
-            )
-            viewModel.addHistoryItem(historyEntity)
-            Toast.makeText(
-                requireContext(),
-                "Транзакция добавлена в историю",
-                Toast.LENGTH_LONG).show()
+            viewModel.isFresh().observe(viewLifecycleOwner) { isFresh ->
+                if (isFresh) {
+                    val historyEntity = HistoryEntity(
+                        id = 0,
+                        currencyNameChild = binding.currencyTextChild.text.toString(),
+                        currencyNameParent = binding.currencyTextParent.text.toString(),
+                        currencyValueChild = binding.currencyValueChild.text.toString().toDouble(),
+                        currencyValueParent = binding.currencyValueParent.text.toString()
+                            .toDouble(),
+                        date = LocalDateTime.now()
+                    )
+                    viewModel.addHistoryItem(historyEntity)
+                    makeToast("Транзакция добавлена в историю")
+                } else {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Обновить данные")
+                        .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
+                        .setPositiveButton("Хорошо") { _, _ ->
+                            viewModel.getCurrency()
+                            makeToast("Данные обновлены. Если вы согласны с курсом, нажмите на кнопку ещё раз")
+                        }.create().show()
+                }
+            }
         }
-
         return binding.root
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+    }
+
+    private fun calculateCrossCoefficient(
+        valueParent: Float,
+        valueChild: Float,
+        nameParent: String
+    ): Float {
+        return if (nameParent == "EUR") valueChild else valueChild / valueParent
+    }
+
+    private fun initViewModel() {
+        val repository = (requireActivity().application as App).dependencyInjection.repository
+        val viewModelFactory = MainViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
     }
 }
