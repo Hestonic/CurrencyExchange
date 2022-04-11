@@ -1,9 +1,11 @@
 package com.example.itogovoe.ui.fragments.exchange
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -32,8 +34,7 @@ class ExchangeFragment : Fragment() {
         val valueChild = args.currencyChildValue
         val nameParent = args.currencyParentName
         val base = args.base
-        coefficient = if (nameParent == base) valueChild else valueChild / valueParent
-
+        coefficient = if (nameParent == "EUR") valueChild else valueChild / valueParent
     }
 
     override fun onCreateView(
@@ -45,8 +46,7 @@ class ExchangeFragment : Fragment() {
         binding.currencyTextParent.text = args.currencyParentName
 
         binding.currencyValueParent.setText("1.0")
-        val startValueChild = args.currencyParentValue * coefficient
-        binding.currencyValueChild.text = startValueChild.toString()
+        binding.currencyValueChild.text = coefficient.toString()
 
         binding.currencyValueParent.addTextChangedListener {
             try {
@@ -68,6 +68,10 @@ class ExchangeFragment : Fragment() {
                 date = LocalDateTime.now()
             )
             viewModel.addHistoryItem(historyEntity)
+            Toast.makeText(
+                requireContext(),
+                "Транзакция добавлена в историю",
+                Toast.LENGTH_LONG).show()
         }
 
         return binding.root

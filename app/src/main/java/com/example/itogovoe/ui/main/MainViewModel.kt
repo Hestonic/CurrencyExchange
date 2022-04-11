@@ -15,11 +15,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     // TODO: тут происходит фильтрация данных для UI в adapter, тут будет фильтроваться isFavourite со звёздочкой
     val itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
-    val readAllHistory: LiveData<List<HistoryEntity>>
+    val readAllHistory: LiveData<List<HistoryEntity>> = repository.readAllHistory
 
-    init {
-        readAllHistory = repository.readAllHistory
-    }
     fun getCurrency() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getCurrencies()?.let {

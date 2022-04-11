@@ -13,7 +13,7 @@ interface CurrencyDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addHistoryItem(history: HistoryEntity)
 
-    @Query("SELECT * FROM HistoryEntity ORDER BY id ASC")
+    @Query("SELECT * FROM HistoryEntity ORDER BY id DESC")
     fun readAllHistory(): LiveData<List<HistoryEntity>>
 
     @Query("DELETE FROM HistoryEntity")

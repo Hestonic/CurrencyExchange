@@ -27,7 +27,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.addInfo(info)
     }
 
-    fun readAllInfo() : InfoEntity{
+    fun readAllInfo() : InfoEntity {
         return currencyDao.readAllInfo()
     }
 

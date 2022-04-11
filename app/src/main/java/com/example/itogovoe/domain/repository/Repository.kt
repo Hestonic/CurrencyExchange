@@ -26,6 +26,8 @@ class Repository(
     suspend fun getCurrencies(): Currencies? {
         try {
             // Получаем данные из локального хранилища
+            /*localDataSource.deleteAllCurrencies()
+            localDataSource.deleteAllInfo()*/
             val localCurrencies = localDataSource.readAllCurrencies()
             // Если БД пустая - берём данные из сети и загружаем в БД
             if (localCurrencies.isEmpty()) {
@@ -38,12 +40,8 @@ class Repository(
                 localDataSource.addInfo(infoEntity)
                 Log.d("repository_return_tag", "добавляем данные в БД")
             } else if (localCurrencies.isNotEmpty()) {
-                infoEntity = localDataSource.readAllInfo()
-                val dateNow = LocalDateTime.now()
-                val minutes = ChronoUnit.MINUTES.between(infoEntity.lastUploadDate, dateNow)
-                Log.d("difference_date", minutes.toString())
                 // Проверяем данные на "старость"
-                return if (minutes < 5) {
+                return if (isFresh()) {
                     Log.d("repository_return_tag", "вернули локальные данные")
                     CurrencyDtoMapper.mapCurrenciesEntityToDomainModel(localCurrencies, infoEntity)
                 } else {
@@ -71,9 +69,15 @@ class Repository(
         }
     }
 
+    fun isFresh(): Boolean {
+        infoEntity = localDataSource.readAllInfo()
+        val dateNow = LocalDateTime.now()
+        val minutes = ChronoUnit.MINUTES.between(infoEntity.lastUploadDate, dateNow)
+        Log.d("difference_date", minutes.toString())
+        return minutes < 6
+    }
+
     suspend fun addHistoryItem(historyEntity: HistoryEntity) {
         localDataSource.addHistoryItem(historyEntity)
     }
-
-
 }

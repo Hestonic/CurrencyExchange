@@ -1,5 +1,6 @@
 package com.example.itogovoe.ui.fragments.history
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(historyEntity: List<HistoryEntity>) {
         this.historyList = historyEntity
         notifyDataSetChanged()
