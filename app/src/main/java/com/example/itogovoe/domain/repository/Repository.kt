@@ -2,11 +2,13 @@ package com.example.itogovoe.domain.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.itogovoe.data.api.CurrencyResponse
-import com.example.itogovoe.data.source.LocalDataSource
-import com.example.itogovoe.data.source.RemoteDataSource
-import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
-import com.example.itogovoe.data.source.local_source.entities.InfoEntity
+import com.example.itogovoe.data.sources.LocalDataSource
+import com.example.itogovoe.data.sources.RemoteDataSource
+import com.example.itogovoe.data.sources.local_source.entities.CurrenciesUiEntity
+import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
+import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.Currencies
 import retrofit2.Response
@@ -18,7 +20,7 @@ class Repository(
     private val remoteDataSource: RemoteDataSource
 ) {
 
-    val readAllHistory: LiveData<List<HistoryEntity>> = localDataSource.readAllHistory()
+
     private lateinit var response: Response<CurrencyResponse>
     private lateinit var domainModel: Currencies
     private lateinit var infoEntity: InfoEntity
@@ -26,8 +28,9 @@ class Repository(
     suspend fun getCurrencies(): Currencies? {
         try {
             // Получаем данные из локального хранилища
-            /*localDataSource.deleteAllCurrencies()
-            localDataSource.deleteAllInfo()*/
+            localDataSource.deleteAllCurrencies()
+            localDataSource.deleteAllInfo()
+            localDataSource.deleteAllHistory()
             val localCurrencies = localDataSource.readAllCurrencies()
             // Если БД пустая - берём данные из сети и загружаем в БД
             if (localCurrencies.isEmpty()) {
@@ -77,7 +80,19 @@ class Repository(
         return minutes < 6
     }
 
+    fun readAllHistory(): LiveData<List<HistoryEntity>> {
+        return localDataSource.readAllHistory()
+    }
+
     suspend fun addHistoryItem(historyEntity: HistoryEntity) {
         localDataSource.addHistoryItem(historyEntity)
+    }
+
+    fun getCurrenciesUi(): LiveData<List<CurrenciesUiEntity>> {
+        return localDataSource.readAllCurrenciesUi()
+    }
+
+    fun deleteCurrencyUiItem(name: String) {
+        localDataSource.deleteCurrencyUiItem(name)
     }
 }

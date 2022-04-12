@@ -1,16 +1,12 @@
 package com.example.itogovoe.domain.mapper
 
-import androidx.room.TypeConverter
 import com.example.itogovoe.domain.model.Currencies
 import com.example.itogovoe.data.api.CurrencyResponse
-import com.example.itogovoe.data.source.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.source.local_source.entities.InfoEntity
+import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
+import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.model.Currency
-import com.example.itogovoe.ui.model.CurrencyUiModel
 import retrofit2.Response
-import java.sql.Timestamp
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 
 object CurrencyDtoMapper {

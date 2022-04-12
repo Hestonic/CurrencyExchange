@@ -1,9 +1,7 @@
-package com.example.itogovoe.data.source.local_source.entities
+package com.example.itogovoe.data.sources.local_source.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.example.itogovoe.data.source.local_source.converters.DateConverter
 import java.time.LocalDateTime
 
 @Entity

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.itogovoe.App
-import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
+import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.databinding.FragmentExchangeBinding
 import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.main.MainViewModelFactory
@@ -84,7 +84,6 @@ class ExchangeFragment : Fragment() {
                         .setMessage("Данные устарели, поэтому перед операцией их необходимо обновить")
                         .setPositiveButton("Хорошо") { _, _ ->
                             viewModel.getCurrency()
-                            // TODO: логика обновления данных
                             makeToast("Данные обновлены")
                         }.create().show()
                 }

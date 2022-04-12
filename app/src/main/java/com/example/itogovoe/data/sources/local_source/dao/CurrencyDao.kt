@@ -1,10 +1,12 @@
-package com.example.itogovoe.data.source.local_source.dao
+package com.example.itogovoe.data.sources.local_source.dao
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
-import com.example.itogovoe.data.source.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
-import com.example.itogovoe.data.source.local_source.entities.InfoEntity
+import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
+import com.example.itogovoe.data.sources.local_source.entities.CurrenciesUiEntity
+import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
+import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 
 @Dao
 interface CurrencyDao {
@@ -30,9 +32,6 @@ interface CurrencyDao {
     @Query("DELETE FROM InfoEntity")
     fun deleteAllInfo()
 
-    /*@Query("SELECT lastUploadDate FROM InfoEntity WHERE id = :key")
-    fun readLastUploadInfoFromInfoEntity(key: Int): LiveData<InfoEntity>*/
-
 
     // CurrenciesEntity
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -45,15 +44,16 @@ interface CurrencyDao {
     fun deleteAllCurrencies()
 
 
-    // TODO: Не забыть удалить
-    // Currencies
-    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addLocalCurrencies(infoEntity: InfoEntity)
+    // CurrenciesUiEntity
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addCurrencyUiItem(currencyUi: CurrenciesUiEntity)
 
-    @Transaction
-    @Query("SELECT * FROM InfoEntity")
-    fun getLocalCurrencies(): LiveData<List<InfoWithCurrencies>>
+    @Query("SELECT * FROM CurrenciesUiEntity")
+    fun readAllCurrenciesUi(): LiveData<List<CurrenciesUiEntity>>
 
-    @Query("DELETE FROM InfoEntity")
-    fun deleteAllLocalCurrencies()*/
+    @Query("DELETE FROM CurrenciesUiEntity")
+    fun deleteAllCurrenciesUi()
+
+    @Query("DELETE FROM CurrenciesUiEntity WHERE name = :name")
+    fun deleteCurrencyUiItem(name: String)
 }

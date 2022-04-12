@@ -44,6 +44,12 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
 
+            if (currencyUiModel.isNotChecked) {
+                currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
+            } else {
+                currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
+            }
+
             currencyLayout.setOnLongClickListener {
                 if (selectedPosition == -1 && currencyParentName != base) {
                     base = currencyUiModel.name
@@ -52,9 +58,14 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
                     currencyUiModel.isNotChecked = false
                     selectedPosition = absoluteAdapterPosition
                     swapItem(selectedPosition, 0)
-                    Toast.makeText(itemView.context, "Выбрана валюта $base", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(itemView.context, "Выбрана валюта $base", Toast.LENGTH_SHORT)
+                        .show()
                 } else if (selectedPosition == -1 && currencyParentName == base) {
-                    Toast.makeText(itemView.context, "$base уже выбрана по умолчанию", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        itemView.context,
+                        "$base уже выбрана по умолчанию",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else if (absoluteAdapterPosition == 0) {
                     base = "EUR"
                     currencyParentName = null
@@ -62,17 +73,14 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
                     currencyUiModel.isNotChecked = true
                     swapItem(0, selectedPosition)
                     selectedPosition = -1
-                    Toast.makeText(itemView.context, "Вернули значение по умолчанию", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        itemView.context,
+                        "Вернули значение по умолчанию",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-
                 notifyDataSetChanged()
                 return@setOnLongClickListener true
-            }
-
-            if (currencyUiModel.isNotChecked) {
-                currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
-            } else {
-                currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
             }
 
             currencyLayout.setOnClickListener {
@@ -100,31 +108,3 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         }
     }
 }
-
-
-// TODO: удалить как доделаю
-/*if (firstItemPosition == -1) {
-                    swapItem(position, 0)
-                    currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
-                    firstItemPosition = position
-                    checkedItemName = currencyUiModel.name
-                    currencyParentName = currencyUiModel.name
-                    currencyParentValue = currencyUiModel.value.toFloat()
-                } else if (checkedItemName == binding.currency.text) {
-                    swapItem(0, firstItemPosition)
-                    currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
-                    firstItemPosition = -1
-                    checkedItemName = ""
-                } else {
-                    firstItemPosition = -1
-                    checkedItemName = ""
-                    currencyChildName = currencyUiModel.name
-                    currencyChildValue = currencyUiModel.value.toFloat()
-                    val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
-                        currencyParentName = currencyParentName,
-                        currencyParentValue = currencyParentValue,
-                        currencyChildName = currencyChildName,
-                        currencyChildValue = currencyChildValue
-                    )
-                    currencyLayout.findNavController().navigate(action)
-                }*/

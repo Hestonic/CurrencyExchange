@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.itogovoe.data.source.local_source.entities.HistoryEntity
+import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.databinding.ItemHistoryBinding
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
@@ -29,7 +29,6 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(history: HistoryEntity) = binding.run {
-
             binding.date.text = history.date.toString()
             binding.currencyNameChild.text = history.currencyNameChild
             binding.currencyValueChild.text = history.currencyValueChild.toString()
