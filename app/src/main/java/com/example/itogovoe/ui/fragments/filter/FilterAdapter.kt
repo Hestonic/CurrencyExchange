@@ -1,6 +1,7 @@
 package com.example.itogovoe.ui.fragments.filter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -38,5 +39,12 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
     fun setData(filterList: List<String>) {
         this.currencyFilterList = filterList
         notifyDataSetChanged()
+    }
+
+    fun setFilter(filter: Filters) {
+        when(filter) {
+            is Filters.CurrencyFilter -> Log.d("filter_tag", "CurrencyFilter")
+            is Filters.DateFilter -> Log.d("filter_tag", "RangeFilter")
+        }
     }
 }
