@@ -23,6 +23,7 @@ class HistoryFragment : Fragment() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        viewModel.getHistory()
     }
 
     override fun onCreateView(
@@ -34,7 +35,7 @@ class HistoryFragment : Fragment() {
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.readAllHistory.observe(viewLifecycleOwner) { history ->
+        viewModel.historyItems.observe(viewLifecycleOwner) { history ->
             adapter.setData(history)
         }
 

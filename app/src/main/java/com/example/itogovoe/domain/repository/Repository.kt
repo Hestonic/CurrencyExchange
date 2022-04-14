@@ -1,7 +1,6 @@
 package com.example.itogovoe.domain.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
@@ -9,6 +8,7 @@ import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.Currencies
+import com.example.itogovoe.domain.model.HistoryDomainModel
 import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -78,12 +78,12 @@ class Repository(
         return minutes < 6
     }
 
-    fun readAllHistory(): LiveData<List<HistoryEntity>> {
-        return localDataSource.readAllHistory()
-    }
-
     suspend fun addHistoryItem(historyEntity: HistoryEntity) {
         localDataSource.addHistoryItem(historyEntity)
+    }
+
+    fun getHistory(): List<HistoryDomainModel> {
+        return CurrencyDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
     }
 
     /*fun deleteCurrencyUiItem(name: String) {

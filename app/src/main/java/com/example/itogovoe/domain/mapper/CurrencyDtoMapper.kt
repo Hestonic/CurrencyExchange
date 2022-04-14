@@ -1,10 +1,12 @@
 package com.example.itogovoe.domain.mapper
 
-import com.example.itogovoe.domain.model.Currencies
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
+import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
+import com.example.itogovoe.domain.model.Currencies
 import com.example.itogovoe.domain.model.Currency
+import com.example.itogovoe.domain.model.HistoryDomainModel
 import retrofit2.Response
 import java.time.Instant
 import java.time.ZoneId
@@ -37,6 +39,18 @@ object CurrencyDtoMapper {
     // TODO: Избавиться от !!
     fun mapDomainModelToInfoEntity(currencies: Currencies): InfoEntity {
         return InfoEntity(0, currencies.date!!, currencies.base!!)
+    }
+
+    fun mapHistoryEntityToDomainModel(history: List<HistoryEntity>): List<HistoryDomainModel> {
+        return history.map {
+            HistoryDomainModel(
+                date = it.date,
+                currencyNameParent = it.currencyNameParent,
+                currencyValueParent = it.currencyValueParent,
+                currencyNameChild = it.currencyNameChild,
+                currencyValueChild = it.currencyValueChild,
+            )
+        }
     }
 
     fun mapCurrenciesEntityToDomainModel(

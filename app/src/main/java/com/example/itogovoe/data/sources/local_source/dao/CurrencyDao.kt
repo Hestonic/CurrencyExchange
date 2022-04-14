@@ -13,7 +13,7 @@ interface CurrencyDao {
     suspend fun addHistoryItem(history: HistoryEntity)
 
     @Query("SELECT * FROM HistoryEntity ORDER BY id DESC")
-    fun readAllHistory(): LiveData<List<HistoryEntity>>
+    fun readAllHistory(): List<HistoryEntity>
 
     @Query("DELETE FROM HistoryEntity")
     fun deleteAllHistory()

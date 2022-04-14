@@ -13,7 +13,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.addHistoryItem(history)
     }
 
-    fun readAllHistory(): LiveData<List<HistoryEntity>> {
+    fun readAllHistory(): List<HistoryEntity> {
         return currencyDao.readAllHistory()
     }
 

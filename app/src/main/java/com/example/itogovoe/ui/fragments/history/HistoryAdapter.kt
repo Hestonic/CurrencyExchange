@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.databinding.ItemHistoryBinding
+import com.example.itogovoe.ui.model.HistoryUiModel
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
-    private var historyList: List<HistoryEntity> = emptyList()
+    private var historyList: List<HistoryUiModel> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -28,8 +28,8 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
 
     inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(history: HistoryEntity) = binding.run {
-            binding.date.text = history.date.toString()
+        fun bind(history: HistoryUiModel) = binding.run {
+            binding.date.text = history.date
             binding.currencyNameChild.text = history.currencyNameChild
             binding.currencyValueChild.text = history.currencyValueChild.toString()
             binding.currencyNameParent.text = history.currencyNameParent
@@ -38,7 +38,7 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(historyEntity: List<HistoryEntity>) {
+    fun setData(historyEntity: List<HistoryUiModel>) {
         this.historyList = historyEntity
         notifyDataSetChanged()
     }
