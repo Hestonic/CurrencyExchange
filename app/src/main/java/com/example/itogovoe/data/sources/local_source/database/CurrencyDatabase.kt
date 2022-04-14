@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.room.*
 import com.example.itogovoe.data.sources.local_source.converters.DateConverter
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesUiEntity
-import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
-import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
+import com.example.itogovoe.data.sources.local_source.entities.*
 
 @Database(
-    entities = [HistoryEntity::class, InfoEntity::class, CurrenciesEntity::class, CurrenciesUiEntity::class],
-    version = 2,
+    entities = [HistoryEntity::class, InfoEntity::class, CurrenciesEntity::class],
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)

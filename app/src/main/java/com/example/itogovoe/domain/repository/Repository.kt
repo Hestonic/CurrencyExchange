@@ -2,11 +2,9 @@ package com.example.itogovoe.domain.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesUiEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
@@ -28,9 +26,9 @@ class Repository(
     suspend fun getCurrencies(): Currencies? {
         try {
             // Получаем данные из локального хранилища
-            localDataSource.deleteAllCurrencies()
+            /*localDataSource.deleteAllCurrencies()
             localDataSource.deleteAllInfo()
-            localDataSource.deleteAllHistory()
+            localDataSource.deleteAllHistory()*/
             val localCurrencies = localDataSource.readAllCurrencies()
             // Если БД пустая - берём данные из сети и загружаем в БД
             if (localCurrencies.isEmpty()) {
@@ -88,11 +86,7 @@ class Repository(
         localDataSource.addHistoryItem(historyEntity)
     }
 
-    fun getCurrenciesUi(): LiveData<List<CurrenciesUiEntity>> {
-        return localDataSource.readAllCurrenciesUi()
-    }
-
-    fun deleteCurrencyUiItem(name: String) {
+    /*fun deleteCurrencyUiItem(name: String) {
         localDataSource.deleteCurrencyUiItem(name)
-    }
+    }*/
 }

@@ -3,10 +3,7 @@ package com.example.itogovoe.data.sources.local_source.dao
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.*
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesUiEntity
-import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
-import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
+import com.example.itogovoe.data.sources.local_source.entities.*
 
 @Dao
 interface CurrencyDao {
@@ -44,16 +41,19 @@ interface CurrencyDao {
     fun deleteAllCurrencies()
 
 
-    // CurrenciesUiEntity
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addCurrencyUiItem(currencyUi: CurrenciesUiEntity)
+    /*// CurrenciesUiEntity
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addCurrencyUiItem(currencyDaoEntity: CurrenciesDaoEntity)
 
-    @Query("SELECT * FROM CurrenciesUiEntity")
-    fun readAllCurrenciesUi(): LiveData<List<CurrenciesUiEntity>>
+    @Update
+    suspend fun updateCurrencyUiItem(currencyDaoEntity: CurrenciesDaoEntity)
 
-    @Query("DELETE FROM CurrenciesUiEntity")
+    @Query("SELECT * FROM CurrenciesDaoEntity")
+    fun readAllCurrenciesUi(): List<CurrenciesDaoEntity>
+
+    @Query("DELETE FROM CurrenciesDaoEntity")
     fun deleteAllCurrenciesUi()
 
-    @Query("DELETE FROM CurrenciesUiEntity WHERE name = :name")
-    fun deleteCurrencyUiItem(name: String)
+    @Query("DELETE FROM CurrenciesDaoEntity WHERE name = :name")
+    fun deleteCurrencyUiItem(name: String)*/
 }

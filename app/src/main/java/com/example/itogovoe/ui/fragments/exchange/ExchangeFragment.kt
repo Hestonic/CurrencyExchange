@@ -92,27 +92,48 @@ class ExchangeFragment : Fragment() {
 
         binding.exchangeButton.setOnClickListener {
             viewModel.isFresh().observe(viewLifecycleOwner) { isFresh ->
-                if (isFresh) {
-                    val historyEntity = HistoryEntity(
-                        id = 0,
-                        currencyNameChild = binding.currencyTextChild.text.toString(),
-                        currencyNameParent = binding.currencyTextParent.text.toString(),
-                        currencyValueChild = binding.currencyValueChild.text.toString().toDouble(),
-                        currencyValueParent = binding.currencyValueParent.text.toString()
-                            .toDouble(),
-                        date = LocalDateTime.now()
-                    )
-                    viewModel.addHistoryItem(historyEntity)
-                    makeToast("Транзакция добавлена в историю")
-                } else {
+                try {
+                    when {
+                        binding.currencyValueParent.text.isEmpty() -> {
+                            AlertDialog.Builder(requireContext())
+                                .setTitle("Вы ввели пустое значение")
+                                .setMessage("Введите значение в поле ввода, перед тем как осуществить транзакцию")
+                                .setPositiveButton("Хорошо") { _, _ -> }
+                                .create().show()
+                        }
+                        isFresh -> {
+                            val historyEntity = HistoryEntity(
+                                id = 0,
+                                currencyNameChild = binding.currencyTextChild.text.toString(),
+                                currencyNameParent = binding.currencyTextParent.text.toString(),
+                                currencyValueChild = binding.currencyValueChild.text.toString()
+                                    .toDouble(),
+                                currencyValueParent = binding.currencyValueParent.text.toString()
+                                    .toDouble(),
+                                date = LocalDateTime.now()
+                            )
+                            viewModel.addHistoryItem(historyEntity)
+                            makeToast("Транзакция добавлена в историю")
+                        }
+                        else -> {
+                            AlertDialog.Builder(requireContext())
+                                .setTitle("Обновить данные")
+                                .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
+                                .setPositiveButton("Хорошо") { _, _ ->
+                                    viewModel.getCurrency()
+                                    makeToast("Данные обновлены. Если вы согласны с курсом, нажмите на кнопку ещё раз")
+                                }.create().show()
+                        }
+                    }
+                } catch (e: Exception) {
                     AlertDialog.Builder(requireContext())
-                        .setTitle("Обновить данные")
-                        .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
-                        .setPositiveButton("Хорошо") { _, _ ->
-                            viewModel.getCurrency()
-                            makeToast("Данные обновлены. Если вы согласны с курсом, нажмите на кнопку ещё раз")
-                        }.create().show()
+                        .setTitle("Вы ввели недопустимое значение")
+                        .setMessage("Введите корректное значение в поле ввода, перед тем как осуществить транзакцию")
+                        .setPositiveButton("Хорошо") { _, _ -> }
+                        .create().show()
                 }
+
+
             }
         }
         return binding.root

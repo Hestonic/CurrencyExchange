@@ -1,10 +1,8 @@
 package com.example.itogovoe.data.sources
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesUiEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 
@@ -29,7 +27,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.addInfo(info)
     }
 
-    fun readAllInfo() : InfoEntity {
+    fun readAllInfo(): InfoEntity {
         return currencyDao.readAllInfo()
     }
 
@@ -43,7 +41,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.addCurrencyItem(currencies)
     }
 
-    fun readAllCurrencies() : List<CurrenciesEntity> {
+    fun readAllCurrencies(): List<CurrenciesEntity> {
         return currencyDao.readAllCurrencies()
     }
 
@@ -52,12 +50,16 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
     }
 
 
-    // CurrenciesUiEntity
-    suspend fun addCurrencyUiItem(currenciesUi: CurrenciesUiEntity) {
-        currencyDao.addCurrencyUiItem(currenciesUi)
+    /*// CurrenciesUiEntity
+    suspend fun addCurrencyUiItem(currencyDaoEntity: CurrenciesDaoEntity) {
+        currencyDao.addCurrencyUiItem(currencyDaoEntity)
     }
 
-    fun readAllCurrenciesUi() : LiveData<List<CurrenciesUiEntity>> {
+    suspend fun updateCurrencyUiItem(currencyDaoEntity: CurrenciesDaoEntity) {
+        currencyDao.updateCurrencyUiItem(currencyDaoEntity)
+    }
+
+    fun readAllCurrenciesUi(): List<CurrenciesDaoEntity> {
         return currencyDao.readAllCurrenciesUi()
     }
 
@@ -67,6 +69,6 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
 
     fun deleteCurrencyUiItem(name: String) {
         currencyDao.deleteCurrencyUiItem(name)
-    }
+    }*/
 }
 
