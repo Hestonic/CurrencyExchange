@@ -8,7 +8,6 @@ import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.domain.repository.Repository
 import com.example.itogovoe.ui.mapper.CurrencyUiModelMapper
 import com.example.itogovoe.ui.model.CurrencyUiModel
-import com.example.itogovoe.ui.model.FilterUiModel
 import com.example.itogovoe.ui.model.HistoryUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +17,15 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     // TODO: тут происходит фильтрация данных для UI в adapter, тут будет фильтроваться isFavourite со звёздочкой
     val itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
     val historyItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
-    val filterItems: MutableLiveData<List<FilterUiModel>> = MutableLiveData()
+    val filterItems: MutableLiveData<List<String>> = MutableLiveData()
+
+    fun getFilterItems() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getHistory().let {
+                filterItems.postValue(CurrencyUiModelMapper.mapHistoryEntityToFilterList(it))
+            }
+        }
+    }
 
     fun getHistory() {
         viewModelScope.launch(Dispatchers.IO) {

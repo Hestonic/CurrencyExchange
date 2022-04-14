@@ -29,9 +29,12 @@ object CurrencyUiModelMapper {
         }
     }
 
-    /*fun mapHistoryEntityToFilterUiModel(history: List<HistoryDomainModel>): List<FilterUiModel> {
-        return history.map {
-            FilterUiModel(it.)
+    fun mapHistoryEntityToFilterList(history: List<HistoryDomainModel>): List<String> {
+        val filterList = mutableListOf<String>()
+        history.map {
+            filterList.add(it.currencyNameChild)
+            filterList.add(it.currencyNameParent)
         }
-    }*/
+        return filterList.distinct().sorted()
+    }
 }
