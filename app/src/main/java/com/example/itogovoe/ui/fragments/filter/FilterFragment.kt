@@ -1,13 +1,13 @@
 package com.example.itogovoe.ui.fragments.filter
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.R
@@ -15,12 +15,17 @@ import com.example.itogovoe.databinding.FragmentFilterBinding
 import com.example.itogovoe.ui.main.MainViewModel
 import com.example.itogovoe.ui.main.MainViewModelFactory
 import java.time.LocalDateTime
+import java.util.*
 
 class FilterFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: FragmentFilterBinding
     private val adapter = FilterAdapter()
+
+    private var year = 0
+    private var month = 0
+    private var day = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +35,7 @@ class FilterFragment : Fragment() {
         viewModel.getFilterItems()
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,7 +75,32 @@ class FilterFragment : Fragment() {
             renderState(FilterInstance)
         }
 
+        getDateCalendar()
+        dateChooser()
+
         return binding.root
+    }
+
+    private fun getDateCalendar() {
+        val calendar = Calendar.getInstance()
+        year = calendar.get(Calendar.YEAR)
+        month = calendar.get(Calendar.MONTH)
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun dateChooser() {
+        binding.chooseDateFrom.setOnClickListener {
+            DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
+                binding.chooseDateFrom.text = "$mDay.$mMonth.$mYear"
+            }, year, month, day).show()
+        }
+
+        binding.chooseDateTo.setOnClickListener {
+            DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
+                binding.chooseDateTo.text = "$mDay.$mMonth.$mYear"
+            }, year, month, day).show()
+        }
     }
 
     private fun renderState(state: FilterInstance) = with(binding) {
@@ -83,8 +113,6 @@ class FilterFragment : Fragment() {
         if (state.weekColorBg) filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
         else filterWeek.setBackgroundResource(R.drawable.round_bg_filter)
     }
-
-
 }
 
 // TODO: не забыть удалить

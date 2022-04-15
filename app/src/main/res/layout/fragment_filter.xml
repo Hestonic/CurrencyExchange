@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@id/filter_all_time" />
 
     <TextView
-        android:id="@+id/date_choose1"
+        android:id="@+id/choose_date_from"
         style="@style/date_choose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,12 +77,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:text="@string/dash"
-        app:layout_constraintBottom_toBottomOf="@id/date_choose1"
-        app:layout_constraintLeft_toRightOf="@id/date_choose1"
-        app:layout_constraintTop_toTopOf="@id/date_choose1" />
+        app:layout_constraintBottom_toBottomOf="@id/choose_date_from"
+        app:layout_constraintLeft_toRightOf="@id/choose_date_from"
+        app:layout_constraintTop_toTopOf="@id/choose_date_from" />
 
     <TextView
-        android:id="@+id/date_choose2"
+        android:id="@+id/choose_date_to"
         style="@style/date_choose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
         android:layout_marginTop="12dp"
         android:text="@string/currency_word"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/date_choose1" />
+        app:layout_constraintTop_toBottomOf="@id/choose_date_from" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
