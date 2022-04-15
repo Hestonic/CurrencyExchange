@@ -49,28 +49,28 @@ class FilterFragment : Fragment() {
         viewModel.filterItems.observe(viewLifecycleOwner) { filterList -> adapter.setData(filterList) }
 
         binding.filterAllTime.setOnClickListener {
-            FilterInstance.allTimeColorBg = true
-            FilterInstance.monthColorBg = false
-            FilterInstance.weekColorBg = false
-            FilterInstance.dateTo = null
+            FilterInstance.allTimeFilter = true
+            FilterInstance.monthFilter = false
+            FilterInstance.weekFilter = false
+            FilterInstance.rangeFilter = false
             FilterInstance.dateFrom = null
             renderState(FilterInstance)
         }
 
         binding.filterMonth.setOnClickListener {
-            FilterInstance.allTimeColorBg = false
-            FilterInstance.monthColorBg = true
-            FilterInstance.weekColorBg = false
-            FilterInstance.dateTo = LocalDateTime.now()
+            FilterInstance.allTimeFilter = false
+            FilterInstance.monthFilter = true
+            FilterInstance.weekFilter = false
+            FilterInstance.rangeFilter = false
             FilterInstance.dateFrom = LocalDateTime.now().minusMonths(1)
             renderState(FilterInstance)
         }
 
         binding.filterWeek.setOnClickListener {
-            FilterInstance.allTimeColorBg = false
-            FilterInstance.monthColorBg = false
-            FilterInstance.weekColorBg = true
-            FilterInstance.dateTo = LocalDateTime.now()
+            FilterInstance.allTimeFilter = false
+            FilterInstance.monthFilter = false
+            FilterInstance.weekFilter = true
+            FilterInstance.rangeFilter = false
             FilterInstance.dateFrom = LocalDateTime.now().minusDays(7)
             renderState(FilterInstance)
         }
@@ -92,26 +92,48 @@ class FilterFragment : Fragment() {
     private fun dateChooser() {
         binding.chooseDateFrom.setOnClickListener {
             DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
-                binding.chooseDateFrom.text = "$mDay.$mMonth.$mYear"
+                binding.chooseDateFrom.text = "$mYear-$mMonth-$mDay"
+                year = mYear
+                month = mMonth
+                day = mDay
+                FilterInstance.dateFrom = LocalDateTime.of(year, month, day, 0, 0, 1)
+                FilterInstance.allTimeFilter = false
+                FilterInstance.monthFilter = false
+                FilterInstance.weekFilter = false
+                FilterInstance.rangeFilter = true
+                renderState(FilterInstance)
             }, year, month, day).show()
+
         }
 
         binding.chooseDateTo.setOnClickListener {
             DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
-                binding.chooseDateTo.text = "$mDay.$mMonth.$mYear"
+                binding.chooseDateTo.text = "$mYear-$mMonth-$mDay"
+                year = mYear
+                month = mMonth
+                day = mDay
+                FilterInstance.dateTo = LocalDateTime.of(year, month, day, 23, 59, 59)
+                renderState(FilterInstance)
             }, year, month, day).show()
+
         }
     }
 
     private fun renderState(state: FilterInstance) = with(binding) {
-        if (state.allTimeColorBg) filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)
+        if (state.allTimeFilter) filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)
         else filterAllTime.setBackgroundResource(R.drawable.round_bg_filter)
 
-        if (state.monthColorBg) filterMonth.setBackgroundResource(R.drawable.round_bg_filter_selected)
+        if (state.monthFilter) filterMonth.setBackgroundResource(R.drawable.round_bg_filter_selected)
         else filterMonth.setBackgroundResource(R.drawable.round_bg_filter)
 
-        if (state.weekColorBg) filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
+        if (state.weekFilter) filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
         else filterWeek.setBackgroundResource(R.drawable.round_bg_filter)
+
+        binding.chooseDateTo.text = FilterInstance.dateTo.toLocalDate().toString()
+        if (FilterInstance.dateFrom != null)
+            binding.chooseDateFrom.text = FilterInstance.dateFrom?.toLocalDate().toString()
+        else
+            binding.chooseDateFrom.text = "Выбрать дату"
     }
 }
 

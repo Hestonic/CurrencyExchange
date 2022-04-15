@@ -1,5 +1,6 @@
 package com.example.itogovoe.ui.fragments.history
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isGone
@@ -58,12 +59,19 @@ class HistoryFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderState(state: FilterInstance) {
-        binding.filterAllTime.isGone = !state.allTimeColorBg
-        binding.filterMonth.isGone = !state.monthColorBg
-        binding.filterWeek.isGone = !state.weekColorBg
-        if ((FilterInstance.dateTo != null) and (FilterInstance.dateFrom != null)) {
-            searchDatabase(FilterInstance.dateTo!!, FilterInstance.dateFrom!!)
+        binding.filterAllTime.isGone = !state.allTimeFilter
+        binding.filterMonth.isGone = !state.monthFilter
+        binding.filterWeek.isGone = !state.weekFilter
+        if (state.rangeFilter) {
+            binding.filterTimeRange.isGone = !state.rangeFilter
+            val dateFrom = state.dateFrom?.toLocalDate()
+            val dateTo = state.dateTo.toLocalDate()
+            binding.filterTimeRange.text = "$dateFrom - $dateTo"
+        }
+        if (FilterInstance.dateFrom != null) {
+            searchDatabase(FilterInstance.dateTo, FilterInstance.dateFrom!!)
         }
     }
 
