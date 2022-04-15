@@ -40,11 +40,4 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
         this.currencyFilterList = filterList
         notifyDataSetChanged()
     }
-
-    fun setFilter(filter: Filters) {
-        when(filter) {
-            is Filters.CurrencyFilter -> Log.d("filter_tag", "CurrencyFilter")
-            is Filters.DateFilter -> Log.d("filter_tag", "RangeFilter")
-        }
-    }
 }

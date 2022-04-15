@@ -5,6 +5,7 @@ import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
+import kotlinx.coroutines.flow.Flow
 
 class LocalDataSource(private val currencyDao: CurrencyDao) {
 
@@ -19,6 +20,10 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
 
     fun deleteAllHistory() {
         currencyDao.deleteAllHistory()
+    }
+
+    fun searchDateHistory(dateTo: Long, dateFrom: Long): LiveData<List<HistoryEntity>> {
+        return currencyDao.searchDateHistory(dateTo, dateFrom)
     }
 
 

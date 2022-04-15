@@ -1,6 +1,7 @@
 package com.example.itogovoe.domain.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
@@ -9,6 +10,7 @@ import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.Currencies
 import com.example.itogovoe.domain.model.HistoryDomainModel
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -86,7 +88,7 @@ class Repository(
         return CurrencyDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
     }
 
-    /*fun deleteCurrencyUiItem(name: String) {
-        localDataSource.deleteCurrencyUiItem(name)
-    }*/
+    fun searchDateHistory(dateTo: Long, dateFrom: Long): LiveData<List<HistoryEntity>> {
+        return localDataSource.searchDateHistory(dateTo, dateFrom)
+    }
 }
