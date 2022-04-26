@@ -46,7 +46,18 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
 
-            if (currencyUiModel.isNotChecked) {
+
+        }
+
+        private fun swapItem(fromPosition: Int, toPosition: Int) {
+            Collections.swap(currencyList, fromPosition, toPosition)
+            notifyItemMoved(fromPosition, toPosition)
+        }
+    }
+}
+
+// TODO: не забыть удалить
+/*if (currencyUiModel.isChecked) {
                 currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
             } else {
                 currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
@@ -57,7 +68,7 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
                     base = currencyUiModel.name
                     currencyParentName = currencyUiModel.name
                     currencyParentValue = currencyUiModel.value
-                    currencyUiModel.isNotChecked = false
+                    currencyUiModel.isChecked = false
                     selectedPosition = absoluteAdapterPosition
                     swapItem(selectedPosition, 0)
                     Toast.makeText(itemView.context, "Выбрана валюта $base", Toast.LENGTH_SHORT)
@@ -72,7 +83,7 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
                     base = "EUR"
                     currencyParentName = null
                     currencyChildName = "EUR"
-                    currencyUiModel.isNotChecked = true
+                    currencyUiModel.isChecked = true
                     swapItem(0, selectedPosition)
                     selectedPosition = -1
                     Toast.makeText(
@@ -101,12 +112,4 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
                     )
                     currencyLayout.findNavController().navigate(action)
                 }
-            }
-        }
-
-        private fun swapItem(fromPosition: Int, toPosition: Int) {
-            Collections.swap(currencyList, fromPosition, toPosition)
-            notifyItemMoved(fromPosition, toPosition)
-        }
-    }
-}
+            }*/

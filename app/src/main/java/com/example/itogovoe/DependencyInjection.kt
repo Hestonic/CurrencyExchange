@@ -5,7 +5,7 @@ import com.example.itogovoe.data.api.RetrofitInstance
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
-import com.example.itogovoe.data.sources.local_source.database.CurrencyDatabase
+import com.example.itogovoe.data.sources.local_source.CurrencyDatabase
 import com.example.itogovoe.domain.repository.Repository
 
 class DependencyInjection {

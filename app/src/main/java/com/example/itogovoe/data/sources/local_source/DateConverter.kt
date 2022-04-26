@@ -1,4 +1,4 @@
-package com.example.itogovoe.data.sources.local_source.converters
+package com.example.itogovoe.data.sources.local_source
 
 import androidx.room.TypeConverter
 import java.time.Instant

@@ -2,56 +2,54 @@ package com.example.itogovoe.domain.mapper
 
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
-import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
-import com.example.itogovoe.domain.model.Currencies
-import com.example.itogovoe.domain.model.Currency
-import com.example.itogovoe.domain.model.HistoryDomainModel
+import com.example.itogovoe.domain.model.CurrencyDtoModel
 import retrofit2.Response
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 
 object CurrencyDtoMapper {
 
-    fun mapResponseToDomainModel(response: Response<CurrencyResponse>): Currencies {
-        val localDateTime = response.body()?.timestamp?.let {
-            Instant.ofEpochSecond(it)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
+    fun mapCurrencyResponseToCurrencyDomainModel(response: Response<CurrencyResponse>): List<CurrencyDtoModel>? {
+        return response.body()?.rates?.map {
+            CurrencyDtoModel(
+                lastUsedAt = null,
+                updatedAt = response.body()?.timestamp?.let { timestamp ->
+                    Instant.ofEpochSecond(timestamp)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime()
+                },
+                name = it.key,
+                value = it.value,
+                isFavourite = null
+            )
         }
-
-        val rates: MutableList<Currency> = mutableListOf()
-        response.body()?.rates?.let {
-            for ((name, value) in it) rates.add(Currency(name, value))
-        }
-
-        response.body()?.base?.let {
-            return Currencies(localDateTime, it, rates)
-        }
-
-        return Currencies(null, null, null)
     }
 
-    fun mapDomainModelToCurrenciesEntity(currencies: Currencies): List<CurrenciesEntity>? {
-        return currencies.rates?.map { CurrenciesEntity(0, it.name, it.value) }
+    fun mapCurrencyDtoModelToCurrenciesEntityList(currencies: List<CurrencyDtoModel>?): List<CurrenciesEntity>? {
+        return currencies?.map {
+            CurrenciesEntity(
+                //  TODO: Избавитсья от !!
+                name = it.name!!,
+                value = it.value!!,
+                createdAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now(),
+                lastUsedAt = LocalDateTime.now(),
+                isFavourite = false,
+            )
+        }
     }
 
-    fun mapDomainModelToInfoEntity(currencies: Currencies): InfoEntity {
-        return InfoEntity(
-            id = 0,
-            lastUploadDate = currencies.date,
-            base = currencies.base
-        )
-    }
-
-    fun mapCurrenciesEntityToDomainModel(
-        currenciesEntity: List<CurrenciesEntity>?,
-        infoEntity: InfoEntity
-    ): Currencies {
-        return Currencies(
-            date = infoEntity.lastUploadDate,
-            base = infoEntity.base,
-            rates = currenciesEntity?.map { Currency(it.name, it.value) }
-        )
+    // TODO: Избавиться от !!
+    fun mapCurrenciesEntityToDomainModel(currenciesEntity: List<CurrenciesEntity>?): List<CurrencyDtoModel> {
+        return currenciesEntity!!.map {
+            CurrencyDtoModel(
+                lastUsedAt = it.lastUsedAt,
+                updatedAt = it.updatedAt,
+                name = it.name,
+                value = it.value,
+                isFavourite = it.isFavourite,
+            )
+        }
     }
 }

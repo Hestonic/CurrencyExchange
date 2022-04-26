@@ -1,19 +1,19 @@
 package com.example.itogovoe.ui.mapper
 
-import com.example.itogovoe.domain.model.Currencies
-import com.example.itogovoe.domain.model.HistoryDomainModel
+import com.example.itogovoe.domain.model.CurrencyDtoModel
 import com.example.itogovoe.ui.model.CurrencyUiModel
-import com.example.itogovoe.ui.model.HistoryUiModel
 
 object CurrencyUiModelMapper {
 
-    fun mapDomainModelToUiModel(currencies: Currencies): List<CurrencyUiModel>? {
-        return currencies.rates?.map {
+    // TODO: Избавиться от !!
+    fun mapDomainModelToUiModel(currencies: List<CurrencyDtoModel>): List<CurrencyUiModel>? {
+        return currencies.map {
             CurrencyUiModel(
-                isNotChecked = true,
-                isFavourite = false,
-                name = it.name,
-                value = it.value
+                isChecked = false,
+                isFavourite = it.isFavourite!!,
+                lastUsedAt = it.lastUsedAt!!,
+                name = it.name!!,
+                value = it.value!!
             )
         }
     }
