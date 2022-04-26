@@ -2,7 +2,6 @@ package com.example.itogovoe.data.sources.local_source.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
 
 @Entity
 data class CurrenciesEntity(

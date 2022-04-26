@@ -36,21 +36,12 @@ object CurrencyDtoMapper {
         return currencies.rates?.map { CurrenciesEntity(0, it.name, it.value) }
     }
 
-    // TODO: Избавиться от !!
     fun mapDomainModelToInfoEntity(currencies: Currencies): InfoEntity {
-        return InfoEntity(0, currencies.date!!, currencies.base!!)
-    }
-
-    fun mapHistoryEntityToDomainModel(history: List<HistoryEntity>): List<HistoryDomainModel> {
-        return history.map {
-            HistoryDomainModel(
-                date = it.date,
-                currencyNameParent = it.currencyNameParent,
-                currencyValueParent = it.currencyValueParent,
-                currencyNameChild = it.currencyNameChild,
-                currencyValueChild = it.currencyValueChild,
-            )
-        }
+        return InfoEntity(
+            id = 0,
+            lastUploadDate = currencies.date,
+            base = currencies.base
+        )
     }
 
     fun mapCurrenciesEntityToDomainModel(

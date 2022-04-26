@@ -13,13 +13,13 @@ import androidx.navigation.fragment.navArgs
 import com.example.itogovoe.App
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.databinding.FragmentExchangeBinding
-import com.example.itogovoe.ui.main.MainViewModel
-import com.example.itogovoe.ui.main.MainViewModelFactory
+import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel
+import com.example.itogovoe.ui.fragments.currency.CurrencyViewModelFactory
 import java.time.LocalDateTime
 
 class ExchangeFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: CurrencyViewModel
     private lateinit var binding: FragmentExchangeBinding
     private val args by navArgs<ExchangeFragmentArgs>()
     private var coefficient: Float = 0.0f
@@ -28,7 +28,6 @@ class ExchangeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         initViewModel()
 
-        val base = args.base
         coefficient = calculateCrossCoefficient(
             args.currencyParentValue,
             args.currencyChildValue,
@@ -140,7 +139,7 @@ class ExchangeFragment : Fragment() {
     }
 
     private fun makeToast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     private fun calculateCrossCoefficient(
@@ -153,7 +152,7 @@ class ExchangeFragment : Fragment() {
 
     private fun initViewModel() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        val viewModelFactory = CurrencyViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
     }
 }

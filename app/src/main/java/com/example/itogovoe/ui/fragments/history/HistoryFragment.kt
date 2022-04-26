@@ -3,33 +3,26 @@ package com.example.itogovoe.ui.fragments.history
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.R
-import com.example.itogovoe.data.sources.local_source.converters.DateConverter
 import com.example.itogovoe.databinding.FragmentHistoryBinding
-import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
-import com.example.itogovoe.ui.fragments.filter.FilterInstance
-import com.example.itogovoe.ui.main.MainViewModel
-import com.example.itogovoe.ui.main.MainViewModelFactory
-import com.example.itogovoe.ui.mapper.CurrencyUiModelMapper
-import java.time.LocalDateTime
+import com.example.itogovoe.ui.main.FilterInstance
+import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel
+import com.example.itogovoe.ui.fragments.currency.CurrencyViewModelFactory
 
 class HistoryFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: CurrencyViewModel
     private lateinit var binding: FragmentHistoryBinding
     private val adapter = HistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        createViewModel()
         viewModel.getHistory()
     }
 
@@ -38,12 +31,38 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        renderState(FilterInstance)
+        viewModel.historySearchItems.observe(viewLifecycleOwner) { it.let { adapter.setData(it) } }
+        viewModel.historyItems.observe(viewLifecycleOwner) { history -> adapter.setData(history) }
+        viewModel.getData()
         setHasOptionsMenu(true)
+        setupRecycler()
+        return binding.root
+    }
+
+    private fun setupRecycler() {
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.historyItems.observe(viewLifecycleOwner) { history -> adapter.setData(history) }
-        return binding.root
+    }
+
+    private fun createViewModel() {
+        val repository = (requireActivity().application as App).dependencyInjection.repository
+        val viewModelFactory = CurrencyViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getData(state: FilterInstance) {
+//        binding.filterAllTime.isGone = !state.allTimeFilter
+//        binding.filterMonth.isGone = !state.monthFilter
+//        binding.filterWeek.isGone = !state.weekFilter
+//        binding.filterCurrencyName.isGone = state.selectedCurrencies.isEmpty()
+
+//        if (state.rangeFilter) {
+//            binding.filterTimeRange.isGone = !state.rangeFilter
+//            val dateFrom = state.dateFrom?.toLocalDate()
+//            val dateTo = state.dateTo.toLocalDate()
+//            binding.filterTimeRange.text = "$dateFrom - $dateTo"
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -58,54 +77,4 @@ class HistoryFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    @SuppressLint("SetTextI18n")
-    private fun renderState(state: FilterInstance) {
-        binding.filterAllTime.isGone = !state.allTimeFilter
-        binding.filterMonth.isGone = !state.monthFilter
-        binding.filterWeek.isGone = !state.weekFilter
-        if (state.rangeFilter) {
-            binding.filterTimeRange.isGone = !state.rangeFilter
-            val dateFrom = state.dateFrom?.toLocalDate()
-            val dateTo = state.dateTo.toLocalDate()
-            binding.filterTimeRange.text = "$dateFrom - $dateTo"
-        }
-        if (FilterInstance.dateFrom != null) {
-            searchDatabase(FilterInstance.dateTo, FilterInstance.dateFrom!!)
-        }
-    }
-
-    private fun searchDatabase(dateTo: LocalDateTime, dateFrom: LocalDateTime) {
-        val dateToTimestamp = DateConverter().localDateTimeToTimestamp(dateTo)
-        val dateFromTimestamp = DateConverter().localDateTimeToTimestamp(dateFrom)
-        viewModel.searchDateHistory(dateFromTimestamp, dateToTimestamp)
-            .observe(viewLifecycleOwner) {
-                it.let {
-                    adapter.setData(
-                        CurrencyUiModelMapper.mapHistoryEntityToUiModel(
-                            CurrencyDtoMapper.mapHistoryEntityToDomainModel(it)
-                        )
-                    )
-                }
-            }
-    }
-
 }
-
-// TODO: Не забыть удалить
-/*viewModel.filterState.observe(viewLifecycleOwner) { filterState -> renderState(filterState)}
-
-        if (viewModel.filterState.value == null) {
-            viewModel.initFilterState(
-                FilterState(
-                    allTimeColorBg = true,
-                    monthColorBg = false,
-                    weekColorBg = false,
-                    selectedCurrencies = mutableListOf(),
-                    dateTo = null,
-                    dateFrom = null,
-                )
-            )
-        }*/
-
-/**/

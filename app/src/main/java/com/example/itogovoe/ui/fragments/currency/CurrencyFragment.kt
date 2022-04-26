@@ -1,4 +1,4 @@
-package com.example.itogovoe.ui.fragments.home
+package com.example.itogovoe.ui.fragments.currency
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,20 +11,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.databinding.FragmentHomeBinding
-import com.example.itogovoe.ui.main.MainViewModel
-import com.example.itogovoe.ui.main.MainViewModelFactory
 
-class HomeFragment : Fragment() {
+class CurrencyFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: CurrencyViewModel
     private val adapter = CurrencyAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        val viewModelFactory = CurrencyViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
         viewModel.getCurrency()
     }
 

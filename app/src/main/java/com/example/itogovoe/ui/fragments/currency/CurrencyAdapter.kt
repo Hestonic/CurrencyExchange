@@ -1,5 +1,6 @@
-package com.example.itogovoe.ui.fragments.home
+package com.example.itogovoe.ui.fragments.currency
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -41,6 +42,7 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
     inner class HomeViewHolder(private val binding: ItemCurrencyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("NotifyDataSetChanged")
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
 
@@ -85,13 +87,13 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
             currencyLayout.setOnClickListener {
                 if (currencyParentName == null) {
-                    val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
+                    val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
                         currencyChildName = currencyUiModel.name,
                         currencyChildValue = currencyUiModel.value.toFloat(),
                     )
                     currencyLayout.findNavController().navigate(action)
                 } else {
-                    val action = HomeFragmentDirections.actionHomeFragmentToExchangeFragment(
+                    val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
                         currencyChildName = currencyUiModel.name,
                         currencyChildValue = currencyUiModel.value.toFloat(),
                         currencyParentName = currencyParentName!!,

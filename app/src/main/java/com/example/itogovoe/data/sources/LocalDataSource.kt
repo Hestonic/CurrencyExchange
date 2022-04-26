@@ -1,11 +1,12 @@
 package com.example.itogovoe.data.sources
 
-import androidx.lifecycle.LiveData
+import android.util.Log
+import com.example.itogovoe.data.sources.local_source.converters.DateConverter
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
-import kotlinx.coroutines.flow.Flow
+import java.time.LocalDateTime
 
 class LocalDataSource(private val currencyDao: CurrencyDao) {
 
@@ -22,8 +23,11 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.deleteAllHistory()
     }
 
-    fun searchDateHistory(dateTo: Long, dateFrom: Long): LiveData<List<HistoryEntity>> {
-        return currencyDao.searchDateHistory(dateTo, dateFrom)
+    fun searchDateHistory(dateFrom: LocalDateTime, dateTo: LocalDateTime): List<HistoryEntity> {
+        val dateFromTimestamp = DateConverter().localDateTimeToTimestamp(dateFrom)
+        val dateToTimestamp = DateConverter().localDateTimeToTimestamp(dateTo)
+        Log.d("date_timestamp_tag", "dateFrom $dateFromTimestamp, dateTo $dateToTimestamp")
+        return currencyDao.searchDateHistory(dateFromTimestamp, dateToTimestamp)
     }
 
 
@@ -53,27 +57,5 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
     fun deleteAllCurrencies() {
         currencyDao.deleteAllCurrencies()
     }
-
-
-    /*// CurrenciesUiEntity
-    suspend fun addCurrencyUiItem(currencyDaoEntity: CurrenciesDaoEntity) {
-        currencyDao.addCurrencyUiItem(currencyDaoEntity)
-    }
-
-    suspend fun updateCurrencyUiItem(currencyDaoEntity: CurrenciesDaoEntity) {
-        currencyDao.updateCurrencyUiItem(currencyDaoEntity)
-    }
-
-    fun readAllCurrenciesUi(): List<CurrenciesDaoEntity> {
-        return currencyDao.readAllCurrenciesUi()
-    }
-
-    fun deleteAllCurrenciesUi() {
-        currencyDao.deleteAllCurrenciesUi()
-    }
-
-    fun deleteCurrencyUiItem(name: String) {
-        currencyDao.deleteCurrencyUiItem(name)
-    }*/
 }
 

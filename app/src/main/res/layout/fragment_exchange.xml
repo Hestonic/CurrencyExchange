@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -27,12 +27,12 @@
             android:id="@+id/currencyValueParent"
             style="@style/currency"
             android:layout_width="0dp"
-            android:digits="0123456789."
-            android:inputType="numberDecimal|numberSigned"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
             android:layout_weight="1"
+            android:digits="0123456789."
             android:importantForAutofill="no"
+            android:inputType="numberDecimal|numberSigned"
             android:maxLength="20"
             android:maxLines="1"
             tools:ignore="LabelFor,TextFields" />

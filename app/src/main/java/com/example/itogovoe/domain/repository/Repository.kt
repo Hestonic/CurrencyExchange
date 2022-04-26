@@ -1,16 +1,15 @@
 package com.example.itogovoe.domain.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.data.sources.local_source.entities.InfoEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
+import com.example.itogovoe.domain.mapper.HistoryDtoMapper
 import com.example.itogovoe.domain.model.Currencies
 import com.example.itogovoe.domain.model.HistoryDomainModel
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -25,47 +24,65 @@ class Repository(
     private lateinit var domainModel: Currencies
     private lateinit var infoEntity: InfoEntity
 
+    // TODO: Разбить getCurrencies() на более мелкие функции
     suspend fun getCurrencies(): Currencies? {
         try {
+
+            /*val localData = readDataFromDatabase()
+            when {
+                checkIfDataIsEmpty(localData) -> {
+                    val dataFromRemote = getDataFromRemote()
+                    localDataSource.saveData(dataFromRemote)
+                }
+                isNotFresh() -> {
+                    val dataFromRemote = getDataFromRemote()
+                    localDataSource.saveData(dataFromRemote)
+                }
+                else -> {
+                    return localData
+                }
+            }
+*/
+
             // Получаем данные из локального хранилища
-            /*localDataSource.deleteAllCurrencies()
-            localDataSource.deleteAllInfo()
-            localDataSource.deleteAllHistory()*/
-            val localCurrencies = localDataSource.readAllCurrencies()
-            // Если БД пустая - берём данные из сети и загружаем в БД
-            if (localCurrencies.isEmpty()) {
-                response = remoteDataSource.getCurrencies()
-                domainModel = CurrencyDtoMapper.mapResponseToDomainModel(response)
-                val currenciesEntity =
-                    CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
-                currenciesEntity?.forEach { localDataSource.addCurrencyItem(it) }
-                infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
-                localDataSource.addInfo(infoEntity)
-                Log.d("repository_return_tag", "добавляем данные в БД")
-            } else if (localCurrencies.isNotEmpty()) {
-                // Проверяем данные на "старость"
-                return if (isFresh()) {
-                    Log.d("repository_return_tag", "вернули локальные данные")
-                    CurrencyDtoMapper.mapCurrenciesEntityToDomainModel(localCurrencies, infoEntity)
-                } else {
-                    Log.d("repository_return_tag", "вернули данные из сети")
+                /*localDataSource.deleteAllCurrencies()
+                localDataSource.deleteAllInfo()
+                localDataSource.deleteAllHistory()*/
+                val localCurrencies = localDataSource.readAllCurrencies()
+                // Если БД пустая - берём данные из сети и загружаем в БД
+                if (localCurrencies.isEmpty()) {
                     response = remoteDataSource.getCurrencies()
                     domainModel = CurrencyDtoMapper.mapResponseToDomainModel(response)
-                    // удалили старые данные
-                    localDataSource.deleteAllCurrencies()
-                    localDataSource.deleteAllInfo()
-                    // добавили новые
-                    infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
                     val currenciesEntity =
                         CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
                     currenciesEntity?.forEach { localDataSource.addCurrencyItem(it) }
+                    infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
                     localDataSource.addInfo(infoEntity)
-                    // вернули актуальные данные
-                    domainModel
+                    Log.d("repository_return_tag", "добавляем данные в БД")
+                } else if (localCurrencies.isNotEmpty()) {
+                    // Проверяем данные на "старость"
+                    return if (isFresh()) {
+                        Log.d("repository_return_tag", "вернули локальные данные")
+                        CurrencyDtoMapper.mapCurrenciesEntityToDomainModel(localCurrencies, infoEntity)
+                    } else {
+                        Log.d("repository_return_tag", "вернули данные из сети")
+                        response = remoteDataSource.getCurrencies()
+                        domainModel = CurrencyDtoMapper.mapResponseToDomainModel(response)
+                        // удалили старые данные
+                        localDataSource.deleteAllCurrencies()
+                        localDataSource.deleteAllInfo()
+                        // добавили новые
+                        infoEntity = CurrencyDtoMapper.mapDomainModelToInfoEntity(domainModel)
+                        val currenciesEntity =
+                            CurrencyDtoMapper.mapDomainModelToCurrenciesEntity(domainModel)
+                        currenciesEntity?.forEach { localDataSource.addCurrencyItem(it) }
+                        localDataSource.addInfo(infoEntity)
+                        // вернули актуальные данные
+                        domainModel
+                    }
                 }
-            }
-            response = remoteDataSource.getCurrencies()
-            return CurrencyDtoMapper.mapResponseToDomainModel(response)
+                response = remoteDataSource.getCurrencies()
+                return CurrencyDtoMapper.mapResponseToDomainModel(response)
         } catch (e: Exception) {
             e.printStackTrace()
             return null
@@ -85,10 +102,18 @@ class Repository(
     }
 
     fun getHistory(): List<HistoryDomainModel> {
-        return CurrencyDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
+        return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
     }
 
-    fun searchDateHistory(dateTo: Long, dateFrom: Long): LiveData<List<HistoryEntity>> {
-        return localDataSource.searchDateHistory(dateTo, dateFrom)
+    fun searchDateHistory(
+        dateFrom: LocalDateTime,
+        dateTo: LocalDateTime
+    ): List<HistoryDomainModel> {
+        return HistoryDtoMapper.mapHistoryEntityToDomainModel(
+            localDataSource.searchDateHistory(dateFrom, dateTo)
+        )
     }
+    /*fun searchDateHistory(query: SupportSQLiteQuery): LiveData<List<HistoryEntity>> {
+        return localDataSource.searchDateHistory(query)
+    }*/
 }

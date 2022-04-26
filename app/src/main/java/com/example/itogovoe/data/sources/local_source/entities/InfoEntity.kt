@@ -7,6 +7,6 @@ import java.time.LocalDateTime
 @Entity
 data class InfoEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val lastUploadDate: LocalDateTime,
-    val base: String
+    val lastUploadDate: LocalDateTime?,
+    val base: String?
 )

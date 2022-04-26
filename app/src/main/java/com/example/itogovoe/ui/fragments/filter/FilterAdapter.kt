@@ -1,12 +1,12 @@
 package com.example.itogovoe.ui.fragments.filter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.itogovoe.R
 import com.example.itogovoe.databinding.ItemCurrencyFilterBinding
-import com.example.itogovoe.ui.model.HistoryUiModel
+import com.example.itogovoe.ui.main.FilterInstance
 
 class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
 
@@ -30,8 +30,24 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
 
     inner class FilterViewHolder(private val binding: ItemCurrencyFilterBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("NotifyDataSetChanged")
         fun bind(currency: String) = binding.run {
             currencyName.text = currency
+            // TODO:
+            /*if (FilterInstance.selectedCurrencies.contains(currencyName.text.toString())) {
+                currencyFilterLayout.setBackgroundResource(R.drawable.round_bg_filter_selected)
+            } else {
+                currencyFilterLayout.setBackgroundResource(R.drawable.round_bg_filter)
+            }
+
+            binding.currencyFilterLayout.setOnClickListener {
+                if (FilterInstance.selectedCurrencies.contains(currencyName.text.toString()))
+                    FilterInstance.selectedCurrencies.remove(currencyName.text.toString())
+                else
+                    FilterInstance.selectedCurrencies.add(currencyName.text.toString())
+//                Log.d("filter_adapter_tag", FilterInstance.selectedCurrencies.toString())
+                notifyDataSetChanged()
+            }*/
         }
     }
 

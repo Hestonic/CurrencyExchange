@@ -19,4 +19,5 @@
     <string name="apply">Применить</string>
     <string name="filter_time_range">В выбранном промежутке</string>
     <string name="filter_currency_name">По выбранным валютам</string>
+    <string name="date_choose">Выбрать дату</string>
 </resources>
