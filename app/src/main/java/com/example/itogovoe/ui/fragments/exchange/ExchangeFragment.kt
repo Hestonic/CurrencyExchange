@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 
 class ExchangeFragment : Fragment() {
 
-    private lateinit var viewModel: CurrencyViewModel
+    private lateinit var viewModel: ExchangeViewModel
     private lateinit var binding: FragmentExchangeBinding
     private val args by navArgs<ExchangeFragmentArgs>()
     private var coefficient: Float = 0.0f
@@ -152,7 +152,7 @@ class ExchangeFragment : Fragment() {
 
     private fun initViewModel() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = CurrencyViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
+        val viewModelFactory = ExchangeViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[ExchangeViewModel::class.java]
     }
 }

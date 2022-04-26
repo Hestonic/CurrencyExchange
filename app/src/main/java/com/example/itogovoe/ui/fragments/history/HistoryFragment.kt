@@ -16,13 +16,13 @@ import com.example.itogovoe.ui.fragments.currency.CurrencyViewModelFactory
 
 class HistoryFragment : Fragment() {
 
-    private lateinit var viewModel: CurrencyViewModel
+    private lateinit var viewModel: HistoryViewModel
     private lateinit var binding: FragmentHistoryBinding
     private val adapter = HistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        createViewModel()
+        initViewModel()
         viewModel.getHistory()
     }
 
@@ -44,10 +44,10 @@ class HistoryFragment : Fragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
     }
 
-    private fun createViewModel() {
+    private fun initViewModel() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = CurrencyViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
+        val viewModelFactory = HistoryViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[HistoryViewModel::class.java]
     }
 
     @SuppressLint("SetTextI18n")

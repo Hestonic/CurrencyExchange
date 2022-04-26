@@ -10,13 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.databinding.FragmentFilterBinding
-import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel
-import com.example.itogovoe.ui.fragments.currency.CurrencyViewModelFactory
 import java.util.*
 
 class FilterFragment : Fragment() {
 
-    private lateinit var viewModel: CurrencyViewModel
+    private lateinit var viewModel: FilterViewModel
     private lateinit var binding: FragmentFilterBinding
     private val adapter = FilterAdapter()
 
@@ -27,8 +25,8 @@ class FilterFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = CurrencyViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
+        val viewModelFactory = FilterViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[FilterViewModel::class.java]
         viewModel.getFilterItems()
     }
 

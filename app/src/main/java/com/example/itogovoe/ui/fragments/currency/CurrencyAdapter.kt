@@ -45,8 +45,7 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         @SuppressLint("NotifyDataSetChanged")
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
-
-
+            // TODO: Отображение валют из вьюМодел
         }
 
         private fun swapItem(fromPosition: Int, toPosition: Int) {
