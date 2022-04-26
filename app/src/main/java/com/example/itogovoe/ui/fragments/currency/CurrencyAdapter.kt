@@ -15,13 +15,6 @@ import java.util.*
 class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
     var currencyList: List<CurrencyUiModel> = emptyList()
-    private var base = "EUR"
-    private var currencyParentName: String? = null
-    private var currencyChildName = "EUR"
-    private var currencyParentValue = 1.0
-    private var currencyChildValue = 1.0
-    private var selectedPosition = -1
-
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -52,6 +45,12 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
             Collections.swap(currencyList, fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(currencyList: List<CurrencyUiModel>) {
+        this.currencyList = currencyList
+        notifyDataSetChanged()
     }
 }
 

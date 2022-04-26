@@ -17,6 +17,7 @@ import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel
 import com.example.itogovoe.ui.fragments.currency.CurrencyViewModelFactory
 import java.time.LocalDateTime
 
+// TODO: сделать поаккуратнее
 class ExchangeFragment : Fragment() {
 
     private lateinit var viewModel: ExchangeViewModel

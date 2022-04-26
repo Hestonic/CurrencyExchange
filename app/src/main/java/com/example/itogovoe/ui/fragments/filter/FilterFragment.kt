@@ -24,9 +24,7 @@ class FilterFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = FilterViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[FilterViewModel::class.java]
+        initViewModel()
         viewModel.getFilterItems()
     }
 
@@ -37,9 +35,7 @@ class FilterFragment : Fragment() {
     ): View {
         binding = FragmentFilterBinding.inflate(inflater, container, false)
         //renderState(FilterInstance)
-        binding.recyclerview.adapter = adapter
-        binding.recyclerview.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        setupRecycler()
 
         viewModel.filterItems.observe(viewLifecycleOwner) { filterList -> adapter.setData(filterList) }
 
@@ -66,6 +62,18 @@ class FilterFragment : Fragment() {
         year = calendar.get(Calendar.YEAR)
         month = calendar.get(Calendar.MONTH)
         day = calendar.get(Calendar.DAY_OF_MONTH)
+    }
+
+    private fun initViewModel() {
+        val repository = (requireActivity().application as App).dependencyInjection.repository
+        val viewModelFactory = FilterViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[FilterViewModel::class.java]
+    }
+
+    private fun setupRecycler() {
+        binding.recyclerview.adapter = adapter
+        binding.recyclerview.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
     /*@SuppressLint("SetTextI18n")
