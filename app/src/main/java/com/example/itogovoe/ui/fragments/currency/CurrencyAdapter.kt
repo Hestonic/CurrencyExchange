@@ -12,9 +12,10 @@ import com.example.itogovoe.ui.model.CurrencyUiModel
 import java.util.*
 
 
-class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
+class CurrencyAdapter(private val listener: CurrencyPassClick) :
+    RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
-    var currencyList: List<CurrencyUiModel> = emptyList()
+    var currencyList: List<CurrencyUiModel> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,12 +39,52 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         @SuppressLint("NotifyDataSetChanged")
         fun bind(currencyUiModel: CurrencyUiModel) = binding.run {
             currency.text = currencyUiModel.name
-            // TODO: Отображение валют из вьюМодел
-        }
 
-        private fun swapItem(fromPosition: Int, toPosition: Int) {
-            Collections.swap(currencyList, fromPosition, toPosition)
-            notifyItemMoved(fromPosition, toPosition)
+            if (currencyUiModel.isFavourite) star.setBackgroundResource(R.drawable.ic_star_rate)
+            else star.setBackgroundResource(R.drawable.ic_star_outline)
+
+            if (currencyUiModel.isChecked) currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
+            else currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
+
+            star.setOnClickListener {
+                if (currencyUiModel.isFavourite)
+                    listener.passIsFavouriteClick(currencyUiModel.name, false)
+                else listener.passIsFavouriteClick(currencyUiModel.name, true)
+            }
+
+            currencyLayout.setOnClickListener {
+                when {
+                    currencyList[0].isChecked -> {
+                        listener.passClick(
+                            currencyList[0].name, currencyList[0].value,
+                            currencyUiModel.name, currencyUiModel.value,
+                        )
+                    }
+                    currencyList[0].isFavourite -> {
+                        listener.passClick(
+                            currencyList[0].name, currencyList[0].value,
+                            currencyUiModel.name, currencyUiModel.value,
+                        )
+                    }
+                    else -> {
+                        currencyList.forEach { currency ->
+                            if (currency.name == "RUB") {
+                                listener.passClick(
+                                    currency.name, currency.value,
+                                    currencyUiModel.name, currencyUiModel.value,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            currencyLayout.setOnLongClickListener {
+                if (!currencyList[0].isChecked) listener.passIsCheckedLongClick(currencyUiModel)
+                else listener.passLongClick(currencyUiModel.name)
+                true
+            }
+
         }
     }
 
@@ -53,61 +94,3 @@ class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
         notifyDataSetChanged()
     }
 }
-
-// TODO: не забыть удалить
-/*if (currencyUiModel.isChecked) {
-                currencyLayout.setBackgroundResource(R.drawable.round_bg_currency)
-            } else {
-                currencyLayout.setBackgroundResource(R.drawable.round_bg_currency_selected)
-            }
-
-            currencyLayout.setOnLongClickListener {
-                if (selectedPosition == -1 && currencyParentName != base) {
-                    base = currencyUiModel.name
-                    currencyParentName = currencyUiModel.name
-                    currencyParentValue = currencyUiModel.value
-                    currencyUiModel.isChecked = false
-                    selectedPosition = absoluteAdapterPosition
-                    swapItem(selectedPosition, 0)
-                    Toast.makeText(itemView.context, "Выбрана валюта $base", Toast.LENGTH_SHORT)
-                        .show()
-                } else if (selectedPosition == -1 && currencyParentName == base) {
-                    Toast.makeText(
-                        itemView.context,
-                        "$base уже выбрана по умолчанию",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (absoluteAdapterPosition == 0) {
-                    base = "EUR"
-                    currencyParentName = null
-                    currencyChildName = "EUR"
-                    currencyUiModel.isChecked = true
-                    swapItem(0, selectedPosition)
-                    selectedPosition = -1
-                    Toast.makeText(
-                        itemView.context,
-                        "Вернули значение по умолчанию",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                notifyDataSetChanged()
-                return@setOnLongClickListener true
-            }
-
-            currencyLayout.setOnClickListener {
-                if (currencyParentName == null) {
-                    val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
-                        currencyChildName = currencyUiModel.name,
-                        currencyChildValue = currencyUiModel.value.toFloat(),
-                    )
-                    currencyLayout.findNavController().navigate(action)
-                } else {
-                    val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
-                        currencyChildName = currencyUiModel.name,
-                        currencyChildValue = currencyUiModel.value.toFloat(),
-                        currencyParentName = currencyParentName!!,
-                        currencyParentValue = currencyParentValue.toFloat()
-                    )
-                    currencyLayout.findNavController().navigate(action)
-                }
-            }*/

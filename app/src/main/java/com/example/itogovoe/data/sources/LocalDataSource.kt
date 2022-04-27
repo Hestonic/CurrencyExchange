@@ -39,6 +39,10 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         currencyDao.updateCurrency(currency)
     }
 
+    fun readCurrency(name: String): CurrenciesEntity {
+        return currencyDao.readCurrency(name)
+    }
+
     fun deleteAllCurrencies() {
         currencyDao.deleteAllCurrencies()
     }

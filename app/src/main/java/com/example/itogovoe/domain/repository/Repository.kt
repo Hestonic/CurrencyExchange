@@ -16,7 +16,7 @@ class Repository(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
 ) {
-    // TODO: Разбить getCurrencies() на более мелкие функции
+
     suspend fun getCurrencies(): List<CurrencyDtoModel>? {
         try {
             val localCurrencies = localDataSource.readAllCurrencies()
@@ -57,9 +57,11 @@ class Repository(
 
     private fun readAllCurrencies(): List<CurrenciesEntity> = localDataSource.readAllCurrencies()
 
-    private suspend fun updateCurrency(currenciesTable: CurrenciesEntity) {
-        localDataSource.updateCurrency(currenciesTable)
+    suspend fun updateCurrency(currenciesEntity: CurrenciesEntity) {
+        localDataSource.updateCurrency(currenciesEntity)
     }
+
+    fun readCurrency(name: String): CurrenciesEntity = localDataSource.readCurrency(name)
 
     private suspend fun updateCurrenciesData() {
         val localCurrenciesNotFresh = localDataSource.readAllCurrencies()
@@ -89,7 +91,6 @@ class Repository(
         Log.d("difference_date", minutes.toString())
         return minutes < 6
     }
-
 
 
     //History

@@ -31,6 +31,9 @@ interface CurrencyDao {
     @Update
     suspend fun updateCurrency(currency: CurrenciesEntity)
 
+    @Query("SELECT * FROM CurrenciesEntity WHERE name = :name")
+    fun readCurrency(name: String): CurrenciesEntity
+
     @Query("DELETE FROM CurrenciesEntity")
     fun deleteAllCurrencies()
 }
