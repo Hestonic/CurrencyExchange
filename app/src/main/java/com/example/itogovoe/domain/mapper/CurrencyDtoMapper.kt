@@ -35,7 +35,6 @@ object CurrencyDtoMapper {
         }
     }
 
-    // TODO: Избавиться от !!
     fun mapListCurrenciesEntityToDomainModelList(currenciesEntity: List<CurrenciesEntity>): List<CurrencyDtoModel> {
         return currenciesEntity.map {
             CurrencyDtoModel(

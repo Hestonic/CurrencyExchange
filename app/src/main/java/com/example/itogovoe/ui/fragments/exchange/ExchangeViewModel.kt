@@ -53,11 +53,10 @@ class ExchangeViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    // TODO: Избавиться от !!
     fun calculateCrossCoefficientLive(currencyParentName: String, currencyChildName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            valueParent = repository.readCurrency(currencyParentName).value!!.toFloat()
-            valueChild = repository.readCurrency(currencyChildName).value!!.toFloat()
+            valueParent = repository.readCurrency(currencyParentName).value.toFloat()
+            valueChild = repository.readCurrency(currencyChildName).value.toFloat()
             coefficient = valueChild / valueParent
         }
     }
