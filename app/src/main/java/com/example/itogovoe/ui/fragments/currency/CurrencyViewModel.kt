@@ -1,32 +1,34 @@
 package com.example.itogovoe.ui.fragments.currency
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.domain.repository.Repository
 import com.example.itogovoe.ui.mapper.CurrencyUiModelMapper
 import com.example.itogovoe.ui.model.CurrencyUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
-    val itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
-    private var currencyUiModelSortedMutableList: MutableList<CurrencyUiModel>? = null
+    private val _itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
+    val itemsLiveData: LiveData<List<CurrencyUiModel>> = _itemsLiveData
+
+
+    private var currencyUiSorted: MutableList<CurrencyUiModel>? = null
 
     fun getCurrencies() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getCurrencies()?.let {
                 sortCurrencyUiModelList(CurrencyUiModelMapper.mapDomainModelToUiModel(it))
-                itemsLiveData.postValue(currencyUiModelSortedMutableList)
+                _itemsLiveData.postValue(currencyUiSorted)
             }
         }
     }
 
     private fun sortCurrencyUiModelList(currencyUiModelList: List<CurrencyUiModel>?) {
-        currencyUiModelSortedMutableList = currencyUiModelList
+        currencyUiSorted = currencyUiModelList
             ?.sortedByDescending { currency -> currency.lastUsedAt }
             ?.sortedByDescending { currency -> currency.isFavourite }
             ?.toMutableList()
@@ -35,15 +37,15 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
     fun isCheckedSort(currencyUiModel: CurrencyUiModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            currencyUiModelSortedMutableList?.remove(currencyUiModel)
+            currencyUiSorted?.remove(currencyUiModel)
             val checkedCurrencyUiModel = CurrencyUiModel(
                 isChecked = true,
                 isFavourite = currencyUiModel.isFavourite,
                 lastUsedAt = currencyUiModel.lastUsedAt,
                 name = currencyUiModel.name
             )
-            currencyUiModelSortedMutableList?.add(0, checkedCurrencyUiModel)
-            itemsLiveData.postValue(currencyUiModelSortedMutableList)
+            currencyUiSorted?.add(0, checkedCurrencyUiModel)
+            _itemsLiveData.postValue(currencyUiSorted)
         }
     }
 

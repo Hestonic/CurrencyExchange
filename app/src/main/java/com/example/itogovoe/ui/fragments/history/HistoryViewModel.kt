@@ -1,5 +1,6 @@
 package com.example.itogovoe.ui.fragments.history
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,13 +15,16 @@ import java.time.LocalDateTime
 
 class HistoryViewModel(private val repository: Repository) : ViewModel() {
 
-    val historySearchItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
-    val historyItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
+    private val _historySearchItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
+    val historySearchItems: LiveData<List<HistoryUiModel>> = _historySearchItems
+
+    private val _historyItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
+    val historyItems: LiveData<List<HistoryUiModel>> = _historyItems
 
     fun getHistory() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getHistory().let {
-                historyItems.postValue(HistoryUiModelMapper.mapHistoryEntityToUiModel(it))
+                _historyItems.postValue(HistoryUiModelMapper.mapHistoryEntityToUiModel(it))
             }
         }
     }
@@ -36,7 +40,7 @@ class HistoryViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getData(from: LocalDateTime, to: LocalDateTime){
         viewModelScope.launch(Dispatchers.IO) {
-            // TODO:
+            // TODO: Filter
             /*repository.searchDateHistory(null, FilterInstance.dateTo).let {
                 historySearchItems.postValue(CurrencyUiModelMapper.mapHistoryEntityToUiModel(it))
             }*/

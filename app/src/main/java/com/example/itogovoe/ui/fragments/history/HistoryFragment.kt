@@ -11,8 +11,6 @@ import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentHistoryBinding
 import com.example.itogovoe.ui.main.FilterInstance
-import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel
-import com.example.itogovoe.ui.fragments.currency.CurrencyViewModelFactory
 
 class HistoryFragment : Fragment() {
 

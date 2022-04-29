@@ -97,7 +97,7 @@ class Repository(
         return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
     }
 
-    /* // TODO:
+    /* // TODO: Filter
     fun searchDateHistory(
         dateFrom: LocalDateTime,
         dateTo: LocalDateTime
@@ -107,7 +107,7 @@ class Repository(
         )
     }*/
 
-    /* TODO:
+    /* TODO: Filter
     fun searchDateHistory(query: SupportSQLiteQuery): LiveData<List<HistoryEntity>> {
         return localDataSource.searchDateHistory(query)
     }*/

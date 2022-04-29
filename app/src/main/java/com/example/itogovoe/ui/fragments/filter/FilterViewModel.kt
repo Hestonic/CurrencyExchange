@@ -10,12 +10,13 @@ import kotlinx.coroutines.launch
 
 class FilterViewModel(private val repository: Repository) : ViewModel() {
 
-    val filterItems: MutableLiveData<List<String>> = MutableLiveData()
+    private val _filterItems: MutableLiveData<List<String>> = MutableLiveData()
+    val filterItems: MutableLiveData<List<String>> = _filterItems
 
     fun getFilterItems() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getHistory().let {
-                filterItems.postValue(HistoryUiModelMapper.mapHistoryDomainModelToFilterList(it))
+                _filterItems.postValue(HistoryUiModelMapper.mapHistoryDomainModelToFilterList(it))
             }
         }
     }

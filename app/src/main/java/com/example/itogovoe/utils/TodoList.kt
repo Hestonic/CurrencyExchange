@@ -1,27 +1,15 @@
 package com.example.itogovoe.utils
 
 // TODO: Переделать FilterFragment под sealed class
-// TODO: Перенести всю бизнес логику во вьюмодели. Фрагмент отвечает только за отображение
-
-// TODO: Реализовать во вьюмоделях бизнес логику (фрагменты должны отвечать только за отображение)
-//  P.S. фрагменты подписаны на лайв даты и туда всё во вьюмодели скидывается
-
-// TODO: Сделать MutableLiveData приватным и создать ему либо LiveData
+// TODO: Перенести всю бизнес логику из FilterFragment во ViewModel
 
 // TODO: Сделать несколько Dao
-
-// TODO: ExchangeFragment
-//  Пофиксить баг с isFresh (переменная обновляется не с первого раза)
-//  Перенести всю бизнес логику во вьюмодель
-//  Фрагмент должен переживать переворот экрана
-//  Сделать так, чтобы из CurrencyFragment передавалось только имя валют и в ExchangeFragment эти валюты подтаскивались из БД
-//  - То есть нужно убрать из CurrencyUiModel значение value и получать эти значения в ExchangeFragment
 
 
 // TODO: HomeFragment
 //  3 должен переживать поворот экрана (Для этого задействовать viewModel)
 //  6 Сделать прогресс бар когда валюты подгружаются
-// это можно сделать при помощи ViewModel + добавить в CurrencyUiModel поле isFavourite: Boolean
+//   - это можно сделать при помощи ViewModel + добавить в CurrencyUiModel поле isFavourite: Boolean
 
 // фильтрация можно сделать через sealed class
 // TODO: FilterFragment

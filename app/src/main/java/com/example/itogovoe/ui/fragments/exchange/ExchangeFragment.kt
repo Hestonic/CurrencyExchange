@@ -15,7 +15,6 @@ import com.example.itogovoe.databinding.FragmentExchangeBinding
 import com.example.itogovoe.ui.model.HistoryUiModel
 import java.time.LocalDateTime
 
-// TODO: сделать поаккуратнее
 class ExchangeFragment : Fragment() {
 
     private lateinit var viewModel: ExchangeViewModel
@@ -34,7 +33,7 @@ class ExchangeFragment : Fragment() {
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
 
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+        viewModel.currencies.observe(viewLifecycleOwner) {
             viewModel.calculateCrossCoefficientLive(args.currencyParentName, args.currencyChildName)
             val currentParentValue = binding.currencyValueParent.text.toString().toFloat()
             binding.currencyValueChild.text =
