@@ -40,15 +40,15 @@ class FilterFragment : Fragment() {
         viewModel.filterItems.observe(viewLifecycleOwner) { filterList -> adapter.setData(filterList) }
 
         binding.filterAllTime.setOnClickListener {
-            // TODO:
+            // TODO: Filter
         }
 
         binding.filterMonth.setOnClickListener {
-            // TODO:
+            // TODO: Filter
         }
 
         binding.filterWeek.setOnClickListener {
-            // TODO:
+            // TODO: Filter
         }
 
         getDateCalendar()
@@ -84,7 +84,7 @@ class FilterFragment : Fragment() {
                 year = mYear
                 month = mMonth
                 day = mDay
-                // TODO:
+                // TODO: Filter
                 renderState(FilterInstance)
             }, year, month, day).show()
         }

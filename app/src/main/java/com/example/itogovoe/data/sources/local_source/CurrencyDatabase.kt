@@ -3,6 +3,7 @@ package com.example.itogovoe.data.sources.local_source
 import android.content.Context
 import androidx.room.*
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
+import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
 import com.example.itogovoe.data.sources.local_source.entities.*
 
 @Database(
@@ -14,6 +15,7 @@ import com.example.itogovoe.data.sources.local_source.entities.*
 abstract class CurrencyDatabase : RoomDatabase() {
 
     abstract val currencyDao: CurrencyDao
+    abstract val historyDao: HistoryDao
 
     companion object {
         @Volatile

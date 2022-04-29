@@ -9,7 +9,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         dependencyInjection.initCurrencyDao(this)
-        dependencyInjection.initLocal(dependencyInjection.currencyDao)
+        dependencyInjection.initHistoryDao(this)
+        dependencyInjection.initLocal(dependencyInjection.currencyDao, dependencyInjection.historyDao)
         dependencyInjection.initRepository(
             dependencyInjection.localDataSource,
             dependencyInjection.remoteDataSource

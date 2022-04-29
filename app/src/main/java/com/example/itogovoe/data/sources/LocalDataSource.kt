@@ -1,20 +1,21 @@
 package com.example.itogovoe.data.sources
 
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
+import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.domain.model.CurrencyDtoModel
 import java.time.LocalDateTime
 
-class LocalDataSource(private val currencyDao: CurrencyDao) {
+class LocalDataSource(private val currencyDao: CurrencyDao, private val historyDao: HistoryDao) {
 
     //HistoryEntity
     suspend fun addHistoryItem(history: HistoryEntity) {
-        currencyDao.addHistoryItem(history)
+        historyDao.addHistoryItem(history)
     }
 
     fun readAllHistory(): List<HistoryEntity> {
-        return currencyDao.readAllHistory()
+        return historyDao.readAllHistory()
     }
 
     /* TODO: Filter
@@ -35,31 +36,33 @@ class LocalDataSource(private val currencyDao: CurrencyDao) {
         return currencyDao.readAllCurrencies()
     }
 
-    // TODO: Избавиться от !!
     suspend fun updateCurrency(currencyDtoModel: CurrencyDtoModel) {
-        val localCurrencyNotFresh = readCurrency(currencyDtoModel.name!!)
-        currencyDao.updateCurrency(CurrenciesEntity(
+        val localCurrencyNotFresh = readCurrency(currencyDtoModel.name)
+        currencyDao.updateCurrency(
+            CurrenciesEntity(
                 name = currencyDtoModel.name,
-                value = currencyDtoModel.value!!,
+                value = currencyDtoModel.value,
                 createdAt = localCurrencyNotFresh.createdAt,
                 updatedAt = LocalDateTime.now(),
                 lastUsedAt = localCurrencyNotFresh.lastUsedAt,
                 isFavourite = localCurrencyNotFresh.isFavourite
             )
         )
+
+
     }
 
     suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         val currencyFromDb = readCurrency(name)
         currencyDao.updateCurrency(
             CurrenciesEntity(
-                    name = name,
-                    value = currencyFromDb.value,
-                    createdAt = currencyFromDb.createdAt,
-                    updatedAt = currencyFromDb.updatedAt,
-                    lastUsedAt = currencyFromDb.lastUsedAt,
-                    isFavourite = isFavourite
-                )
+                name = name,
+                value = currencyFromDb.value,
+                createdAt = currencyFromDb.createdAt,
+                updatedAt = currencyFromDb.updatedAt,
+                lastUsedAt = currencyFromDb.lastUsedAt,
+                isFavourite = isFavourite
+            )
         )
     }
 

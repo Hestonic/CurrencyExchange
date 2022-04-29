@@ -33,7 +33,7 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
         @SuppressLint("NotifyDataSetChanged")
         fun bind(currency: String) = binding.run {
             currencyName.text = currency
-            // TODO:
+            // TODO: Filter
             /*if (FilterInstance.selectedCurrencies.contains(currencyName.text.toString())) {
                 currencyFilterLayout.setBackgroundResource(R.drawable.round_bg_filter_selected)
             } else {

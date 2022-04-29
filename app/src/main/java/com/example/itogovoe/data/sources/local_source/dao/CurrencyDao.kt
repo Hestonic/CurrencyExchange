@@ -7,21 +7,6 @@ import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 @Dao
 interface CurrencyDao {
 
-    // HistoryEntity
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addHistoryItem(history: HistoryEntity)
-
-    @Query("SELECT * FROM HistoryEntity ORDER BY date DESC")
-    fun readAllHistory(): List<HistoryEntity>
-
-    @Query("DELETE FROM HistoryEntity")
-    fun deleteAllHistory()
-
-    @Query("SELECT * FROM HistoryEntity WHERE date BETWEEN :dateFrom AND :dateTo ORDER BY date DESC")
-    fun searchDateHistory(dateFrom: Long, dateTo: Long): List<HistoryEntity>
-
-
-    // CurrenciesEntity
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCurrencyItem(currencies: CurrenciesEntity)
 
@@ -36,4 +21,5 @@ interface CurrencyDao {
 
     @Query("DELETE FROM CurrenciesEntity")
     fun deleteAllCurrencies()
+
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -39,6 +40,10 @@ class CurrencyFragment : Fragment(), CurrencyPassClick {
         super.onViewCreated(view, savedInstanceState)
         viewModel.itemsLiveData.observe(viewLifecycleOwner) { currencyList ->
             adapter.setData(currencyList)
+        }
+
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
+            binding.error.isGone = !error
         }
     }
 

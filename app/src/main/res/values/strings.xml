@@ -20,4 +20,7 @@
     <string name="filter_time_range">В выбранном промежутке</string>
     <string name="filter_currency_name">По выбранным валютам</string>
     <string name="date_choose">Выбрать дату</string>
+    <string name="network_error">Не удалось получить данные из сети. Возможны проблемы с сервером.
+        Попробуйте проверить подключение к интернету, либо подождите устранение неисправности
+        с нашей стороны</string>
 </resources>

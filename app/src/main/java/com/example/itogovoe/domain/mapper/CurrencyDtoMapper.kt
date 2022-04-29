@@ -10,14 +10,14 @@ import java.time.ZoneId
 
 object CurrencyDtoMapper {
 
-    fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel>? {
-        return response.body()?.rates?.map {
+    fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel> {
+        return response.body()!!.rates.map {
             CurrencyDtoModel(
-                lastUsedAt = null,
-                updatedAt = timestampToLocalDateTime(response.body()?.timestamp),
+                lastUsedAt = LocalDateTime.now(),
+                updatedAt = timestampToLocalDateTime(response.body()!!.timestamp),
                 name = it.key,
                 value = it.value,
-                isFavourite = null
+                isFavourite = false
             )
         }
     }
@@ -25,9 +25,8 @@ object CurrencyDtoMapper {
     fun mapCurrencyDtoModelListToCurrenciesEntityList(currencies: List<CurrencyDtoModel>?): List<CurrenciesEntity>? {
         return currencies?.map {
             CurrenciesEntity(
-                //  TODO: Избавитсья от !!
-                name = it.name!!,
-                value = it.value!!,
+                name = it.name,
+                value = it.value,
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now(),
                 lastUsedAt = LocalDateTime.now(),
@@ -37,8 +36,8 @@ object CurrencyDtoMapper {
     }
 
     // TODO: Избавиться от !!
-    fun mapListCurrenciesEntityToDomainModelList(currenciesEntity: List<CurrenciesEntity>?): List<CurrencyDtoModel> {
-        return currenciesEntity!!.map {
+    fun mapListCurrenciesEntityToDomainModelList(currenciesEntity: List<CurrenciesEntity>): List<CurrencyDtoModel> {
+        return currenciesEntity.map {
             CurrencyDtoModel(
                 lastUsedAt = it.lastUsedAt,
                 updatedAt = it.updatedAt,
@@ -59,8 +58,8 @@ object CurrencyDtoMapper {
         )
     }
 
-    private fun timestampToLocalDateTime(timestamp: Long?): LocalDateTime? {
-        return timestamp?.let {
+    private fun timestampToLocalDateTime(timestamp: Long): LocalDateTime {
+        return timestamp.let {
             Instant.ofEpochSecond(it)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()

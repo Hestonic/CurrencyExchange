@@ -5,14 +5,13 @@ import com.example.itogovoe.ui.model.CurrencyUiModel
 
 object CurrencyUiModelMapper {
 
-    // TODO: Избавиться от !!
-    fun mapDomainModelToUiModel(currencies: List<CurrencyDtoModel>): List<CurrencyUiModel>? {
+    fun mapDomainModelToUiModel(currencies: List<CurrencyDtoModel>): List<CurrencyUiModel> {
         return currencies.map {
             CurrencyUiModel(
                 isChecked = false,
-                isFavourite = it.isFavourite!!,
-                lastUsedAt = it.lastUsedAt!!,
-                name = it.name!!
+                isFavourite = it.isFavourite,
+                lastUsedAt = it.lastUsedAt,
+                name = it.name
             )
         }
     }
