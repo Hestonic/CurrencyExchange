@@ -33,31 +33,28 @@ class ExchangeFragment : Fragment() {
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
 
-        viewModel.currencies.observe(viewLifecycleOwner) {
-            viewModel.calculateCrossCoefficientLive(args.currencyParentName, args.currencyChildName)
-            val currentParentValue = binding.currencyValueParent.text.toString().toFloat()
-            binding.currencyValueChild.text =
-                (currentParentValue * viewModel.coefficient).toString()
-        }
-
-        viewModel.isFreshOnTextChange.observe(viewLifecycleOwner) { dataIsFresh ->
-            onValueParentTextChange(dataIsFresh)
-        }
-
-        viewModel.isFreshOnHistorySave.observe(viewLifecycleOwner) { dataIsFresh ->
-            onExchangeButtonClick(dataIsFresh)
-        }
-
-        binding.currencyTextChild.text = args.currencyChildName
-        binding.currencyTextParent.text = args.currencyParentName
-
-        binding.currencyValueParent.setText("1.0")
-        binding.currencyValueChild.text = viewModel.coefficient.toString()
-
+        viewModel.currencies.observe(viewLifecycleOwner) { updateCurrentValues() }
+        viewModel.isFreshOnTextChange.observe(viewLifecycleOwner) { onValueParentTextChange(it) }
+        viewModel.isFreshOnHistorySave.observe(viewLifecycleOwner) { onExchangeButtonClick(it) }
         binding.currencyValueParent.addTextChangedListener { viewModel.checkIsFreshOnTextChange() }
         binding.exchangeButton.setOnClickListener { viewModel.checkIsFreshOnHistorySave() }
+        setStartValues()
 
         return binding.root
+    }
+
+    private fun setStartValues() {
+        binding.currencyTextChild.text = args.currencyChildName
+        binding.currencyTextParent.text = args.currencyParentName
+        binding.currencyValueParent.setText("1.0")
+        binding.currencyValueChild.text = viewModel.coefficient.toString()
+    }
+
+    private fun updateCurrentValues() {
+        viewModel.calculateCrossCoefficientLive(args.currencyParentName, args.currencyChildName)
+        val currentParentValue = binding.currencyValueParent.text.toString().toFloat()
+        binding.currencyValueChild.text =
+            (currentParentValue * viewModel.coefficient).toString()
     }
 
     private fun onExchangeButtonClick(dataIsFresh: Boolean) {
@@ -129,4 +126,6 @@ class ExchangeFragment : Fragment() {
         val viewModelFactory = ExchangeViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ExchangeViewModel::class.java]
     }
+
+
 }

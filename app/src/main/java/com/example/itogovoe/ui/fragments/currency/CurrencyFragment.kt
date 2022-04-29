@@ -38,13 +38,8 @@ class CurrencyFragment : Fragment(), CurrencyPassClick {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) { currencyList ->
-            adapter.setData(currencyList)
-        }
-
-        viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
-            binding.error.isGone = !error
-        }
+        viewModel.itemsLiveData.observe(viewLifecycleOwner) { adapter.setData(it) }
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { binding.error.isGone = !it }
     }
 
     private fun initViewModel() {

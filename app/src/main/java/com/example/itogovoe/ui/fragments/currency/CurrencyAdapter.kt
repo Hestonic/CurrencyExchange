@@ -3,19 +3,16 @@ package com.example.itogovoe.ui.fragments.currency
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.ItemCurrencyBinding
 import com.example.itogovoe.ui.model.CurrencyUiModel
-import java.util.*
 
 
 class CurrencyAdapter(private val listener: CurrencyPassClick) :
     RecyclerView.Adapter<CurrencyAdapter.HomeViewHolder>() {
 
-    var currencyList: List<CurrencyUiModel> = mutableListOf()
+    private var currencyList: List<CurrencyUiModel> = listOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -55,14 +52,14 @@ class CurrencyAdapter(private val listener: CurrencyPassClick) :
             currencyLayout.setOnClickListener {
                 when {
                     currencyList[0].isChecked ->
-                        listener.passClick(currencyList[0].name, currencyUiModel.name,)
+                        listener.passClick(currencyList[0].name, currencyUiModel.name)
 
                     currencyList[0].isFavourite ->
-                        listener.passClick(currencyList[0].name, currencyUiModel.name,)
+                        listener.passClick(currencyList[0].name, currencyUiModel.name)
 
                     else -> currencyList.forEach { currency ->
                             if (currency.name == "RUB")
-                                listener.passClick(currency.name, currencyUiModel.name,)
+                                listener.passClick(currency.name, currencyUiModel.name)
                     }
                 }
             }
