@@ -38,19 +38,9 @@
             android:name="currencyParentName"
             app:argType="string"
             android:defaultValue="EUR" />
-        <argument android:name="currencyChildValue"
-            app:argType="float" />
-        <argument
-            android:name="currencyParentValue"
-            app:argType="float"
-            android:defaultValue="1" />
         <argument
             android:name="currencyChildName"
             app:argType="string" />
-        <argument
-            android:name="base"
-            app:argType="string"
-            android:defaultValue="EUR" />
     </fragment>
     <fragment
         android:id="@+id/filterFragment"

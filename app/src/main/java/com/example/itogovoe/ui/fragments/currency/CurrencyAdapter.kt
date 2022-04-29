@@ -54,27 +54,15 @@ class CurrencyAdapter(private val listener: CurrencyPassClick) :
 
             currencyLayout.setOnClickListener {
                 when {
-                    currencyList[0].isChecked -> {
-                        listener.passClick(
-                            currencyList[0].name, currencyList[0].value,
-                            currencyUiModel.name, currencyUiModel.value,
-                        )
-                    }
-                    currencyList[0].isFavourite -> {
-                        listener.passClick(
-                            currencyList[0].name, currencyList[0].value,
-                            currencyUiModel.name, currencyUiModel.value,
-                        )
-                    }
-                    else -> {
-                        currencyList.forEach { currency ->
-                            if (currency.name == "RUB") {
-                                listener.passClick(
-                                    currency.name, currency.value,
-                                    currencyUiModel.name, currencyUiModel.value,
-                                )
-                            }
-                        }
+                    currencyList[0].isChecked ->
+                        listener.passClick(currencyList[0].name, currencyUiModel.name,)
+
+                    currencyList[0].isFavourite ->
+                        listener.passClick(currencyList[0].name, currencyUiModel.name,)
+
+                    else -> currencyList.forEach { currency ->
+                            if (currency.name == "RUB")
+                                listener.passClick(currency.name, currencyUiModel.name,)
                     }
                 }
             }

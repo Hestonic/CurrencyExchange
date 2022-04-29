@@ -61,18 +61,14 @@ class CurrencyFragment : Fragment(), CurrencyPassClick {
 
     override fun passClick(
         currencyParentName: String,
-        currencyParentValue: Double,
-        currencyChildName: String,
-        currencyChildValue: Double
+        currencyChildName: String
     ) {
         viewModel.updateCurrencyLastUsedAt(currencyChildName)
         viewModel.updateCurrencyLastUsedAt(currencyParentName)
         viewModel.getCurrencies()
         val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
             currencyParentName = currencyParentName,
-            currencyParentValue = currencyParentValue.toFloat(),
             currencyChildName = currencyChildName,
-            currencyChildValue = currencyChildValue.toFloat()
         )
         findNavController().navigate(action)
     }

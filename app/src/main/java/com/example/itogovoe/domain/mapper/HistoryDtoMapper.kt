@@ -1,12 +1,12 @@
 package com.example.itogovoe.domain.mapper
 
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
-import com.example.itogovoe.domain.model.HistoryDomainModel
+import com.example.itogovoe.domain.model.HistoryDtoModel
 
 object HistoryDtoMapper {
-    fun mapHistoryEntityToDomainModel(history: List<HistoryEntity>): List<HistoryDomainModel> {
+    fun mapHistoryEntityToDomainModel(history: List<HistoryEntity>): List<HistoryDtoModel> {
         return history.map {
-            HistoryDomainModel(
+            HistoryDtoModel(
                 date = it.date,
                 currencyNameParent = it.currencyNameParent,
                 currencyValueParent = it.currencyValueParent,

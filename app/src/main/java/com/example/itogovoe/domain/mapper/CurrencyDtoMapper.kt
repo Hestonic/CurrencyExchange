@@ -10,15 +10,11 @@ import java.time.ZoneId
 
 object CurrencyDtoMapper {
 
-    fun mapCurrencyResponseToCurrencyDomainModel(response: Response<CurrencyResponse>): List<CurrencyDtoModel>? {
+    fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel>? {
         return response.body()?.rates?.map {
             CurrencyDtoModel(
                 lastUsedAt = null,
-                updatedAt = response.body()?.timestamp?.let { timestamp ->
-                    Instant.ofEpochSecond(timestamp)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime()
-                },
+                updatedAt = timestampToLocalDateTime(response.body()?.timestamp),
                 name = it.key,
                 value = it.value,
                 isFavourite = null
@@ -26,7 +22,7 @@ object CurrencyDtoMapper {
         }
     }
 
-    fun mapCurrencyDtoModelToCurrenciesEntityList(currencies: List<CurrencyDtoModel>?): List<CurrenciesEntity>? {
+    fun mapCurrencyDtoModelListToCurrenciesEntityList(currencies: List<CurrencyDtoModel>?): List<CurrenciesEntity>? {
         return currencies?.map {
             CurrenciesEntity(
                 //  TODO: Избавитсья от !!
@@ -41,7 +37,7 @@ object CurrencyDtoMapper {
     }
 
     // TODO: Избавиться от !!
-    fun mapCurrenciesEntityToDomainModel(currenciesEntity: List<CurrenciesEntity>?): List<CurrencyDtoModel> {
+    fun mapListCurrenciesEntityToDomainModelList(currenciesEntity: List<CurrenciesEntity>?): List<CurrencyDtoModel> {
         return currenciesEntity!!.map {
             CurrencyDtoModel(
                 lastUsedAt = it.lastUsedAt,
@@ -51,5 +47,24 @@ object CurrencyDtoMapper {
                 isFavourite = it.isFavourite,
             )
         }
+    }
+
+    fun mapCurrencyEntityToDomainModel(currencyEntity: CurrenciesEntity): CurrencyDtoModel {
+        return CurrencyDtoModel(
+            isFavourite = currencyEntity.isFavourite,
+            lastUsedAt = currencyEntity.lastUsedAt,
+            updatedAt = currencyEntity.updatedAt,
+            name = currencyEntity.name,
+            value = currencyEntity.value
+        )
+    }
+
+    private fun timestampToLocalDateTime(timestamp: Long?): LocalDateTime? {
+        return timestamp?.let {
+            Instant.ofEpochSecond(it)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+        }
+
     }
 }

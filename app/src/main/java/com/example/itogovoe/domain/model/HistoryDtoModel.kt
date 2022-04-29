@@ -2,7 +2,7 @@ package com.example.itogovoe.domain.model
 
 import java.time.LocalDateTime
 
-data class HistoryDomainModel(
+data class HistoryDtoModel(
     val date: LocalDateTime,
     val currencyNameParent: String,
     val currencyValueParent: Double,

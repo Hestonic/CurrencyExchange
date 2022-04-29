@@ -12,8 +12,7 @@ object CurrencyUiModelMapper {
                 isChecked = false,
                 isFavourite = it.isFavourite!!,
                 lastUsedAt = it.lastUsedAt!!,
-                name = it.name!!,
-                value = it.value!!
+                name = it.name!!
             )
         }
     }

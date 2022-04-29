@@ -4,11 +4,11 @@ import android.util.Log
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.mapper.HistoryDtoMapper
 import com.example.itogovoe.domain.model.CurrencyDtoModel
-import com.example.itogovoe.domain.model.HistoryDomainModel
+import com.example.itogovoe.domain.model.HistoryDtoModel
+import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -45,73 +45,70 @@ class Repository(
 
     private suspend fun saveCurrencies() {
         val remoteCurrencyDtoModel =
-            CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModel(remoteDataSource.getCurrencies())
+            CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModelList(remoteDataSource.getCurrencies())
         val listCurrenciesTable =
-            CurrencyDtoMapper.mapCurrencyDtoModelToCurrenciesEntityList(remoteCurrencyDtoModel)
+            CurrencyDtoMapper.mapCurrencyDtoModelListToCurrenciesEntityList(remoteCurrencyDtoModel)
         listCurrenciesTable?.forEach { localDataSource.addCurrencyItem(it) }
         Log.d("REPOSITORY_TAG", "Data has been added to database")
     }
 
     private fun getLocalCurrencies() =
-        CurrencyDtoMapper.mapCurrenciesEntityToDomainModel(readAllCurrencies())
+        CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(readAllCurrencies())
 
     private fun readAllCurrencies(): List<CurrenciesEntity> = localDataSource.readAllCurrencies()
 
-    suspend fun updateCurrency(currenciesEntity: CurrenciesEntity) {
-        localDataSource.updateCurrency(currenciesEntity)
+    suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
+        localDataSource.updateCurrencyIsFavourite(name, isFavourite)
     }
 
-    fun readCurrency(name: String): CurrenciesEntity = localDataSource.readCurrency(name)
+    suspend fun updateCurrencyLastUsedAt(name: String) {
+        localDataSource.updateCurrencyLastUsedAt(name)
+    }
+
+    fun readCurrency(name: String): CurrencyDtoModel =
+        CurrencyDtoMapper.mapCurrencyEntityToDomainModel(localDataSource.readCurrency(name))
 
     private suspend fun updateCurrenciesData() {
-        val localCurrenciesNotFresh = localDataSource.readAllCurrencies()
         val remoteCurrency =
-            CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModel(remoteDataSource.getCurrencies())
-        remoteCurrency?.forEachIndexed { i, remoteCurrencies ->
-            updateCurrency(
-                CurrenciesEntity(
-                    // TODO: Избавиться от !!
-                    name = remoteCurrencies.name!!,
-                    value = remoteCurrencies.value!!,
-                    createdAt = localCurrenciesNotFresh[i].createdAt,
-                    updatedAt = LocalDateTime.now(),
-                    lastUsedAt = localCurrenciesNotFresh[i].lastUsedAt,
-                    isFavourite = localCurrenciesNotFresh[i].isFavourite
-                )
-            )
-        }
+            CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModelList(remoteDataSource.getCurrencies())
+        remoteCurrency?.forEach { localDataSource.updateCurrency(it) }
         Log.d("REPOSITORY_TAG", "Database has been updated")
     }
-
 
     fun isFresh(): Boolean {
         val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
         val minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
         Log.d("difference_date", minutes.toString())
-        return minutes < 6
+        return minutes < 1
     }
 
 
     //History
-    suspend fun addHistoryItem(historyEntity: HistoryEntity) {
-        localDataSource.addHistoryItem(historyEntity)
-    }
-
-    fun getHistory(): List<HistoryDomainModel> {
-        return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
-    }
-
-    fun searchDateHistory(
-        dateFrom: LocalDateTime,
-        dateTo: LocalDateTime
-    ): List<HistoryDomainModel> {
-        return HistoryDtoMapper.mapHistoryEntityToDomainModel(
-            localDataSource.searchDateHistory(dateFrom, dateTo)
+    suspend fun addHistoryItem(historyDomainModel: HistoryDtoModel) {
+        localDataSource.addHistoryItem(
+            HistoryUiModelMapper.mapHistoryDomainModelToEntity(
+                historyDomainModel
+            )
         )
     }
 
-    /*fun searchDateHistory(query: SupportSQLiteQuery): LiveData<List<HistoryEntity>> {
+    fun getHistory(): List<HistoryDtoModel> {
+        return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
+    }
+
+    /* // TODO:
+    fun searchDateHistory(
+        dateFrom: LocalDateTime,
+        dateTo: LocalDateTime
+    ): List<HistoryDtoModel> {
+        return HistoryDtoMapper.mapHistoryEntityToDomainModel(
+            localDataSource.searchDateHistory(dateFrom, dateTo)
+        )
+    }*/
+
+    /* TODO:
+    fun searchDateHistory(query: SupportSQLiteQuery): LiveData<List<HistoryEntity>> {
         return localDataSource.searchDateHistory(query)
     }*/
 }

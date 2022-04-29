@@ -40,8 +40,7 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
                 isChecked = true,
                 isFavourite = currencyUiModel.isFavourite,
                 lastUsedAt = currencyUiModel.lastUsedAt,
-                name = currencyUiModel.name,
-                value = currencyUiModel.value
+                name = currencyUiModel.name
             )
             currencyUiModelSortedMutableList?.add(0, checkedCurrencyUiModel)
             itemsLiveData.postValue(currencyUiModelSortedMutableList)
@@ -51,33 +50,13 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
     fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currenciesTableItem = repository.readCurrency(name)
-            repository.updateCurrency(
-                CurrenciesEntity(
-                    name = name,
-                    value = currenciesTableItem.value,
-                    createdAt = currenciesTableItem.createdAt,
-                    updatedAt = currenciesTableItem.updatedAt,
-                    lastUsedAt = currenciesTableItem.lastUsedAt,
-                    isFavourite = isFavourite
-                )
-            )
+            repository.updateCurrencyIsFavourite(name, isFavourite)
         }
     }
 
     fun updateCurrencyLastUsedAt(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currenciesTableItem = repository.readCurrency(name)
-            repository.updateCurrency(
-                CurrenciesEntity(
-                    name = name,
-                    value = currenciesTableItem.value,
-                    createdAt = currenciesTableItem.createdAt,
-                    updatedAt = currenciesTableItem.updatedAt,
-                    lastUsedAt = LocalDateTime.now(),
-                    isFavourite = currenciesTableItem.isFavourite
-                )
-            )
+            repository.updateCurrencyLastUsedAt(name)
         }
     }
 }

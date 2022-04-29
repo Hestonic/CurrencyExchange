@@ -7,7 +7,6 @@ data class CurrencyUiModel(
     var isFavourite: Boolean,
     val lastUsedAt: LocalDateTime,
     val name: String,
-    val value: Double
 )
 
 
