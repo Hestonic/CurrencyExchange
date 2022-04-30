@@ -69,7 +69,6 @@ class CurrencyAdapter(private val listener: CurrencyPassClick) :
                 else listener.passLongClick(currencyUiModel.name)
                 true
             }
-
         }
     }
 

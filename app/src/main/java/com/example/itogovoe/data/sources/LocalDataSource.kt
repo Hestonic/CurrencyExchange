@@ -1,5 +1,6 @@
 package com.example.itogovoe.data.sources
 
+import com.example.itogovoe.data.sources.local_source.DateConverter
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
@@ -18,13 +19,11 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
         return historyDao.readAllHistory()
     }
 
-    /* TODO: Filter
     fun searchDateHistory(dateFrom: LocalDateTime, dateTo: LocalDateTime): List<HistoryEntity> {
         val dateFromTimestamp = DateConverter().localDateTimeToTimestamp(dateFrom)
         val dateToTimestamp = DateConverter().localDateTimeToTimestamp(dateTo)
-        Log.d("date_timestamp_tag", "dateFrom $dateFromTimestamp, dateTo $dateToTimestamp")
-        return currencyDao.searchDateHistory(dateFromTimestamp, dateToTimestamp)
-    }*/
+        return historyDao.searchDateHistory(dateFromTimestamp, dateToTimestamp)
+    }
 
 
     // CurrenciesEntity
@@ -48,8 +47,6 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
                 isFavourite = localCurrencyNotFresh.isFavourite
             )
         )
-
-
     }
 
     suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {

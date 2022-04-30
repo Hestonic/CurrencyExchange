@@ -1,22 +1,20 @@
-package com.example.itogovoe.ui.fragments.filter
-
-import com.example.itogovoe.ui.main.TimeFilter
-import java.sql.Time
+package com.example.itogovoe.ui.model
 
 data class FilterUiModel(
-    val timeFilters: List<TimeFilterUiModel>,
+    val timeFilters: TimeFilterUiModel,
     val timeRange: TimeRangeUiModel,
     val currencyChips: List<CurrencyChipsUiModel>
 )
 
 data class TimeFilterUiModel(
-    val text: String,
+    val name: String,
     val isChecked: Boolean
 )
 
 data class TimeRangeUiModel(
     val dateFrom: String,
-    val dateTo: String
+    val dateTo: String,
+    val isChecked: Boolean
 )
 
 data class CurrencyChipsUiModel(

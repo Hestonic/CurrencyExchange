@@ -1,7 +1,9 @@
 package com.example.itogovoe.ui.mapper
 
+import com.example.itogovoe.data.sources.local_source.DateConverter
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.domain.model.HistoryDtoModel
+import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 import com.example.itogovoe.ui.model.HistoryUiModel
 import java.time.LocalDateTime
 
@@ -19,22 +21,13 @@ object HistoryUiModelMapper {
         }
     }
 
-    fun mapHistoryDomainModelToFilterList(history: List<HistoryDtoModel>): List<String> {
-        val filterList = mutableListOf<String>()
-        history.map {
-            filterList.add(it.currencyNameChild)
-            filterList.add(it.currencyNameParent)
-        }
-        return filterList.distinct().sorted()
-    }
-
     fun mapHistoryUiModelToDomainModel(historyUiModel: HistoryUiModel): HistoryDtoModel {
         return HistoryDtoModel(
             currencyNameParent = historyUiModel.currencyNameParent,
             currencyValueParent = historyUiModel.currencyValueParent,
             currencyNameChild = historyUiModel.currencyNameChild,
             currencyValueChild = historyUiModel.currencyValueChild,
-            date = LocalDateTime.now()
+            date = LocalDateTime.parse(historyUiModel.date)
         )
     }
 

@@ -1,5 +1,14 @@
 package com.example.itogovoe.utils
 
+// TODO: CurrencyFragment должен сохраняться выбранный элемент при перевороте экрана
+
+// TODO:
+//  Упорядочить функции в repository, localDateSource, во viewModels
+//  Сделать во вью моделях вызовы в из бд через .let{}
+//  Сделать во вью моделях get() для public LiveData
+//  Сделать UiModel для ExchangeFragment
+//  усовершенствовать HistoryUiModel
+
 // TODO: HomeFragment
 //  3 должен переживать поворот экрана
 //  6 Сделать прогресс бар когда валюты подгружаются

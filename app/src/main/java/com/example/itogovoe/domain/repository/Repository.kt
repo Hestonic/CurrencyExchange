@@ -39,7 +39,7 @@ class Repository(
                 else -> {
                     Log.d("REPOSITORY_TAG", "Data is not fresh")
                     val remoteCurrency = remoteDataSource.getCurrencies()
-                    return if (remoteCurrency.isSuccessful){
+                    return if (remoteCurrency.isSuccessful) {
                         updateCurrenciesData(remoteCurrency)
                         getLocalCurrencies()
                     } else null
@@ -105,18 +105,9 @@ class Repository(
         return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
     }
 
-    /* // TODO: Filter
-    fun searchDateHistory(
-        dateFrom: LocalDateTime,
-        dateTo: LocalDateTime
-    ): List<HistoryDtoModel> {
+    fun searchDateHistory(dateFrom: LocalDateTime, dateTo: LocalDateTime): List<HistoryDtoModel> {
         return HistoryDtoMapper.mapHistoryEntityToDomainModel(
             localDataSource.searchDateHistory(dateFrom, dateTo)
         )
-    }*/
-
-    /* TODO: Filter
-    fun searchDateHistory(query: SupportSQLiteQuery): LiveData<List<HistoryEntity>> {
-        return localDataSource.searchDateHistory(query)
-    }*/
+    }
 }

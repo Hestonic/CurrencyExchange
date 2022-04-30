@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 object FilterInstance {
     var timeFilter: TimeFilter = TimeFilter.AllTime
-    // var currencyFilter: CurrencyFilter = CurrencyFilter()
+    var currencyFilter: CurrencyFilter = CurrencyFilter(emptyList())
 }
 
 data class CurrencyFilter(

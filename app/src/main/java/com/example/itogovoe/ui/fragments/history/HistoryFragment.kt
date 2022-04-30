@@ -1,6 +1,5 @@
 package com.example.itogovoe.ui.fragments.history
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentHistoryBinding
-import com.example.itogovoe.ui.main.FilterInstance
 
 class HistoryFragment : Fragment() {
 
@@ -21,7 +19,7 @@ class HistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        viewModel.getHistory()
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -29,10 +27,8 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        viewModel.historySearchItems.observe(viewLifecycleOwner) { it.let { adapter.setData(it) } }
-        viewModel.historyItems.observe(viewLifecycleOwner) { history -> adapter.setData(history) }
         viewModel.getData()
-        setHasOptionsMenu(true)
+        viewModel.historyItems.observe(viewLifecycleOwner) { history -> adapter.setData(history) }
         setupRecycler()
         return binding.root
     }
@@ -46,21 +42,6 @@ class HistoryFragment : Fragment() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
         val viewModelFactory = HistoryViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[HistoryViewModel::class.java]
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun getData(state: FilterInstance) {
-//        binding.filterAllTime.isGone = !state.allTimeFilter
-//        binding.filterMonth.isGone = !state.monthFilter
-//        binding.filterWeek.isGone = !state.weekFilter
-//        binding.filterCurrencyName.isGone = state.selectedCurrencies.isEmpty()
-
-//        if (state.rangeFilter) {
-//            binding.filterTimeRange.isGone = !state.rangeFilter
-//            val dateFrom = state.dateFrom?.toLocalDate()
-//            val dateTo = state.dateTo.toLocalDate()
-//            binding.filterTimeRange.text = "$dateFrom - $dateTo"
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

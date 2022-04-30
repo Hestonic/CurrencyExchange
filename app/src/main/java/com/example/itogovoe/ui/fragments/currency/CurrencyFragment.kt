@@ -32,15 +32,12 @@ class CurrencyFragment : Fragment(), CurrencyPassClick {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         setupRecycler()
+        viewModel.itemsLiveData.observe(viewLifecycleOwner) { adapter.setData(it) }
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { binding.error.isGone = !it }
         return binding.root
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) { adapter.setData(it) }
-        viewModel.errorLiveData.observe(viewLifecycleOwner) { binding.error.isGone = !it }
-    }
+
 
     private fun initViewModel() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
