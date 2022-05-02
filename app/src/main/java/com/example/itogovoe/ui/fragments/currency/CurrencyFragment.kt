@@ -79,18 +79,10 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.currency_menu, menu)
-        val item = menu.findItem(R.id.menu_search)
-        val searchView = item.actionView as SearchView
-        searchView.setOnQueryTextListener(this)
-        super.onCreateOptionsMenu(menu, inflater)
-
-        /*activity?.menuInflater?.inflate(R.menu.currency_menu, menu)
-
+        activity?.menuInflater?.inflate(R.menu.currency_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val searchView = search?.actionView as? SearchView
-        searchView?.isSubmitButtonEnabled = true
-        searchView?.setOnQueryTextListener(this)*/
+        searchView?.setOnQueryTextListener(this)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
