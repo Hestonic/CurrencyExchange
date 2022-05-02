@@ -15,9 +15,6 @@ interface HistoryDao {
     @Query("SELECT * FROM HistoryEntity ORDER BY date DESC")
     fun readAllHistory(): List<HistoryEntity>
 
-    @Query("DELETE FROM HistoryEntity")
-    fun deleteAllHistory()
-
     @Query("SELECT * FROM HistoryEntity WHERE date BETWEEN :dateFrom AND :dateTo ORDER BY date DESC")
     fun searchDateHistory(dateFrom: Long, dateTo: Long): List<HistoryEntity>
 

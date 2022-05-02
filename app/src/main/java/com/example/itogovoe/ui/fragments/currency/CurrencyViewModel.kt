@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
     private val _itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
-    val itemsLiveData: LiveData<List<CurrencyUiModel>> = _itemsLiveData
+    val itemsLiveData: LiveData<List<CurrencyUiModel>> get() = _itemsLiveData
 
     private val _errorLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    val errorLiveData: MutableLiveData<Boolean> = _errorLiveData
+    val errorLiveData: MutableLiveData<Boolean> get() = _errorLiveData
 
     private var currencyUiSorted: MutableList<CurrencyUiModel>? = null
 

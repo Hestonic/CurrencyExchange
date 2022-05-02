@@ -60,22 +60,6 @@ class Repository(
         Log.d("REPOSITORY_TAG", "Data has been added to database")
     }
 
-    private fun getLocalCurrencies() =
-        CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(readAllCurrencies())
-
-    private fun readAllCurrencies(): List<CurrenciesEntity> = localDataSource.readAllCurrencies()
-
-    suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
-        localDataSource.updateCurrencyIsFavourite(name, isFavourite)
-    }
-
-    suspend fun updateCurrencyLastUsedAt(name: String) {
-        localDataSource.updateCurrencyLastUsedAt(name)
-    }
-
-    fun readCurrency(name: String): CurrencyDtoModel =
-        CurrencyDtoMapper.mapCurrencyEntityToDomainModel(localDataSource.readCurrency(name))
-
     private suspend fun updateCurrenciesData(remoteCurrency: Response<CurrencyResponse>) {
         val currencyDtoModelList =
             CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
@@ -91,13 +75,31 @@ class Repository(
         return minutes < 1
     }
 
+    private fun getLocalCurrencies() =
+        CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(readAllCurrencies())
+
+    private fun readAllCurrencies(): List<CurrenciesEntity> = localDataSource.readAllCurrencies()
+
+
+    // CurrencyViewModel
+    suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
+        localDataSource.updateCurrencyIsFavourite(name, isFavourite)
+    }
+
+    suspend fun updateCurrencyLastUsedAt(name: String) {
+        localDataSource.updateCurrencyLastUsedAt(name)
+    }
+
     fun searchCurrenciesDatabase(searchQuery: String) =
         CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(
             localDataSource.searchCurrenciesDatabase(searchQuery)
         )
 
 
-    //History
+    // ExchangerViewModel
+    fun readCurrency(name: String): CurrencyDtoModel =
+        CurrencyDtoMapper.mapCurrencyEntityToDomainModel(localDataSource.readCurrency(name))
+
     suspend fun addHistoryItem(historyDomainModel: HistoryDtoModel) {
         localDataSource.addHistoryItem(
             HistoryUiModelMapper.mapHistoryDomainModelToEntity(
@@ -106,6 +108,8 @@ class Repository(
         )
     }
 
+
+    // History
     fun getHistory(): List<HistoryDtoModel> {
         return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
     }

@@ -16,13 +16,13 @@ import java.time.LocalDateTime
 class ExchangerViewModel(private val repository: Repository) : ViewModel() {
 
     private val _exchanger: MutableLiveData<ExchangerUiModel> = MutableLiveData()
-    val exchanger: LiveData<ExchangerUiModel> = _exchanger
+    val exchanger: LiveData<ExchangerUiModel> get() = _exchanger
 
     private val _isFreshOnHistorySave = MutableLiveData<Boolean>()
-    val isFreshOnHistorySave: LiveData<Boolean> = _isFreshOnHistorySave
+    val isFreshOnHistorySave: LiveData<Boolean> get() = _isFreshOnHistorySave
 
     private val _isFreshOnTextChange = MutableLiveData<Boolean>()
-    val isFreshOnTextChange: LiveData<Boolean> = _isFreshOnTextChange
+    val isFreshOnTextChange: LiveData<Boolean> get() = _isFreshOnTextChange
 
     private var coefficient = 0f
 

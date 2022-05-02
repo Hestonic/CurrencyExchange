@@ -22,7 +22,4 @@ interface CurrencyDao {
     @Query("SELECT * FROM CurrenciesEntity WHERE name = :name")
     fun readCurrency(name: String): CurrenciesEntity
 
-    @Query("DELETE FROM CurrenciesEntity")
-    fun deleteAllCurrencies()
-
 }

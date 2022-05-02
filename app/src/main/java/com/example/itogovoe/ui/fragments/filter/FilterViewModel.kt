@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 class FilterViewModel(private val repository: Repository) : ViewModel() {
 
     private val _filtersLiveData: MutableLiveData<FilterUiModel> = MutableLiveData()
-    val filterLiveData: LiveData<FilterUiModel> = _filtersLiveData
+    val filterLiveData: LiveData<FilterUiModel> get() = _filtersLiveData
 
     fun getFilterItems() {
         if (_filtersLiveData.value == null) initFilterUiModel()

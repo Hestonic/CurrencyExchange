@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 class HistoryViewModel(private val repository: Repository) : ViewModel() {
 
     private val _historyItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
-    val historyItems: LiveData<List<HistoryUiModel>> = _historyItems
+    val historyItems: LiveData<List<HistoryUiModel>> get() = _historyItems
 
     fun getData() {
         // TODO: не забыть удалить
