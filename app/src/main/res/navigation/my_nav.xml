@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/exchangeFragment"
-        android:name="com.example.itogovoe.ui.fragments.exchange.ExchangeFragment"
+        android:name="com.example.itogovoe.ui.fragments.exchange.ExchangerFragment"
         android:label="Exchange" >
         <action
             android:id="@+id/action_exchangeFragment_to_homeFragment"

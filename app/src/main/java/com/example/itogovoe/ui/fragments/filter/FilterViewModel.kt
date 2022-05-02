@@ -69,6 +69,7 @@ class FilterViewModel(private val repository: Repository) : ViewModel() {
                     FilterUiModelMapper.mapHistoryDomainModelToCurrencyChipsUiModel(
                         historyDtoModelList
                     )
+
                 val filterUiModel = FilterUiModel(
                     timeFilters = TimeFilterUiModel("За всё время", true),
                     timeRange = TimeRangeUiModel(

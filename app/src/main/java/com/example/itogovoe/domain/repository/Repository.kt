@@ -88,7 +88,7 @@ class Repository(
         val dateNow = LocalDateTime.now()
         val minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
         Log.d("difference_date", minutes.toString())
-        return minutes < 6
+        return minutes < 1
     }
 
 

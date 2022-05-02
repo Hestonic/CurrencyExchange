@@ -12,19 +12,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.itogovoe.App
 import com.example.itogovoe.databinding.FragmentExchangeBinding
+import com.example.itogovoe.ui.model.ExchangerUiModel
 import com.example.itogovoe.ui.model.HistoryUiModel
 import java.time.LocalDateTime
 
-class ExchangeFragment : Fragment() {
+class ExchangerFragment : Fragment() {
 
-    private lateinit var viewModel: ExchangeViewModel
+    private lateinit var viewModel: ExchangerViewModel
     private lateinit var binding: FragmentExchangeBinding
-    private val args by navArgs<ExchangeFragmentArgs>()
+    private val args by navArgs<ExchangerFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        viewModel.calculateCrossCoefficientLive(args.currencyParentName, args.currencyChildName)
+        viewModel.initUiModel(args)
     }
 
     override fun onCreateView(
@@ -32,29 +33,24 @@ class ExchangeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
+        setCurrenciesNames()
 
-        viewModel.currencies.observe(viewLifecycleOwner) { updateCurrentValues() }
+        viewModel.exchanger.observe(viewLifecycleOwner) { exchangerUiModel ->
+            binding.currencyValueChild.text = exchangerUiModel.currencyValueChild.toString()
+        }
         viewModel.isFreshOnTextChange.observe(viewLifecycleOwner) { onValueParentTextChange(it) }
         viewModel.isFreshOnHistorySave.observe(viewLifecycleOwner) { onExchangeButtonClick(it) }
+
         binding.currencyValueParent.addTextChangedListener { viewModel.checkIsFreshOnTextChange() }
         binding.exchangeButton.setOnClickListener { viewModel.checkIsFreshOnHistorySave() }
-        setStartValues()
 
         return binding.root
     }
 
-    private fun setStartValues() {
+    private fun setCurrenciesNames() {
         binding.currencyTextChild.text = args.currencyChildName
         binding.currencyTextParent.text = args.currencyParentName
         binding.currencyValueParent.setText("1.0")
-        binding.currencyValueChild.text = viewModel.coefficient.toString()
-    }
-
-    private fun updateCurrentValues() {
-        viewModel.calculateCrossCoefficientLive(args.currencyParentName, args.currencyChildName)
-        val currentParentValue = binding.currencyValueParent.text.toString().toFloat()
-        binding.currencyValueChild.text =
-            (currentParentValue * viewModel.coefficient).toString()
     }
 
     private fun onExchangeButtonClick(dataIsFresh: Boolean) {
@@ -72,7 +68,7 @@ class ExchangeFragment : Fragment() {
                     .setTitle("Обновить данные")
                     .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
                     .setPositiveButton("Хорошо") { _, _ ->
-                        viewModel.getCurrency()
+                        viewModel.updateCurrencies(args)
                         makeToast("Данные обновлены. Если вы согласны с курсом, сохраните в историю ещё раз")
                     }.create().show()
             }
@@ -83,6 +79,22 @@ class ExchangeFragment : Fragment() {
                 .setPositiveButton("Хорошо") { _, _ -> }
                 .create().show()
         }
+    }
+
+    private fun onValueParentTextChange(dataIsFresh: Boolean) {
+        if (dataIsFresh)
+            try {
+                viewModel.refreshUiModelValues(binding.currencyValueParent.text.toString().toFloat())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        else AlertDialog.Builder(requireContext())
+            .setTitle("Обновить данные")
+            .setMessage("Данные устарели, поэтому перед операцией их необходимо обновить")
+            .setPositiveButton("Хорошо") { _, _ ->
+                viewModel.updateCurrencies(args)
+                makeToast("Данные обновлены")
+            }.create().show()
     }
 
     private fun addToHistory() {
@@ -99,33 +111,14 @@ class ExchangeFragment : Fragment() {
         makeToast("Транзакция добавлена в историю")
     }
 
-    private fun onValueParentTextChange(dataIsFresh: Boolean) {
-        if (dataIsFresh)
-            try {
-                val valueParent = binding.currencyValueParent.text.toString().toFloat()
-                val valueChild = valueParent * viewModel.coefficient
-                binding.currencyValueChild.text = valueChild.toString()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        else AlertDialog.Builder(requireContext())
-            .setTitle("Обновить данные")
-            .setMessage("Данные устарели, поэтому перед операцией их необходимо обновить")
-            .setPositiveButton("Хорошо") { _, _ ->
-                viewModel.getCurrency()
-                makeToast("Данные обновлены")
-            }.create().show()
-    }
-
     private fun makeToast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     private fun initViewModel() {
         val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = ExchangeViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[ExchangeViewModel::class.java]
+        val viewModelFactory = ExchangerViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[ExchangerViewModel::class.java]
     }
-
 
 }
