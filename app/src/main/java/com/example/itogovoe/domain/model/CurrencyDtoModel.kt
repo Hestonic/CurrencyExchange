@@ -6,6 +6,6 @@ data class CurrencyDtoModel(
     val updatedAt: LocalDateTime,
     val lastUsedAt: LocalDateTime,
     val name: String,
-    val value: Double,
+    val value: Float,
     val isFavourite: Boolean
 )

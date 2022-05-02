@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/search_action"
+        android:id="@+id/menu_search"
         android:icon="@drawable/ic_baseline_search"
+        android:iconTint="@color/white"
         android:title="@string/search"
-        app:actionViewClass="android.widget.SearchView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom" />
 
 </menu>

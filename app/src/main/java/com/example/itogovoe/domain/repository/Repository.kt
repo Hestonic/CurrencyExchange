@@ -91,6 +91,11 @@ class Repository(
         return minutes < 1
     }
 
+    fun searchCurrenciesDatabase(searchQuery: String) =
+        CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(
+            localDataSource.searchCurrenciesDatabase(searchQuery)
+        )
+
 
     //History
     suspend fun addHistoryItem(historyDomainModel: HistoryDtoModel) {

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Entity
 data class CurrenciesEntity(
     @PrimaryKey val name: String,
-    val value: Double,
+    val value: Float,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val lastUsedAt: LocalDateTime,

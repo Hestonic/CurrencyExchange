@@ -9,7 +9,7 @@ data class HistoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val date: LocalDateTime,
     val currencyNameParent: String,
-    val currencyValueParent: Double,
+    val currencyValueParent: Float,
     val currencyNameChild: String,
-    val currencyValueChild: Double
+    val currencyValueChild: Float
 )

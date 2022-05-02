@@ -11,6 +11,7 @@ import com.example.itogovoe.ui.model.ExchangerUiModel
 import com.example.itogovoe.ui.model.HistoryUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class ExchangerViewModel(private val repository: Repository) : ViewModel() {
 
@@ -28,8 +29,8 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
     fun initUiModel(args: ExchangerFragmentArgs) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getCurrencies()
-            val valueParent = repository.readCurrency(args.currencyParentName).value.toFloat()
-            val valueChild = repository.readCurrency(args.currencyChildName).value.toFloat()
+            val valueParent = repository.readCurrency(args.currencyParentName).value
+            val valueChild = repository.readCurrency(args.currencyChildName).value
             coefficient = valueChild / valueParent
             val exchangerUiModel = ExchangerUiModel(
                 currencyNameParent = args.currencyParentName,
@@ -45,12 +46,12 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
     fun refreshUiModelValues(valueParent: Float) {
         viewModelScope.launch {
             val oldExchangerUiModel = _exchanger.value
-                _exchanger.postValue(
-                    oldExchangerUiModel?.copy(
-                        currencyValueParent = valueParent,
-                        currencyValueChild = valueParent * coefficient
-                    )
+            _exchanger.postValue(
+                oldExchangerUiModel?.copy(
+                    currencyValueParent = valueParent,
+                    currencyValueChild = valueParent * coefficient
                 )
+            )
             Log.d("refresh_ui_model_values_tag", oldExchangerUiModel.toString())
         }
     }
@@ -59,8 +60,8 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getCurrencies()
             val oldExchangerUiModel = _exchanger.value
-            val valueParentDb = repository.readCurrency(args.currencyParentName).value.toFloat()
-            val valueChildDb = repository.readCurrency(args.currencyChildName).value.toFloat()
+            val valueParentDb = repository.readCurrency(args.currencyParentName).value
+            val valueChildDb = repository.readCurrency(args.currencyChildName).value
             coefficient = valueChildDb / valueParentDb
             _exchanger.postValue(
                 oldExchangerUiModel?.copy(
@@ -72,8 +73,20 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun addHistoryItem(historyUiModel: HistoryUiModel) {
+    fun addHistoryItem(
+        currencyNameChild: String,
+        currencyNameParent: String,
+        currencyValueChild: Float,
+        currencyValueParent: Float
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
+            val historyUiModel = HistoryUiModel(
+                currencyNameChild = currencyNameChild,
+                currencyNameParent = currencyNameParent,
+                currencyValueChild = currencyValueChild,
+                currencyValueParent = currencyValueParent,
+                date = LocalDateTime.now().toString(),
+            )
             repository.addHistoryItem(
                 HistoryUiModelMapper.mapHistoryUiModelToDomainModel(historyUiModel)
             )

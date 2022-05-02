@@ -84,7 +84,9 @@ class ExchangerFragment : Fragment() {
     private fun onValueParentTextChange(dataIsFresh: Boolean) {
         if (dataIsFresh)
             try {
-                viewModel.refreshUiModelValues(binding.currencyValueParent.text.toString().toFloat())
+                viewModel.refreshUiModelValues(
+                    binding.currencyValueParent.text.toString().toFloat()
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -98,16 +100,12 @@ class ExchangerFragment : Fragment() {
     }
 
     private fun addToHistory() {
-        val historyUiModel = HistoryUiModel(
+        viewModel.addHistoryItem(
             currencyNameChild = binding.currencyTextChild.text.toString(),
             currencyNameParent = binding.currencyTextParent.text.toString(),
-            currencyValueChild = binding.currencyValueChild.text.toString()
-                .toDouble(),
-            currencyValueParent = binding.currencyValueParent.text.toString()
-                .toDouble(),
-            date = LocalDateTime.now().toString()
+            currencyValueChild = binding.currencyValueChild.text.toString().toFloat(),
+            currencyValueParent = binding.currencyValueParent.text.toString().toFloat()
         )
-        viewModel.addHistoryItem(historyUiModel)
         makeToast("Транзакция добавлена в историю")
     }
 

@@ -31,6 +31,10 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
         currencyDao.addCurrencyItem(currencies)
     }
 
+    fun searchCurrenciesDatabase(searchQuery: String) =
+        currencyDao.searchCurrenciesDatabase(searchQuery)
+
+
     fun readAllCurrencies(): List<CurrenciesEntity> {
         return currencyDao.readAllCurrencies()
     }

@@ -8,7 +8,7 @@ import com.example.itogovoe.data.sources.local_source.entities.*
 
 @Database(
     entities = [HistoryEntity::class, CurrenciesEntity::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)

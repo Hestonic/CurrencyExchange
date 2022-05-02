@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.itogovoe.R
 import com.example.itogovoe.domain.repository.Repository
 import com.example.itogovoe.ui.mapper.CurrencyUiModelMapper
 import com.example.itogovoe.ui.model.CurrencyUiModel
@@ -18,7 +17,6 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
     private val _errorLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val errorLiveData: MutableLiveData<Boolean> = _errorLiveData
-
 
     private var currencyUiSorted: MutableList<CurrencyUiModel>? = null
 
@@ -63,6 +61,16 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
     fun updateCurrencyLastUsedAt(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateCurrencyLastUsedAt(name)
+        }
+    }
+
+    fun searchCurrenciesDatabase(searchQuery: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val responseCurrenciesDtoModel = repository.searchCurrenciesDatabase(searchQuery)
+            val currenciesUiModel =
+                CurrencyUiModelMapper.mapDomainModelToUiModel(responseCurrenciesDtoModel)
+            sortCurrencyUiModelList(currenciesUiModel)
+            _itemsLiveData.postValue(currencyUiSorted)
         }
     }
 }
