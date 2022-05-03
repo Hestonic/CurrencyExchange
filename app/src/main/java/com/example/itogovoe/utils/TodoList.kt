@@ -1,12 +1,9 @@
 package com.example.itogovoe.utils
 
-// TODO: CurrencyFragment должен сохраняться выбранный элемент при перевороте экрана
 // TODO: Сделать во вью моделях вызовы в из бд через .let{}
 
 // TODO: HomeFragment
-//  3 должен переживать поворот экрана
-//  6 Сделать прогресс бар когда валюты подгружаются
-//   - это можно сделать при помощи ViewModel + добавить в CurrencyUiModel поле isFavourite: Boolean
+//  - должен сохраняться выбранный элемент при перевороте экрана
 
 // TODO: FilterFragment
 //  - Переделать FilterFragment под sealed class

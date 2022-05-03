@@ -33,7 +33,12 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         setupRecycler()
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) { adapter.setData(it) }
+        setProgressBarVisible()
+
+        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+            adapter.setData(it)
+            setProgressBarGone()
+        }
         viewModel.errorLiveData.observe(viewLifecycleOwner) { binding.error.isGone = !it }
         return binding.root
     }
@@ -48,6 +53,16 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)
         (binding.recyclerview.layoutManager as GridLayoutManager).scrollToPosition(0)
+    }
+
+    private fun setProgressBarVisible() {
+        binding.progressCircular.isGone = false
+        binding.recyclerview.isGone = true
+    }
+
+    private fun setProgressBarGone() {
+        binding.progressCircular.isGone = true
+        binding.recyclerview.isGone = false
     }
 
     override fun passIsFavouriteClick(currencyName: String, isFavourite: Boolean) {

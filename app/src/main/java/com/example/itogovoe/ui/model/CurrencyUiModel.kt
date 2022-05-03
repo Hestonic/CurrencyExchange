@@ -8,5 +8,3 @@ data class CurrencyUiModel(
     val lastUsedAt: LocalDateTime,
     val name: String,
 )
-
-

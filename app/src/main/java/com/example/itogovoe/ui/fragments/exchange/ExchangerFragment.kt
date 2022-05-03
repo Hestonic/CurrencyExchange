@@ -6,15 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.itogovoe.App
 import com.example.itogovoe.databinding.FragmentExchangeBinding
-import com.example.itogovoe.ui.model.ExchangerUiModel
-import com.example.itogovoe.ui.model.HistoryUiModel
-import java.time.LocalDateTime
 
 class ExchangerFragment : Fragment() {
 
@@ -34,9 +32,11 @@ class ExchangerFragment : Fragment() {
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
         setCurrenciesNames()
+        setProgressBarVisible()
 
         viewModel.exchanger.observe(viewLifecycleOwner) { exchangerUiModel ->
             binding.currencyValueChild.text = exchangerUiModel.currencyValueChild.toString()
+            setProgressBarGone()
         }
         viewModel.isFreshOnTextChange.observe(viewLifecycleOwner) { onValueParentTextChange(it) }
         viewModel.isFreshOnHistorySave.observe(viewLifecycleOwner) { onExchangeButtonClick(it) }
@@ -68,6 +68,7 @@ class ExchangerFragment : Fragment() {
                     .setTitle("Обновить данные")
                     .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
                     .setPositiveButton("Хорошо") { _, _ ->
+                        setProgressBarVisible()
                         viewModel.updateCurrencies(args)
                         makeToast("Данные обновлены. Если вы согласны с курсом, сохраните в историю ещё раз")
                     }.create().show()
@@ -94,6 +95,7 @@ class ExchangerFragment : Fragment() {
             .setTitle("Обновить данные")
             .setMessage("Данные устарели, поэтому перед операцией их необходимо обновить")
             .setPositiveButton("Хорошо") { _, _ ->
+                setProgressBarVisible()
                 viewModel.updateCurrencies(args)
                 makeToast("Данные обновлены")
             }.create().show()
@@ -107,6 +109,20 @@ class ExchangerFragment : Fragment() {
             currencyValueParent = binding.currencyValueParent.text.toString().toFloat()
         )
         makeToast("Транзакция добавлена в историю")
+    }
+
+    private fun setProgressBarVisible() {
+        binding.blockParent.isGone = true
+        binding.blockChild.isGone = true
+        binding.exchangeButton.isGone = true
+        binding.progressCircular.isGone = false
+    }
+
+    private fun setProgressBarGone() {
+        binding.blockParent.isGone = false
+        binding.blockChild.isGone = false
+        binding.exchangeButton.isGone = false
+        binding.progressCircular.isGone = true
     }
 
     private fun makeToast(text: String) {

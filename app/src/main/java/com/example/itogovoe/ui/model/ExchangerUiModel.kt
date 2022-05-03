@@ -4,5 +4,5 @@ data class ExchangerUiModel(
     val currencyNameParent: String,
     val currencyValueParent: Float,
     val currencyNameChild: String,
-    val currencyValueChild: Float
+    val currencyValueChild: Float,
 )
