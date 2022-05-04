@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.itogovoe.domain.repository.Repository
+import com.example.itogovoe.domain.repository.CurrencyRepository
 import com.example.itogovoe.ui.mapper.CurrencyUiModelMapper
 import com.example.itogovoe.ui.model.CurrencyUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CurrencyViewModel(private val repository: Repository) : ViewModel() {
+class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : ViewModel() {
 
     private val _itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
     val itemsLiveData: LiveData<List<CurrencyUiModel>> get() = _itemsLiveData
@@ -22,7 +22,7 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
     fun getCurrencies() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getCurrencies()?.let {
+            currencyRepository.getCurrencies()?.let {
                 sortCurrencyUiModelList(CurrencyUiModelMapper.mapDomainModelToUiModel(it))
                 _itemsLiveData.postValue(currencyUiSorted)
             } ?: _errorLiveData.postValue(true)
@@ -54,19 +54,19 @@ class CurrencyViewModel(private val repository: Repository) : ViewModel() {
 
     fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateCurrencyIsFavourite(name, isFavourite)
+            currencyRepository.updateCurrencyIsFavourite(name, isFavourite)
         }
     }
 
     fun updateCurrencyLastUsedAt(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateCurrencyLastUsedAt(name)
+            currencyRepository.updateCurrencyLastUsedAt(name)
         }
     }
 
     fun searchCurrenciesDatabase(searchQuery: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val responseCurrenciesDtoModel = repository.searchCurrenciesDatabase(searchQuery)
+            val responseCurrenciesDtoModel = currencyRepository.searchCurrenciesDatabase(searchQuery)
             val currenciesUiModel =
                 CurrencyUiModelMapper.mapDomainModelToUiModel(responseCurrenciesDtoModel)
             sortCurrencyUiModelList(currenciesUiModel)

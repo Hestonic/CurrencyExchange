@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.itogovoe.domain.repository.Repository
+import com.example.itogovoe.domain.repository.CurrencyRepository
+import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import com.example.itogovoe.ui.model.ExchangerUiModel
 import com.example.itogovoe.ui.model.HistoryUiModel
@@ -13,7 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class ExchangerViewModel(private val repository: Repository) : ViewModel() {
+class ExchangerViewModel(
+    private val currencyRepository: CurrencyRepository,
+    private val historyRepository: HistoryRepository
+) : ViewModel() {
 
     private val _exchanger: MutableLiveData<ExchangerUiModel> = MutableLiveData()
     val exchanger: LiveData<ExchangerUiModel> get() = _exchanger
@@ -28,9 +32,9 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
 
     fun initUiModel(args: ExchangerFragmentArgs) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getCurrencies()
-            val valueParent = repository.readCurrency(args.currencyParentName).value
-            val valueChild = repository.readCurrency(args.currencyChildName).value
+            currencyRepository.getCurrencies()
+            val valueParent = currencyRepository.readCurrency(args.currencyParentName).value
+            val valueChild = currencyRepository.readCurrency(args.currencyChildName).value
             coefficient = valueChild / valueParent
             val exchangerUiModel = ExchangerUiModel(
                 currencyNameParent = args.currencyParentName,
@@ -58,10 +62,10 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
 
     fun updateCurrencies(args: ExchangerFragmentArgs) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getCurrencies()
+            currencyRepository.getCurrencies()
             val oldExchangerUiModel = _exchanger.value
-            val valueParentDb = repository.readCurrency(args.currencyParentName).value
-            val valueChildDb = repository.readCurrency(args.currencyChildName).value
+            val valueParentDb = currencyRepository.readCurrency(args.currencyParentName).value
+            val valueChildDb = currencyRepository.readCurrency(args.currencyChildName).value
             coefficient = valueChildDb / valueParentDb
             _exchanger.postValue(
                 oldExchangerUiModel?.copy(
@@ -87,7 +91,7 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
                 currencyValueParent = currencyValueParent,
                 date = LocalDateTime.now().toString(),
             )
-            repository.addHistoryItem(
+            historyRepository.addHistoryItem(
                 HistoryUiModelMapper.mapHistoryUiModelToDomainModel(historyUiModel)
             )
         }
@@ -95,13 +99,13 @@ class ExchangerViewModel(private val repository: Repository) : ViewModel() {
 
     fun checkIsFreshOnHistorySave() {
         viewModelScope.launch(Dispatchers.IO) {
-            _isFreshOnHistorySave.postValue(repository.isFresh())
+            _isFreshOnHistorySave.postValue(currencyRepository.isFresh())
         }
     }
 
     fun checkIsFreshOnTextChange() {
         viewModelScope.launch(Dispatchers.IO) {
-            _isFreshOnTextChange.postValue(repository.isFresh())
+            _isFreshOnTextChange.postValue(currencyRepository.isFresh())
         }
     }
 

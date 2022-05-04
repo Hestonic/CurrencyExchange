@@ -1,6 +1,7 @@
 package com.example.itogovoe.utils
 
-// TODO: Сделать во вью моделях вызовы в из бд через .let{}
+// TODO: Сделать отображение progressBar задействуя UiModel, добавив туда val isLoading: Boolean
+// TODO: сделать repository правильно https://clck.ru/gj65x
 
 // TODO: HomeFragment
 //  - должен сохраняться выбранный элемент при перевороте экрана

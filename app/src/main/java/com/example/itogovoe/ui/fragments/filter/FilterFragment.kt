@@ -128,8 +128,8 @@ class FilterFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = FilterViewModelFactory(repository)
+        val historyRepository = (requireActivity().application as App).dependencyInjection.historyRepositoryImpl
+        val viewModelFactory = FilterViewModelFactory(historyRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[FilterViewModel::class.java]
     }
 

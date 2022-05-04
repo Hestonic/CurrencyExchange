@@ -44,8 +44,8 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     }
 
     private fun initViewModel() {
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = CurrencyViewModelFactory(repository)
+        val currencyRepository = (requireActivity().application as App).dependencyInjection.currencyRepositoryImpl
+        val viewModelFactory = CurrencyViewModelFactory(currencyRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
     }
 

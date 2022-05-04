@@ -1,4 +1,4 @@
-package com.example.itogovoe.domain.repository
+package com.example.itogovoe.data.repository
 
 import android.util.Log
 import com.example.itogovoe.data.api.CurrencyResponse
@@ -6,20 +6,18 @@ import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
-import com.example.itogovoe.domain.mapper.HistoryDtoMapper
 import com.example.itogovoe.domain.model.CurrencyDtoModel
-import com.example.itogovoe.domain.model.HistoryDtoModel
-import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
+import com.example.itogovoe.domain.repository.CurrencyRepository
 import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-class Repository(
+class CurrencyRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
-) {
+) : CurrencyRepository {
 
-    suspend fun getCurrencies(): List<CurrencyDtoModel>? {
+    override suspend fun getCurrencies(): List<CurrencyDtoModel>? {
         try {
             val localCurrencies = localDataSource.readAllCurrencies()
             Log.d("REPOSITORY_TAG", "localCurrencies: ${localCurrencies.size}")
@@ -67,7 +65,7 @@ class Repository(
         Log.d("REPOSITORY_TAG", "Database has been updated")
     }
 
-    fun isFresh(): Boolean {
+    override fun isFresh(): Boolean {
         val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
         val minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
@@ -81,42 +79,20 @@ class Repository(
     private fun readAllCurrencies(): List<CurrenciesEntity> = localDataSource.readAllCurrencies()
 
 
-    // CurrencyViewModel
-    suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
+    override suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         localDataSource.updateCurrencyIsFavourite(name, isFavourite)
     }
 
-    suspend fun updateCurrencyLastUsedAt(name: String) {
+    override suspend fun updateCurrencyLastUsedAt(name: String) {
         localDataSource.updateCurrencyLastUsedAt(name)
     }
 
-    fun searchCurrenciesDatabase(searchQuery: String) =
+    override fun searchCurrenciesDatabase(searchQuery: String) =
         CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(
             localDataSource.searchCurrenciesDatabase(searchQuery)
         )
 
-
-    // ExchangerViewModel
-    fun readCurrency(name: String): CurrencyDtoModel =
+    override fun readCurrency(name: String): CurrencyDtoModel =
         CurrencyDtoMapper.mapCurrencyEntityToDomainModel(localDataSource.readCurrency(name))
 
-    suspend fun addHistoryItem(historyDomainModel: HistoryDtoModel) {
-        localDataSource.addHistoryItem(
-            HistoryUiModelMapper.mapHistoryDomainModelToEntity(
-                historyDomainModel
-            )
-        )
-    }
-
-
-    // History
-    fun getHistory(): List<HistoryDtoModel> {
-        return HistoryDtoMapper.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
-    }
-
-    fun searchDateHistory(dateFrom: LocalDateTime, dateTo: LocalDateTime): List<HistoryDtoModel> {
-        return HistoryDtoMapper.mapHistoryEntityToDomainModel(
-            localDataSource.searchDateHistory(dateFrom, dateTo)
-        )
-    }
 }

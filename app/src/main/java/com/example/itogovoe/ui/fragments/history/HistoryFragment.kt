@@ -39,8 +39,8 @@ class HistoryFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = HistoryViewModelFactory(repository)
+        val historyRepository = (requireActivity().application as App).dependencyInjection.historyRepositoryImpl
+        val viewModelFactory = HistoryViewModelFactory(historyRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[HistoryViewModel::class.java]
     }
 

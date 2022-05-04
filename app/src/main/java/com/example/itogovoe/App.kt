@@ -11,7 +11,7 @@ class App : Application() {
         dependencyInjection.initCurrencyDao(this)
         dependencyInjection.initHistoryDao(this)
         dependencyInjection.initLocal(dependencyInjection.currencyDao, dependencyInjection.historyDao)
-        dependencyInjection.initRepository(
+        dependencyInjection.initRepositories(
             dependencyInjection.localDataSource,
             dependencyInjection.remoteDataSource
         )

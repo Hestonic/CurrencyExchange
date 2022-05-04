@@ -2,13 +2,13 @@ package com.example.itogovoe.ui.fragments.filter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.itogovoe.domain.repository.Repository
+import com.example.itogovoe.domain.repository.HistoryRepository
 
-class FilterViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
+class FilterViewModelFactory(private val historyRepository: HistoryRepository) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FilterViewModel::class.java))
-            return FilterViewModel(repository) as T
+            return FilterViewModel(historyRepository) as T
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.itogovoe.domain.repository.Repository
+import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.main.FilterInstance
 import com.example.itogovoe.ui.main.TimeFilter
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class HistoryViewModel(private val repository: Repository) : ViewModel() {
+class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewModel() {
 
     private val _historyItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
     val historyItems: LiveData<List<HistoryUiModel>> get() = _historyItems
@@ -33,7 +33,7 @@ class HistoryViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getAllHistory() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getHistory().let {
+            historyRepository.getHistory().let {
                 _historyItems.postValue(HistoryUiModelMapper.mapHistoryEntityToUiModel(it))
             }
         }
@@ -41,7 +41,7 @@ class HistoryViewModel(private val repository: Repository) : ViewModel() {
 
     private fun getData(from: LocalDateTime, to: LocalDateTime) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.searchDateHistory(from, to).let {
+            historyRepository.searchDateHistory(from, to).let {
                 _historyItems.postValue(HistoryUiModelMapper.mapHistoryEntityToUiModel(it))
             }
         }

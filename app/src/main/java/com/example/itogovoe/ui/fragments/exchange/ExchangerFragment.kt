@@ -130,8 +130,9 @@ class ExchangerFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val repository = (requireActivity().application as App).dependencyInjection.repository
-        val viewModelFactory = ExchangerViewModelFactory(repository)
+        val currencyRepository = (requireActivity().application as App).dependencyInjection.currencyRepositoryImpl
+        val historyRepository = (requireActivity().application as App).dependencyInjection.historyRepositoryImpl
+        val viewModelFactory = ExchangerViewModelFactory(currencyRepository, historyRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ExchangerViewModel::class.java]
     }
 

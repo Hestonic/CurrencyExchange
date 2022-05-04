@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.itogovoe.domain.repository.Repository
+import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.main.FilterInstance
 import com.example.itogovoe.ui.main.TimeFilter
 import com.example.itogovoe.ui.mapper.FilterUiModelMapper
@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class FilterViewModel(private val repository: Repository) : ViewModel() {
+class FilterViewModel(private val historyRepository: HistoryRepository) : ViewModel() {
 
     private val _filtersLiveData: MutableLiveData<FilterUiModel> = MutableLiveData()
     val filterLiveData: LiveData<FilterUiModel> get() = _filtersLiveData
@@ -64,7 +64,7 @@ class FilterViewModel(private val repository: Repository) : ViewModel() {
 
     private fun initFilterUiModel() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getHistory().let { historyDtoModelList ->
+            historyRepository.getHistory().let { historyDtoModelList ->
                 val currencyChipsUiModelList =
                     FilterUiModelMapper.mapHistoryDomainModelToCurrencyChipsUiModel(
                         historyDtoModelList
