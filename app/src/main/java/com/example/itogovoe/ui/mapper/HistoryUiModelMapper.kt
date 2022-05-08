@@ -1,6 +1,7 @@
 package com.example.itogovoe.ui.mapper
 
 import com.example.itogovoe.data.sources.local_source.DateConverter
+import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 import com.example.itogovoe.domain.model.HistoryDtoModel
 import com.example.itogovoe.ui.model.CurrencyChipsUiModel
@@ -31,14 +32,4 @@ object HistoryUiModelMapper {
         )
     }
 
-    fun mapHistoryDomainModelToEntity(historyDomainModel: HistoryDtoModel): HistoryEntity {
-        return HistoryEntity(
-            id = 0,
-            currencyNameParent = historyDomainModel.currencyNameParent,
-            currencyValueParent = historyDomainModel.currencyValueParent,
-            currencyNameChild = historyDomainModel.currencyNameChild,
-            currencyValueChild = historyDomainModel.currencyValueChild,
-            date = historyDomainModel.date
-        )
-    }
 }

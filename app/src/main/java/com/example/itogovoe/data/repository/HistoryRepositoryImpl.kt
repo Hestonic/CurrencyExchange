@@ -8,14 +8,11 @@ import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import java.time.LocalDateTime
 
-class HistoryRepositoryImpl(
-    private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
-) : HistoryRepository {
+class HistoryRepositoryImpl(private val localDataSource: LocalDataSource) : HistoryRepository {
 
     override suspend fun addHistoryItem(historyDomainModel: HistoryDtoModel) {
         localDataSource.addHistoryItem(
-            HistoryUiModelMapper.mapHistoryDomainModelToEntity(
+            HistoryDtoMapper.mapHistoryDomainModelToEntity(
                 historyDomainModel
             )
         )

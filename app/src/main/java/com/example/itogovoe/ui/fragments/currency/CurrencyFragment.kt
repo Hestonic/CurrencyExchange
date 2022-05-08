@@ -35,7 +35,7 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
         setupRecycler()
         setProgressBarVisible()
 
-        viewModel.itemsLiveData.observe(viewLifecycleOwner) {
+        viewModel.currenciesLiveData.observe(viewLifecycleOwner) {
             adapter.setData(it)
             setProgressBarGone()
         }
@@ -67,7 +67,6 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
 
     override fun passIsFavouriteClick(currencyName: String, isFavourite: Boolean) {
         viewModel.updateCurrencyIsFavourite(currencyName, isFavourite)
-        viewModel.getCurrencies()
     }
 
     override fun passClick(
@@ -76,7 +75,6 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     ) {
         viewModel.updateCurrencyLastUsedAt(currencyChildName)
         viewModel.updateCurrencyLastUsedAt(currencyParentName)
-        viewModel.getCurrencies()
         val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
             currencyParentName = currencyParentName,
             currencyChildName = currencyChildName,
@@ -86,7 +84,6 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
 
     override fun passLongClick(currencyName: String) {
         viewModel.updateCurrencyLastUsedAt(currencyName)
-        viewModel.getCurrencies()
     }
 
     override fun passIsCheckedLongClick(currencyUiModel: CurrencyUiModel) {
@@ -113,6 +110,6 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     private fun searchCurrenciesDatabase(query: String) {
         val searchQuery = "%$query%"
         Log.d("asd", "searchQuery")
-        viewModel.searchCurrenciesDatabase(searchQuery)
+        viewModel.searchCurrencies(searchQuery)
     }
 }

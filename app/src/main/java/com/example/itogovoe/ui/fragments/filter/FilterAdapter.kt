@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemCurrencyFilterBinding
 import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 
-class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
+class FilterAdapter : RecyclerView.Adapter<FilterViewHolder>() {
 
-    private var CurrencyChipsList: List<CurrencyChipsUiModel> = listOf()
+    private var currencyChipsList: List<CurrencyChipsUiModel> = listOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -21,37 +21,15 @@ class FilterAdapter : RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
-        val filter = CurrencyChipsList[position]
+        val filter = currencyChipsList[position]
         holder.bind(filter)
     }
 
-    override fun getItemCount(): Int = CurrencyChipsList.size
-
-    inner class FilterViewHolder(private val binding: ItemCurrencyFilterBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("NotifyDataSetChanged")
-        fun bind(currency: CurrencyChipsUiModel) = binding.run {
-            currencyName.text = currency.name
-
-            // TODO: Filter
-            /*if (FilterInstance.selectedCurrencies.contains(currencyName.text.toString()))
-                currencyFilterLayout.setBackgroundResource(R.drawable.round_bg_filter_selected)
-            else currencyFilterLayout.setBackgroundResource(R.drawable.round_bg_filter)
-
-
-            binding.currencyFilterLayout.setOnClickListener {
-                if (FilterInstance.selectedCurrencies.contains(currencyName.text.toString()))
-                    FilterInstance.selectedCurrencies.remove(currencyName.text.toString())
-                else FilterInstance.selectedCurrencies.add(currencyName.text.toString())
-//                Log.d("filter_adapter_tag", FilterInstance.selectedCurrencies.toString())
-                notifyDataSetChanged()
-            }*/
-        }
-    }
+    override fun getItemCount(): Int = currencyChipsList.size
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(filterList: List<CurrencyChipsUiModel>) {
-        this.CurrencyChipsList = filterList
+        this.currencyChipsList = filterList
         notifyDataSetChanged()
     }
 }

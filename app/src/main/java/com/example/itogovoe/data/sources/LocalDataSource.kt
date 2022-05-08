@@ -5,6 +5,7 @@ import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
+import com.example.itogovoe.domain.mapper.HistoryDtoMapper
 import com.example.itogovoe.domain.model.CurrencyDtoModel
 import java.time.LocalDateTime
 
@@ -41,16 +42,9 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
 
     suspend fun updateCurrency(currencyDtoModel: CurrencyDtoModel) {
         val localCurrencyNotFresh = readCurrency(currencyDtoModel.name)
-        currencyDao.updateCurrency(
-            CurrenciesEntity(
-                name = currencyDtoModel.name,
-                value = currencyDtoModel.value,
-                createdAt = localCurrencyNotFresh.createdAt,
-                updatedAt = LocalDateTime.now(),
-                lastUsedAt = localCurrencyNotFresh.lastUsedAt,
-                isFavourite = localCurrencyNotFresh.isFavourite
-            )
-        )
+        val localCurrencyFresh =
+            HistoryDtoMapper.mapCurrenciesEntityNotFreshToFresh(localCurrencyNotFresh, currencyDtoModel)
+        currencyDao.updateCurrency(localCurrencyFresh)
     }
 
     suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {

@@ -12,42 +12,41 @@ import kotlinx.coroutines.launch
 
 class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : ViewModel() {
 
-    private val _itemsLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
-    val itemsLiveData: LiveData<List<CurrencyUiModel>> get() = _itemsLiveData
+    private val _currenciesLiveData: MutableLiveData<List<CurrencyUiModel>> = MutableLiveData()
+    val currenciesLiveData: LiveData<List<CurrencyUiModel>> get() = _currenciesLiveData
 
     private val _errorLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val errorLiveData: MutableLiveData<Boolean> get() = _errorLiveData
 
-    private var currencyUiSorted: MutableList<CurrencyUiModel>? = null
-
     fun getCurrencies() {
         viewModelScope.launch(Dispatchers.IO) {
-            currencyRepository.getCurrencies()?.let {
-                sortCurrencyUiModelList(CurrencyUiModelMapper.mapDomainModelToUiModel(it))
-                _itemsLiveData.postValue(currencyUiSorted)
-            } ?: _errorLiveData.postValue(true)
+            val currencies = currencyRepository.getCurrencies()
+            if (currencies.isNotEmpty()) {
+                sortCurrencyUiModelList(CurrencyUiModelMapper.mapDomainModelToUiModel(currencies))
+            } else _errorLiveData.postValue(true)
         }
     }
 
     private fun sortCurrencyUiModelList(currencyUiModelList: List<CurrencyUiModel>?) {
-        currencyUiSorted = currencyUiModelList
+        _currenciesLiveData.postValue(currencyUiModelList
             ?.sortedByDescending { currency -> currency.lastUsedAt }
             ?.sortedByDescending { currency -> currency.isFavourite }
-            ?.toMutableList()
+            ?.toMutableList())
     }
 
 
     fun isCheckedSort(currencyUiModel: CurrencyUiModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            currencyUiSorted?.remove(currencyUiModel)
+            val currenciesList = _currenciesLiveData.value?.toMutableList()
+            currenciesList?.remove(currencyUiModel)
             val checkedCurrencyUiModel = CurrencyUiModel(
                 isChecked = true,
                 isFavourite = currencyUiModel.isFavourite,
                 lastUsedAt = currencyUiModel.lastUsedAt,
                 name = currencyUiModel.name
             )
-            currencyUiSorted?.add(0, checkedCurrencyUiModel)
-            _itemsLiveData.postValue(currencyUiSorted)
+            currenciesList?.add(0, checkedCurrencyUiModel)
+            _currenciesLiveData.postValue(currenciesList)
         }
     }
 
@@ -55,22 +54,23 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
     fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             currencyRepository.updateCurrencyIsFavourite(name, isFavourite)
+            getCurrencies()
         }
     }
 
     fun updateCurrencyLastUsedAt(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             currencyRepository.updateCurrencyLastUsedAt(name)
+            getCurrencies()
         }
     }
 
-    fun searchCurrenciesDatabase(searchQuery: String) {
+    fun searchCurrencies(searchQuery: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val responseCurrenciesDtoModel = currencyRepository.searchCurrenciesDatabase(searchQuery)
-            val currenciesUiModel =
-                CurrencyUiModelMapper.mapDomainModelToUiModel(responseCurrenciesDtoModel)
-            sortCurrencyUiModelList(currenciesUiModel)
-            _itemsLiveData.postValue(currencyUiSorted)
+            val foundCurrenciesUiModel = CurrencyUiModelMapper.mapDomainModelToUiModel(
+                currencyRepository.searchCurrenciesDatabase(searchQuery)
+            )
+            sortCurrencyUiModelList(foundCurrenciesUiModel)
         }
     }
 }

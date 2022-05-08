@@ -8,7 +8,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-
     private val retrofit by lazy {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -20,11 +19,9 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
     private val api: CurrencyApi by lazy {
         retrofit.create(CurrencyApi::class.java)
     }
-
     val remoteDataSource = RemoteDataSource(api)
 }
 

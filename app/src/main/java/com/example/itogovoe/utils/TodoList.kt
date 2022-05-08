@@ -1,7 +1,8 @@
 package com.example.itogovoe.utils
 
-// TODO: Сделать отображение progressBar задействуя UiModel, добавив туда val isLoading: Boolean
-// TODO: сделать repository правильно https://clck.ru/gj65x
+// TODO:
+//  Сделать отображение progressBar задействуя UiModel, добавив туда val isLoading: Boolean
+//  Выдавать ошибку если отсутствует интернет во время загрузки в ExchangerFragment
 
 // TODO: HomeFragment
 //  - должен сохраняться выбранный элемент при перевороте экрана
@@ -14,5 +15,4 @@ package com.example.itogovoe.utils
 //  - При повторном нажатии выбор данной валюты отменяется (либо сделать кнопку сброса фильтра по валютам)
 //  - На экране с историей будет видно, что применён фильтр по валютам
 
-// TODO: - AnalyticFragment
-// TODO: - возможно использовать api какой нибудь биржи тенденции валют
+// TODO: AnalyticFragment

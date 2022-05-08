@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -56,30 +56,40 @@ class ExchangerFragment : Fragment() {
     private fun onExchangeButtonClick(dataIsFresh: Boolean) {
         try {
             when {
-                binding.currencyValueParent.text.isEmpty() -> AlertDialog.Builder(requireContext())
-                    .setTitle("Вы ввели пустое значение")
-                    .setMessage("Введите значение в поле ввода, перед тем как осуществить транзакцию")
-                    .setPositiveButton("Хорошо") { _, _ -> }
-                    .create().show()
-
+                binding.currencyValueParent.text.isEmpty() -> showAlertDialogEmptyValue()
                 dataIsFresh -> addToHistory()
-
-                else -> AlertDialog.Builder(requireContext())
-                    .setTitle("Обновить данные")
-                    .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
-                    .setPositiveButton("Хорошо") { _, _ ->
-                        setProgressBarVisible()
-                        viewModel.updateCurrencies(args)
-                        makeToast("Данные обновлены. Если вы согласны с курсом, сохраните в историю ещё раз")
-                    }.create().show()
+                else -> showAlertDialogNotFreshValues()
             }
         } catch (e: Exception) {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Вы ввели недопустимое значение")
-                .setMessage("Введите корректное значение в поле ввода, перед тем как осуществить транзакцию")
-                .setPositiveButton("Хорошо") { _, _ -> }
-                .create().show()
+            showAlertDialogInvalidValue()
         }
+    }
+
+    private fun showAlertDialogNotFreshValues() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Обновить данные")
+            .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
+            .setPositiveButton("Хорошо") { _, _ ->
+                setProgressBarVisible()
+                viewModel.updateCurrencies(args)
+                makeToast("Данные обновлены. Если вы согласны с курсом, сохраните в историю ещё раз")
+            }.create().show()
+    }
+
+    private fun showAlertDialogEmptyValue() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Вы ввели пустое значение")
+            .setMessage("Введите значение в поле ввода, перед тем как осуществить транзакцию")
+            .setPositiveButton("Хорошо") { _, _ -> }
+            .create().show()
+    }
+
+    private fun showAlertDialogInvalidValue() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Вы ввели недопустимое значение")
+            .setMessage("Введите корректное значение в поле ввода, перед тем как осуществить транзакцию")
+            .setPositiveButton("Хорошо") { _, _ -> }
+            .create().show()
     }
 
     private fun onValueParentTextChange(dataIsFresh: Boolean) {
@@ -112,17 +122,17 @@ class ExchangerFragment : Fragment() {
     }
 
     private fun setProgressBarVisible() {
-        binding.blockParent.isGone = true
-        binding.blockChild.isGone = true
-        binding.exchangeButton.isGone = true
-        binding.progressCircular.isGone = false
+        binding.blockParent.isVisible = false
+        binding.blockChild.isVisible = false
+        binding.exchangeButton.isVisible = false
+        binding.progressCircular.isVisible = true
     }
 
     private fun setProgressBarGone() {
-        binding.blockParent.isGone = false
-        binding.blockChild.isGone = false
-        binding.exchangeButton.isGone = false
-        binding.progressCircular.isGone = true
+        binding.blockParent.isVisible = true
+        binding.blockChild.isVisible = true
+        binding.exchangeButton.isVisible = true
+        binding.progressCircular.isVisible = false
     }
 
     private fun makeToast(text: String) {

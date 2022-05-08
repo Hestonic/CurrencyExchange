@@ -17,36 +17,41 @@ class CurrencyRepositoryImpl(
     private val remoteDataSource: RemoteDataSource
 ) : CurrencyRepository {
 
-    override suspend fun getCurrencies(): List<CurrencyDtoModel>? {
+    override suspend fun getCurrencies(): List<CurrencyDtoModel> {
         try {
             val localCurrencies = localDataSource.readAllCurrencies()
             Log.d("REPOSITORY_TAG", "localCurrencies: ${localCurrencies.size}")
             return when {
-                localCurrencies.isEmpty() -> {
-                    Log.d("REPOSITORY_TAG", "Database is empty")
-                    val remoteCurrency = remoteDataSource.getCurrencies()
-                    return if (remoteCurrency.isSuccessful) {
-                        saveCurrencies(remoteCurrency)
-                        getLocalCurrencies()
-                    } else null
-                }
+                localCurrencies.isEmpty() -> saveResponseAndReturnUpdatedLocalCurrencies()
                 isFresh() -> {
                     Log.d("REPOSITORY_TAG", "Data is fresh")
                     getLocalCurrencies()
                 }
-                else -> {
-                    Log.d("REPOSITORY_TAG", "Data is not fresh")
-                    val remoteCurrency = remoteDataSource.getCurrencies()
-                    return if (remoteCurrency.isSuccessful) {
-                        updateCurrenciesData(remoteCurrency)
-                        getLocalCurrencies()
-                    } else null
-                }
+                else -> updateAndReturnUpdatedLocalCurrencies()
+
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
+            return emptyList()
         }
+    }
+
+    private suspend fun updateAndReturnUpdatedLocalCurrencies(): List<CurrencyDtoModel> {
+        Log.d("REPOSITORY_TAG", "Data is not fresh")
+        val remoteCurrency = remoteDataSource.getCurrencies()
+        return if (remoteCurrency.isSuccessful) {
+            updateCurrenciesData(remoteCurrency)
+            getLocalCurrencies()
+        } else emptyList()
+    }
+
+    private suspend fun saveResponseAndReturnUpdatedLocalCurrencies(): List<CurrencyDtoModel> {
+        Log.d("REPOSITORY_TAG", "Database is empty")
+        val remoteCurrency = remoteDataSource.getCurrencies()
+        return if (remoteCurrency.isSuccessful) {
+            saveCurrencies(remoteCurrency)
+            getLocalCurrencies()
+        } else emptyList()
     }
 
     private suspend fun saveCurrencies(remoteCurrency: Response<CurrencyResponse>) {

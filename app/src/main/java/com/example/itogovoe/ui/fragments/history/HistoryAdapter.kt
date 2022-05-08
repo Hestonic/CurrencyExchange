@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemHistoryBinding
 import com.example.itogovoe.ui.model.HistoryUiModel
 
-class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
 
     private var historyList: List<HistoryUiModel> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HistoryAdapter.HistoryViewHolder {
+    ): HistoryViewHolder {
         val binding = ItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HistoryViewHolder(binding)
     }
@@ -25,17 +25,6 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     }
 
     override fun getItemCount(): Int = historyList.size
-
-    inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(history: HistoryUiModel) = binding.run {
-            binding.date.text = history.date
-            binding.currencyNameChild.text = history.currencyNameChild
-            binding.currencyValueChild.text = history.currencyValueChild.toString()
-            binding.currencyNameParent.text = history.currencyNameParent
-            binding.currencyValueParent.text = history.currencyValueParent.toString()
-        }
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(historyEntity: List<HistoryUiModel>) {

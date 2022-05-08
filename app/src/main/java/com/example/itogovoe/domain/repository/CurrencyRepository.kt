@@ -4,7 +4,7 @@ import com.example.itogovoe.domain.model.CurrencyDtoModel
 
 interface CurrencyRepository {
 
-    suspend fun getCurrencies(): List<CurrencyDtoModel>?
+    suspend fun getCurrencies(): List<CurrencyDtoModel>
 
     suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean)
 

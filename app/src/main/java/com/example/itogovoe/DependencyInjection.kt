@@ -33,7 +33,7 @@ class DependencyInjection {
     }
 
     fun initRepositories(localDataSource: LocalDataSource, remoteDataSource: RemoteDataSource) {
-        historyRepositoryImpl = HistoryRepositoryImpl(localDataSource, remoteDataSource)
+        historyRepositoryImpl = HistoryRepositoryImpl(localDataSource)
         currencyRepositoryImpl = CurrencyRepositoryImpl(localDataSource, remoteDataSource)
     }
 }
