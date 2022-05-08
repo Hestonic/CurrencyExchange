@@ -101,14 +101,7 @@ class ExchangerFragment : Fragment() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        else AlertDialog.Builder(requireContext())
-            .setTitle("Обновить данные")
-            .setMessage("Данные устарели, поэтому перед операцией их необходимо обновить")
-            .setPositiveButton("Хорошо") { _, _ ->
-                setProgressBarVisible()
-                viewModel.updateCurrencies(args)
-                makeToast("Данные обновлены")
-            }.create().show()
+        else showAlertDialogNotFreshValues()
     }
 
     private fun addToHistory() {
