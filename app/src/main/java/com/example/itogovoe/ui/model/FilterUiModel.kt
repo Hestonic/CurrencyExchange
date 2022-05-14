@@ -1,7 +1,7 @@
 package com.example.itogovoe.ui.model
 
 data class FilterUiModel(
-    val timeFilters: TimeFilterUiModel,
+    val timeFilters: List<TimeFilterUiModel>,
     val timeRange: TimeRangeUiModel,
     val currencyChips: List<CurrencyChipsUiModel>
 )
@@ -21,4 +21,3 @@ data class CurrencyChipsUiModel(
     val name: String,
     val isChecked: Boolean
 )
-

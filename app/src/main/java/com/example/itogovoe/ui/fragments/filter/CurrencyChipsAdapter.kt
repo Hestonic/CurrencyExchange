@@ -7,29 +7,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemCurrencyFilterBinding
 import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 
-class FilterAdapter : RecyclerView.Adapter<FilterViewHolder>() {
+class CurrencyChipsAdapter : RecyclerView.Adapter<CurrencyChipsViewHolder>() {
 
     private var currencyChipsList: List<CurrencyChipsUiModel> = listOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): FilterViewHolder {
+    ): CurrencyChipsViewHolder {
         val binding =
             ItemCurrencyFilterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return FilterViewHolder(binding)
+        return CurrencyChipsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
-        val filter = currencyChipsList[position]
-        holder.bind(filter)
+    override fun onBindViewHolder(holder: CurrencyChipsViewHolder, position: Int) {
+        currencyChipsList.getOrNull(position)?.let {
+            holder.bind(it)
+        }
     }
 
     override fun getItemCount(): Int = currencyChipsList.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(filterList: List<CurrencyChipsUiModel>) {
-        this.currencyChipsList = filterList
+    fun setData(data: List<CurrencyChipsUiModel>) {
+        this.currencyChipsList = data
         notifyDataSetChanged()
     }
 }

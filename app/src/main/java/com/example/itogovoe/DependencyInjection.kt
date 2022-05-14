@@ -19,7 +19,6 @@ class DependencyInjection {
     lateinit var historyRepositoryImpl: HistoryRepositoryImpl
     lateinit var currencyRepositoryImpl: CurrencyRepositoryImpl
 
-
     fun initCurrencyDao(context: Context) {
         currencyDao = CurrencyDatabase.getDatabase(context).currencyDao
     }

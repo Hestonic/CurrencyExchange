@@ -73,6 +73,7 @@ class CurrencyRepositoryImpl(
     override fun isFresh(): Boolean {
         val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
+        // TODO: localCurrencies[0] небезопасненько
         val minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
         Log.d("difference_date", minutes.toString())
         return minutes < 1

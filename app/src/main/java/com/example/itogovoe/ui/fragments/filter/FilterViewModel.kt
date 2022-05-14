@@ -8,36 +8,68 @@ import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.main.FilterInstance
 import com.example.itogovoe.ui.main.TimeFilter
 import com.example.itogovoe.ui.mapper.FilterUiModelMapper
+import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 import com.example.itogovoe.ui.model.FilterUiModel
 import com.example.itogovoe.ui.model.TimeFilterUiModel
-import com.example.itogovoe.ui.model.TimeRangeUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class FilterViewModel(private val historyRepository: HistoryRepository) : ViewModel() {
 
     private val _filtersLiveData: MutableLiveData<FilterUiModel> = MutableLiveData()
     val filterLiveData: LiveData<FilterUiModel> get() = _filtersLiveData
 
-    fun getFilterItems() {
-        if (_filtersLiveData.value == null) initFilterUiModel()
+    /*fun getFilterItems() {
         when (FilterInstance.timeFilter) {
             is TimeFilter.AllTime -> setAllTimeFilter()
             is TimeFilter.Month -> setMonthFilter()
             is TimeFilter.Week -> setWeekFilter()
             is TimeFilter.Range -> setRangeFilter()
         }
+    }*/
+
+    fun initFilterUiModel() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _filtersLiveData.postValue(FilterUiModelMapper.mapFilterUiModel(getCurrenciesFilter()))
+        }
     }
 
-    private fun setAllTimeFilter() {
+    private fun getCurrenciesFilter(): List<CurrencyChipsUiModel> {
+        historyRepository.getHistory().let { historyDtoModelList ->
+            return FilterUiModelMapper.mapHistoryDomainModelToCurrencyChipsUiModel(
+                historyDtoModelList
+            )
+        }
+    }
+
+    fun setTimeFilter(name: String) {
+        viewModelScope.launch {
+            val oldFilters = _filtersLiveData.value
+            val timeFilterUiModelList = mutableListOf<TimeFilterUiModel>()
+            oldFilters?.timeFilters?.forEach { filter ->
+                if (filter.name == name) timeFilterUiModelList.add(TimeFilterUiModel(name, true))
+                else timeFilterUiModelList.add(TimeFilterUiModel(filter.name, false))
+            }
+            _filtersLiveData.postValue(oldFilters?.copy(timeFilters = timeFilterUiModelList))
+        }
+        setTimeToFilterInstance(name)
+    }
+
+    private fun setTimeToFilterInstance(name: String) {
+        when (name) {
+            "За всё время" -> FilterInstance.timeFilter = TimeFilter.AllTime
+            "За месяц" -> FilterInstance.timeFilter = TimeFilter.Month
+            "За неделю" -> FilterInstance.timeFilter = TimeFilter.Week
+        }
+    }
+        /*private fun setAllTimeFilter() {
         viewModelScope.launch {
             val oldFilters = _filtersLiveData.value
             _filtersLiveData.postValue(
                 oldFilters?.copy(timeFilters = TimeFilterUiModel("За всё время", true))
             )
         }
-    }
+
 
     private fun setMonthFilter() {
         viewModelScope.launch {
@@ -58,32 +90,12 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
     }
 
     private fun setRangeFilter() {
-        TODO("Not yet implemented")
-    }
+    }*/
 
 
-    private fun initFilterUiModel() {
-        viewModelScope.launch(Dispatchers.IO) {
-            historyRepository.getHistory().let { historyDtoModelList ->
-                val currencyChipsUiModelList =
-                    FilterUiModelMapper.mapHistoryDomainModelToCurrencyChipsUiModel(
-                        historyDtoModelList
-                    )
 
-                val filterUiModel = FilterUiModel(
-                    timeFilters = TimeFilterUiModel("За всё время", true),
-                    timeRange = TimeRangeUiModel(
-                        "Выбрать дату",
-                        LocalDateTime.now().toString(),
-                        false
-                    ),
-                    currencyChips = currencyChipsUiModelList,
-                )
-                _filtersLiveData.postValue(filterUiModel)
-            }
-        }
-    }
 }
+
 
 // TODO: не забыть удалить
 /*private fun setMonthFilter(currencyChipsUiModelList: List<CurrencyChipsUiModel>) {

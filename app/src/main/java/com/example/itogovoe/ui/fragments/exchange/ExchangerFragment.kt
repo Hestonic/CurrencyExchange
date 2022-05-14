@@ -69,6 +69,7 @@ class ExchangerFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Обновить данные")
             .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
+            .setCancelable(false)
             .setPositiveButton("Хорошо") { _, _ ->
                 setProgressBarVisible()
                 viewModel.updateCurrencies(args)
@@ -80,6 +81,7 @@ class ExchangerFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Вы ввели пустое значение")
             .setMessage("Введите значение в поле ввода, перед тем как осуществить транзакцию")
+            .setCancelable(false)
             .setPositiveButton("Хорошо") { _, _ -> }
             .create().show()
     }
@@ -88,6 +90,7 @@ class ExchangerFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Вы ввели недопустимое значение")
             .setMessage("Введите корректное значение в поле ввода, перед тем как осуществить транзакцию")
+            .setCancelable(false)
             .setPositiveButton("Хорошо") { _, _ -> }
             .create().show()
     }

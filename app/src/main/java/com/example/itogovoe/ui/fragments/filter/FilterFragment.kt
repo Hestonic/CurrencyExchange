@@ -2,7 +2,6 @@ package com.example.itogovoe.ui.fragments.filter
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,17 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
-import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentFilterBinding
-import com.example.itogovoe.ui.main.FilterInstance
-import com.example.itogovoe.ui.main.TimeFilter
 import java.util.*
 
-class FilterFragment : Fragment() {
+class FilterFragment : Fragment(), FilterPassClick {
 
     private lateinit var viewModel: FilterViewModel
     private lateinit var binding: FragmentFilterBinding
-    private val adapter = FilterAdapter()
+    // TODO: попробовать сделать через один адаптер (адаптер делегат)
+    private val currencyChipsAdapter = CurrencyChipsAdapter()
+    private val timeChipsAdapter = TimeChipsAdapter(this)
 
     private var year = 0
     private var month = 0
@@ -29,7 +27,8 @@ class FilterFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        viewModel.getFilterItems()
+        viewModel.initFilterUiModel()
+//        viewModel.getFilterItems()
     }
 
     @SuppressLint("ResourceAsColor", "SetTextI18n")
@@ -38,37 +37,21 @@ class FilterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterBinding.inflate(inflater, container, false)
-        setupRecycler()
+        setupCurrencyChipsRecycler()
+        setupTimeChipsRecycler()
         getDateCalendar()
 
         viewModel.filterLiveData.observe(viewLifecycleOwner) { filterUiModel ->
-            adapter.setData(filterUiModel.currencyChips)
-
-            with(filterUiModel) {
-                with(binding) {
-                    if (timeRange.isChecked) {
-
-                    }
-
-                    if (timeFilters.name == "За всё время" && timeFilters.isChecked)
-                        filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)
-                    else
-                        filterAllTime.setBackgroundResource(R.drawable.round_bg_filter)
-
-                    if (timeFilters.name == "За месяц" && timeFilters.isChecked)
-                        filterMonth.setBackgroundResource(R.drawable.round_bg_filter_selected)
-                    else
-                        filterMonth.setBackgroundResource(R.drawable.round_bg_filter)
-
-                    if (timeFilters.name == "За неделю" && timeFilters.isChecked)
-                        filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
-                    else
-                        filterWeek.setBackgroundResource(R.drawable.round_bg_filter)
-                }
-            }
+            currencyChipsAdapter.setData(filterUiModel.currencyChips)
+            timeChipsAdapter.setData(filterUiModel.timeFilters)
         }
 
-        binding.filterAllTime.setOnClickListener {
+        binding.chooseDateFrom.setOnClickListener { dateFromChooser() }
+
+        binding.chooseDateTo.setOnClickListener { dateToChooser() }
+
+// TODO: Не забыть удалить
+        /*binding.filterAllTime.setOnClickListener {
             FilterInstance.timeFilter = TimeFilter.AllTime
             viewModel.getFilterItems()
             Log.d("filter_tag", "AllTime ${FilterInstance.timeFilter}")
@@ -84,19 +67,12 @@ class FilterFragment : Fragment() {
             FilterInstance.timeFilter = TimeFilter.Week
             viewModel.getFilterItems()
             Log.d("filter_tag", "Week ${FilterInstance.timeFilter}")
-        }
-
-        binding.chooseDateFrom.setOnClickListener { dateFromChooser() }
-
-        binding.chooseDateTo.setOnClickListener { dateToChooser() }
-
-        /*// TODO: передача фильтра в HistoryFragment
-        binding.filterButton.setOnClickListener {
-            findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToHistoryFragment())
         }*/
 
         return binding.root
     }
+
+
 
     private fun dateFromChooser() {
         /*DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
@@ -133,18 +109,48 @@ class FilterFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[FilterViewModel::class.java]
     }
 
-    private fun setupRecycler() {
-        binding.recyclerview.adapter = adapter
-        binding.recyclerview.layoutManager =
+    private fun setupCurrencyChipsRecycler() {
+        binding.currencyChipsRecyclerview.adapter = currencyChipsAdapter
+        binding.currencyChipsRecyclerview.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    private fun setupTimeChipsRecycler() {
+        binding.timeChipsRecyclerview.adapter = timeChipsAdapter
+        binding.timeChipsRecyclerview.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.timeChipsRecyclerview.hasFixedSize()
+    }
+
+    override fun passChipsClick(name: String) {
+        viewModel.setTimeFilter(name)
     }
 
 
     // TODO: восстановление состояния
-    /*@SuppressLint("SetTextI18n")
-    private fun dateChooser() {
 
-    }*/
+    /*with(filterUiModel) {
+                with(binding) {
+                    if (timeRange.isChecked) {
+
+                    }
+
+                    if (timeFilters.name == "За всё время" && timeFilters.isChecked)
+                        filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)
+                    else
+                        filterAllTime.setBackgroundResource(R.drawable.round_bg_filter)
+
+                    if (timeFilters.name == "За месяц" && timeFilters.isChecked)
+                        filterMonth.setBackgroundResource(R.drawable.round_bg_filter_selected)
+                    else
+                        filterMonth.setBackgroundResource(R.drawable.round_bg_filter)
+
+                    if (timeFilters.name == "За неделю" && timeFilters.isChecked)
+                        filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
+                    else
+                        filterWeek.setBackgroundResource(R.drawable.round_bg_filter)
+                }
+            }*/
 
     /*private fun renderState(state: FilterInstance) = with(binding) {
         if (state.allTimeFilter) filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)

@@ -6,49 +6,15 @@
     android:layout_marginVertical="12dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/filter_all_time"
-        style="@style/filter_currency"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/time_chips_recyclerview"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/round_bg_filter"
-        android:gravity="center"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="6dp"
-        android:text="@string/filter_all_time"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/filter_week"
-        style="@style/filter_currency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/round_bg_filter"
-        android:gravity="center"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="6dp"
-        android:text="@string/filter_week"
-        app:layout_constraintLeft_toRightOf="@id/filter_all_time"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/filter_month"
-        style="@style/filter_currency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/round_bg_filter"
-        android:gravity="center"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="6dp"
-        android:text="@string/filter_month"
-        app:layout_constraintLeft_toRightOf="@id/filter_week"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <TextView
         android:id="@+id/date_word"
@@ -58,7 +24,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/date_word"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filter_all_time" />
+        app:layout_constraintTop_toBottomOf="@id/time_chips_recyclerview" />
 
     <TextView
         android:id="@+id/choose_date_from"
@@ -103,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@id/choose_date_from" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
+        android:id="@+id/currency_chips_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

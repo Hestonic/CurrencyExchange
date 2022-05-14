@@ -8,8 +8,10 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+// TODO: domain ничего не должен знать о других внешних слоях
 object CurrencyDtoMapper {
 
+    // TODO: !! плохая практика
     fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel> {
         return response.body()!!.rates.map {
             CurrencyDtoModel(

@@ -6,7 +6,7 @@ import com.example.itogovoe.R
 import com.example.itogovoe.databinding.ItemCurrencyBinding
 import com.example.itogovoe.ui.model.CurrencyUiModel
 
-class HomeViewHolder(private val binding: ItemCurrencyBinding) :
+class CurrencyViewHolder(private val binding: ItemCurrencyBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("NotifyDataSetChanged")

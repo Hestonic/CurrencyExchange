@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemCurrencyFilterBinding
 import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 
-class FilterViewHolder(private val binding: ItemCurrencyFilterBinding) :
+class CurrencyChipsViewHolder(private val binding: ItemCurrencyFilterBinding) :
     RecyclerView.ViewHolder(binding.root) {
     @SuppressLint("NotifyDataSetChanged")
     fun bind(currency: CurrencyChipsUiModel) = binding.run {

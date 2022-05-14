@@ -20,8 +20,9 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val history = historyList[position]
-        holder.bind(history)
+        historyList.getOrNull(position)?.let {
+            holder.bind(it)
+        }
     }
 
     override fun getItemCount(): Int = historyList.size
