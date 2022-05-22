@@ -2,10 +2,10 @@ package com.example.itogovoe.data.repository
 
 import android.util.Log
 import com.example.itogovoe.data.api.CurrencyResponse
+import com.example.itogovoe.data.mapper.CurrencyDtoMapperImpl
 import com.example.itogovoe.data.sources.LocalDataSource
 import com.example.itogovoe.data.sources.RemoteDataSource
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
 import com.example.itogovoe.domain.model.CurrencyDtoModel
 import com.example.itogovoe.domain.repository.CurrencyRepository
 import retrofit2.Response
@@ -62,16 +62,16 @@ class CurrencyRepositoryImpl(
 
     private suspend fun saveCurrencies(remoteCurrency: Response<CurrencyResponse>) {
         val currencyDtoModelList =
-            CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
+            CurrencyDtoMapperImpl.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
         val listCurrenciesTable =
-            CurrencyDtoMapper.mapCurrencyDtoModelListToCurrenciesEntityList(currencyDtoModelList)
+            CurrencyDtoMapperImpl.mapCurrencyDtoModelListToCurrenciesEntityList(currencyDtoModelList)
         listCurrenciesTable?.forEach { localDataSource.addCurrencyItem(it) }
         Log.d("REPOSITORY_TAG", "Data has been added to database")
     }
 
     private suspend fun updateCurrenciesData(remoteCurrency: Response<CurrencyResponse>) {
         val currencyDtoModelList =
-            CurrencyDtoMapper.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
+            CurrencyDtoMapperImpl.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
         currencyDtoModelList.forEach { localDataSource.updateCurrency(it) }
         Log.d("REPOSITORY_TAG", "Database has been updated")
     }
@@ -80,15 +80,14 @@ class CurrencyRepositoryImpl(
         val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
         var minutes: Long = 0
-        if (localCurrencies.isNotEmpty()) minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
-        else // TODO: ситуация, когда пришёл пустой localCurrencies
-
+        if (localCurrencies.isNotEmpty())
+            minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
         Log.d("difference_date", minutes.toString())
         return minutes < 6
     }
 
     private fun getLocalCurrencies() =
-        CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(readAllCurrencies())
+        CurrencyDtoMapperImpl.mapListCurrenciesEntityToDomainModelList(readAllCurrencies())
 
     private fun readAllCurrencies(): List<CurrenciesEntity> = localDataSource.readAllCurrencies()
 
@@ -102,11 +101,11 @@ class CurrencyRepositoryImpl(
     }
 
     override fun searchCurrenciesDatabase(searchQuery: String) =
-        CurrencyDtoMapper.mapListCurrenciesEntityToDomainModelList(
+        CurrencyDtoMapperImpl.mapListCurrenciesEntityToDomainModelList(
             localDataSource.searchCurrenciesDatabase(searchQuery)
         )
 
     override fun readCurrency(name: String): CurrencyDtoModel =
-        CurrencyDtoMapper.mapCurrencyEntityToDomainModel(localDataSource.readCurrency(name))
+        CurrencyDtoMapperImpl.mapCurrencyEntityToDomainModel(localDataSource.readCurrency(name))
 
 }

@@ -1,11 +1,11 @@
 package com.example.itogovoe.data.sources
 
+import com.example.itogovoe.data.mapper.HistoryDtoMapperImpl
 import com.example.itogovoe.data.sources.local_source.DateConverter
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
-import com.example.itogovoe.domain.mapper.HistoryDtoMapper
 import com.example.itogovoe.domain.model.CurrencyDtoModel
 import java.time.LocalDateTime
 
@@ -43,7 +43,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
     suspend fun updateCurrency(currencyDtoModel: CurrencyDtoModel) {
         val localCurrencyNotFresh = readCurrency(currencyDtoModel.name)
         val localCurrencyFresh =
-            HistoryDtoMapper.mapCurrenciesEntityNotFreshToFresh(localCurrencyNotFresh, currencyDtoModel)
+            HistoryDtoMapperImpl.mapCurrenciesEntityNotFreshToFresh(localCurrencyNotFresh, currencyDtoModel)
         currencyDao.updateCurrency(localCurrencyFresh)
     }
 
