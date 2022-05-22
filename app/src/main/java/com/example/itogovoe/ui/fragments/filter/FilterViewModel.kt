@@ -11,29 +11,31 @@ import com.example.itogovoe.ui.mapper.FilterUiModelMapper
 import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 import com.example.itogovoe.ui.model.FilterUiModel
 import com.example.itogovoe.ui.model.TimeFilterUiModel
+import com.example.itogovoe.utils.Constants.Companion.FILTER_ALL_TIME
+import com.example.itogovoe.utils.Constants.Companion.FILTER_MONTH
+import com.example.itogovoe.utils.Constants.Companion.FILTER_WEEK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FilterViewModel(private val historyRepository: HistoryRepository) : ViewModel() {
-
+    
     private val _filtersLiveData: MutableLiveData<FilterUiModel> = MutableLiveData()
     val filterLiveData: LiveData<FilterUiModel> get() = _filtersLiveData
-
-    /*fun getFilterItems() {
-        when (FilterInstance.timeFilter) {
-            is TimeFilter.AllTime -> setAllTimeFilter()
-            is TimeFilter.Month -> setMonthFilter()
-            is TimeFilter.Week -> setWeekFilter()
-            is TimeFilter.Range -> setRangeFilter()
-        }
-    }*/
-
-    fun initFilterUiModel() {
+    
+    fun initFilterUiModel(timeFilter: TimeFilter) {
         viewModelScope.launch(Dispatchers.IO) {
-            _filtersLiveData.postValue(FilterUiModelMapper.mapFilterUiModel(getCurrenciesFilter()))
+            if (_filtersLiveData.value == null)
+                _filtersLiveData.postValue(FilterUiModelMapper.mapFilterUiModel(getCurrenciesFilter()))
+            
+            when (timeFilter) {
+                is TimeFilter.AllTime -> updateFilter(FILTER_ALL_TIME)
+                is TimeFilter.Month -> updateFilter(FILTER_MONTH)
+                is TimeFilter.Week -> updateFilter(FILTER_WEEK)
+                is TimeFilter.Range -> doSomething()
+            }
         }
     }
-
+    
     private fun getCurrenciesFilter(): List<CurrencyChipsUiModel> {
         historyRepository.getHistory().let { historyDtoModelList ->
             return FilterUiModelMapper.mapHistoryDomainModelToCurrencyChipsUiModel(
@@ -41,8 +43,8 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
             )
         }
     }
-
-    fun setTimeFilter(name: String) {
+    
+    fun updateFilter(name: String) {
         viewModelScope.launch {
             val oldFilters = _filtersLiveData.value
             val timeFilterUiModelList = mutableListOf<TimeFilterUiModel>()
@@ -52,93 +54,18 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
             }
             _filtersLiveData.postValue(oldFilters?.copy(timeFilters = timeFilterUiModelList))
         }
-        setTimeToFilterInstance(name)
+        
     }
-
-    private fun setTimeToFilterInstance(name: String) {
+    
+    fun setTimeFilterInInstance(name: String) {
         when (name) {
-            "За всё время" -> FilterInstance.timeFilter = TimeFilter.AllTime
-            "За месяц" -> FilterInstance.timeFilter = TimeFilter.Month
-            "За неделю" -> FilterInstance.timeFilter = TimeFilter.Week
+            FILTER_ALL_TIME -> FilterInstance.timeFilter.postValue(TimeFilter.AllTime)
+            FILTER_MONTH -> FilterInstance.timeFilter.postValue(TimeFilter.Month)
+            FILTER_WEEK -> FilterInstance.timeFilter.postValue(TimeFilter.Week)
         }
     }
-        /*private fun setAllTimeFilter() {
-        viewModelScope.launch {
-            val oldFilters = _filtersLiveData.value
-            _filtersLiveData.postValue(
-                oldFilters?.copy(timeFilters = TimeFilterUiModel("За всё время", true))
-            )
-        }
-
-
-    private fun setMonthFilter() {
-        viewModelScope.launch {
-            val oldFilters = _filtersLiveData.value
-            _filtersLiveData.postValue(
-                oldFilters?.copy(timeFilters = TimeFilterUiModel("За месяц", true))
-            )
-        }
+    
+    private fun doSomething() {
+        TODO("Not yet implemented")
     }
-
-    private fun setWeekFilter() {
-        viewModelScope.launch {
-            val oldFilters = _filtersLiveData.value
-            _filtersLiveData.postValue(
-                oldFilters?.copy(timeFilters = TimeFilterUiModel("За неделю", true))
-            )
-        }
-    }
-
-    private fun setRangeFilter() {
-    }*/
-
-
-
 }
-
-
-// TODO: не забыть удалить
-/*private fun setMonthFilter(currencyChipsUiModelList: List<CurrencyChipsUiModel>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val filterUiModel = FilterUiModel(
-                timeFilters = listOf(
-                    TimeFilterUiModel("За всё время", true),
-                    TimeFilterUiModel("За неделю", false),
-                    TimeFilterUiModel("За месяц", false),
-                ),
-                timeRange = TimeRangeUiModel("Выбрать дату", LocalDateTime.now().toString(), false),
-                currencyChips = currencyChipsUiModelList,
-            )
-            _filtersUi.postValue(filterUiModel)
-        }
-    }
-
-    private fun setWeekFilter(currencyChipsUiModelList: List<CurrencyChipsUiModel>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val filterUiModel = FilterUiModel(
-                timeFilters = listOf(
-                    TimeFilterUiModel("За всё время", true),
-                    TimeFilterUiModel("За неделю", false),
-                    TimeFilterUiModel("За месяц", false),
-                ),
-                timeRange = TimeRangeUiModel("Выбрать дату", LocalDateTime.now().toString(), false),
-                currencyChips = currencyChipsUiModelList,
-            )
-            _filtersUi.postValue(filterUiModel)
-        }
-    }
-
-    private fun setRangeFilter(currencyChipsUiModelList: List<CurrencyChipsUiModel>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val filterUiModel = FilterUiModel(
-                timeFilters = listOf(
-                    TimeFilterUiModel("За всё время", true),
-                    TimeFilterUiModel("За неделю", false),
-                    TimeFilterUiModel("За месяц", false),
-                ),
-                timeRange = TimeRangeUiModel("Выбрать дату", LocalDateTime.now().toString(), false),
-                currencyChips = currencyChipsUiModelList,
-            )
-            _filtersUi.postValue(filterUiModel)
-        }
-    }*/

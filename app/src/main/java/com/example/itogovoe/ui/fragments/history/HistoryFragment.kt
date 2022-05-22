@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentHistoryBinding
+import com.example.itogovoe.ui.main.FilterInstance
 
 class HistoryFragment : Fragment() {
 
@@ -27,9 +28,12 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        viewModel.getData()
-        viewModel.historyItems.observe(viewLifecycleOwner) { history -> adapter.setData(history) }
         setupRecycler()
+        viewModel.historyItems.observe(viewLifecycleOwner) { history -> adapter.setData(history) }
+        FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
+            viewModel.getData(timeFilter)
+        }
+    
         return binding.root
     }
 

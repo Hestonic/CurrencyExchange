@@ -19,11 +19,11 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewM
     private val _historyItems: MutableLiveData<List<HistoryUiModel>> = MutableLiveData()
     val historyItems: LiveData<List<HistoryUiModel>> get() = _historyItems
 
-    fun getData() {
+    fun getData(timeFilter: TimeFilter) {
         // TODO: не забыть удалить
-        val timeFilter = FilterInstance.timeFilter
-        Log.d("history_view_tag", "$timeFilter")
-        return when (val timeFilter = FilterInstance.timeFilter) {
+        /*val timeFilter = FilterInstance.timeFilter
+        Log.d("history_view_tag", "$timeFilter")*/
+        return when (timeFilter) {
             is TimeFilter.AllTime -> getAllHistory()
             is TimeFilter.Month -> getData(TimeFilter.Month.from, TimeFilter.Month.to)
             is TimeFilter.Week -> getData(TimeFilter.Week.from, TimeFilter.Week.to)

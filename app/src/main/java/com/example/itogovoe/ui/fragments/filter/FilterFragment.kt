@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.databinding.FragmentFilterBinding
+import com.example.itogovoe.ui.main.FilterInstance
 import java.util.*
 
 class FilterFragment : Fragment(), FilterPassClick {
@@ -27,7 +28,6 @@ class FilterFragment : Fragment(), FilterPassClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-        viewModel.initFilterUiModel()
 //        viewModel.getFilterItems()
     }
 
@@ -45,34 +45,21 @@ class FilterFragment : Fragment(), FilterPassClick {
             currencyChipsAdapter.setData(filterUiModel.currencyChips)
             timeChipsAdapter.setData(filterUiModel.timeFilters)
         }
+        
+        FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
+            viewModel.initFilterUiModel(timeFilter)
+        }
 
         binding.chooseDateFrom.setOnClickListener { dateFromChooser() }
-
         binding.chooseDateTo.setOnClickListener { dateToChooser() }
-
-// TODO: Не забыть удалить
-        /*binding.filterAllTime.setOnClickListener {
-            FilterInstance.timeFilter = TimeFilter.AllTime
-            viewModel.getFilterItems()
-            Log.d("filter_tag", "AllTime ${FilterInstance.timeFilter}")
-        }
-
-        binding.filterMonth.setOnClickListener {
-            FilterInstance.timeFilter = TimeFilter.Month
-            viewModel.getFilterItems()
-            Log.d("filter_tag", "Month ${FilterInstance.timeFilter}")
-        }
-
-        binding.filterWeek.setOnClickListener {
-            FilterInstance.timeFilter = TimeFilter.Week
-            viewModel.getFilterItems()
-            Log.d("filter_tag", "Week ${FilterInstance.timeFilter}")
-        }*/
 
         return binding.root
     }
 
-
+    override fun passChipsClick(name: String) {
+        viewModel.updateFilter(name)
+        viewModel.setTimeFilterInInstance(name)
+    }
 
     private fun dateFromChooser() {
         /*DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
@@ -122,13 +109,8 @@ class FilterFragment : Fragment(), FilterPassClick {
         binding.timeChipsRecyclerview.hasFixedSize()
     }
 
-    override fun passChipsClick(name: String) {
-        viewModel.setTimeFilter(name)
-    }
-
 
     // TODO: восстановление состояния
-
     /*with(filterUiModel) {
                 with(binding) {
                     if (timeRange.isChecked) {

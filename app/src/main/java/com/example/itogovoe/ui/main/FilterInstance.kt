@@ -1,10 +1,15 @@
 package com.example.itogovoe.ui.main
 
+import androidx.lifecycle.MutableLiveData
 import java.time.LocalDateTime
 
 object FilterInstance {
-    var timeFilter: TimeFilter = TimeFilter.AllTime
+    var timeFilter: MutableLiveData<TimeFilter> = MutableLiveData()
     var currencyFilter: CurrencyFilter = CurrencyFilter(emptyList())
+    
+    fun initTimeFilter() {
+        timeFilter.postValue(TimeFilter.AllTime)
+    }
 }
 
 data class CurrencyFilter(
@@ -38,5 +43,4 @@ sealed class TimeFilter {
     }
 
     data class Range(val from: LocalDateTime, val to: LocalDateTime) : TimeFilter()
-
 }
