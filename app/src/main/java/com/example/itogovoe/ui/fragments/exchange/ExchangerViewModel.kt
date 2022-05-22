@@ -42,7 +42,6 @@ class ExchangerViewModel(
                 currencyNameChild = args.currencyChildName,
                 currencyValueChild = coefficient,
             )
-            Log.d("init_ui_model_tag", exchangerUiModel.toString())
             _exchanger.postValue(exchangerUiModel)
         }
     }

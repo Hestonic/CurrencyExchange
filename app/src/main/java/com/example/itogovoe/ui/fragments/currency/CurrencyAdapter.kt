@@ -24,8 +24,7 @@ class CurrencyAdapter(private val listener: CurrencyPassClick) :
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         currencyList.getOrNull(position)?.let {
-            // TODO: Holder не должен ничего знать о currencyList
-            holder.bind(it, listener, currencyList)
+            holder.bind(it, listener)
         }
     }
 

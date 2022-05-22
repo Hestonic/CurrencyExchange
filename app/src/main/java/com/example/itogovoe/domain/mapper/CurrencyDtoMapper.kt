@@ -1,5 +1,6 @@
 package com.example.itogovoe.domain.mapper
 
+import android.util.Log
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.domain.model.CurrencyDtoModel
@@ -11,16 +12,20 @@ import java.time.ZoneId
 // TODO: domain ничего не должен знать о других внешних слоях
 object CurrencyDtoMapper {
 
-    // TODO: !! плохая практика
     fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel> {
-        return response.body()!!.rates.map {
-            CurrencyDtoModel(
-                lastUsedAt = LocalDateTime.now(),
-                updatedAt = timestampToLocalDateTime(response.body()!!.timestamp),
-                name = it.key,
-                value = it.value,
-                isFavourite = false
-            )
+        return if (response.isSuccessful) {
+            response.body()!!.rates.map {
+                CurrencyDtoModel(
+                    lastUsedAt = LocalDateTime.now(),
+                    updatedAt = timestampToLocalDateTime(response.body()!!.timestamp),
+                    name = it.key,
+                    value = it.value,
+                    isFavourite = false
+                )
+            }
+        } else {
+            Log.d("CurrencyDtoMapper_response_error", response.errorBody().toString())
+            emptyList()
         }
     }
 

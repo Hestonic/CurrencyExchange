@@ -42,7 +42,10 @@ class CurrencyRepositoryImpl(
         return if (remoteCurrency.isSuccessful) {
             updateCurrenciesData(remoteCurrency)
             getLocalCurrencies()
-        } else emptyList()
+        } else {
+            Log.d("CurrencyRepository_response_error_on_update", remoteCurrency.errorBody().toString())
+            emptyList()
+        }
     }
 
     private suspend fun saveResponseAndReturnUpdatedLocalCurrencies(): List<CurrencyDtoModel> {
@@ -51,7 +54,10 @@ class CurrencyRepositoryImpl(
         return if (remoteCurrency.isSuccessful) {
             saveCurrencies(remoteCurrency)
             getLocalCurrencies()
-        } else emptyList()
+        } else {
+            Log.d("CurrencyRepository_response_error_on_save", remoteCurrency.errorBody().toString())
+            emptyList()
+        }
     }
 
     private suspend fun saveCurrencies(remoteCurrency: Response<CurrencyResponse>) {
@@ -73,10 +79,12 @@ class CurrencyRepositoryImpl(
     override fun isFresh(): Boolean {
         val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
-        // TODO: localCurrencies[0] небезопасненько
-        val minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
+        var minutes: Long = 0
+        if (localCurrencies.isNotEmpty()) minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
+        else // TODO: ситуация, когда пришёл пустой localCurrencies
+
         Log.d("difference_date", minutes.toString())
-        return minutes < 1
+        return minutes < 6
     }
 
     private fun getLocalCurrencies() =

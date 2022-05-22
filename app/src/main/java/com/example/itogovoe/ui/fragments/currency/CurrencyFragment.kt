@@ -7,12 +7,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentHomeBinding
 import com.example.itogovoe.ui.model.CurrencyUiModel
+import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel.ExchangeNavArgs
 
 class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextListener {
 
@@ -39,20 +41,35 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
             adapter.setData(it)
             setProgressBarGone()
         }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.eventFlow.collect { exchangeNavArgs ->
+                navigateToExchangeFragment(exchangeNavArgs)
+            }
+        }
+
         viewModel.errorLiveData.observe(viewLifecycleOwner) { binding.error.isGone = !it }
         return binding.root
     }
 
-    private fun initViewModel() {
-        val currencyRepository = (requireActivity().application as App).dependencyInjection.currencyRepositoryImpl
-        val viewModelFactory = CurrencyViewModelFactory(currencyRepository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
+    private fun navigateToExchangeFragment(exchangeNavArgs: ExchangeNavArgs) {
+        val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
+            currencyParentName = exchangeNavArgs.currencyParentName,
+            currencyChildName = exchangeNavArgs.currencyChildName,
+        )
+        findNavController().navigate(action)
     }
 
-    private fun setupRecycler() {
-        binding.recyclerview.adapter = adapter
-        binding.recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)
-        (binding.recyclerview.layoutManager as GridLayoutManager).scrollToPosition(0)
+    override fun passIsFavouriteClick(currencyName: String, isFavourite: Boolean) {
+        viewModel.updateCurrencyIsFavourite(currencyName, isFavourite)
+    }
+
+    override fun passClick(currencyChildName: String) {
+        viewModel.handleSingleClick(currencyChildName)
+    }
+
+    override fun passLongClick(currencyUiModel: CurrencyUiModel) {
+        viewModel.handleLongClick(currencyUiModel)
     }
 
     private fun setProgressBarVisible() {
@@ -65,29 +82,17 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
         binding.recyclerview.isGone = false
     }
 
-    override fun passIsFavouriteClick(currencyName: String, isFavourite: Boolean) {
-        viewModel.updateCurrencyIsFavourite(currencyName, isFavourite)
+    private fun initViewModel() {
+        val currencyRepository =
+            (requireActivity().application as App).dependencyInjection.currencyRepositoryImpl
+        val viewModelFactory = CurrencyViewModelFactory(currencyRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[CurrencyViewModel::class.java]
     }
 
-    override fun passClick(
-        currencyParentName: String,
-        currencyChildName: String
-    ) {
-        viewModel.updateCurrencyLastUsedAt(currencyChildName)
-        viewModel.updateCurrencyLastUsedAt(currencyParentName)
-        val action = CurrencyFragmentDirections.actionHomeFragmentToExchangeFragment(
-            currencyParentName = currencyParentName,
-            currencyChildName = currencyChildName,
-        )
-        findNavController().navigate(action)
-    }
-
-    override fun passLongClick(currencyName: String) {
-        viewModel.updateCurrencyLastUsedAt(currencyName)
-    }
-
-    override fun passIsCheckedLongClick(currencyUiModel: CurrencyUiModel) {
-        viewModel.isCheckedSort(currencyUiModel)
+    private fun setupRecycler() {
+        binding.recyclerview.adapter = adapter
+        binding.recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)
+        (binding.recyclerview.layoutManager as GridLayoutManager).scrollToPosition(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
