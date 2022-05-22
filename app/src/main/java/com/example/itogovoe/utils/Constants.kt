@@ -7,6 +7,5 @@ class Constants {
         const val FILTER_ALL_TIME = "За всё время"
         const val FILTER_MONTH = "За месяц"
         const val FILTER_WEEK = "За неделю"
-        const val CHOOSE_DATE = "Выбрать дату"
     }
 }

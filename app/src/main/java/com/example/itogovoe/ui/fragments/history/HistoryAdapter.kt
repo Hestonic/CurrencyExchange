@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemHistoryBinding
-import com.example.itogovoe.ui.model.HistoryUiModel
+import com.example.itogovoe.ui.model.History
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
 
-    private var historyList: List<HistoryUiModel> = emptyList()
+    private var historyList: List<History> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -28,8 +28,8 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
     override fun getItemCount(): Int = historyList.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(historyEntity: List<HistoryUiModel>) {
-        this.historyList = historyEntity
+    fun setData(historyList: List<History>) {
+        this.historyList = historyList
         notifyDataSetChanged()
     }
 }

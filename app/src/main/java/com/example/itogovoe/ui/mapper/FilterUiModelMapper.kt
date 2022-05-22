@@ -9,7 +9,6 @@ import java.time.LocalDateTime
 import com.example.itogovoe.utils.Constants.Companion.FILTER_ALL_TIME
 import com.example.itogovoe.utils.Constants.Companion.FILTER_MONTH
 import com.example.itogovoe.utils.Constants.Companion.FILTER_WEEK
-import com.example.itogovoe.utils.Constants.Companion.CHOOSE_DATE
 
 object FilterUiModelMapper {
 
@@ -35,7 +34,7 @@ object FilterUiModelMapper {
                 TimeFilterUiModel(FILTER_WEEK, false),
             ),
             timeRange = TimeRangeUiModel(
-                CHOOSE_DATE,
+                "Выбрать дату",
                 LocalDateTime.now().toString(),
                 false
             ),

@@ -9,7 +9,7 @@ import com.example.itogovoe.domain.repository.CurrencyRepository
 import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import com.example.itogovoe.ui.model.ExchangerUiModel
-import com.example.itogovoe.ui.model.HistoryUiModel
+import com.example.itogovoe.ui.model.History
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -28,6 +28,7 @@ class ExchangerViewModel(
     private val _isFreshOnTextChange = MutableLiveData<Boolean>()
     val isFreshOnTextChange: LiveData<Boolean> get() = _isFreshOnTextChange
 
+    // TODO: Избавиться от переменной при помощи LiveData
     private var coefficient = 0f
 
     fun initUiModel(args: ExchangerFragmentArgs) {
@@ -36,6 +37,7 @@ class ExchangerViewModel(
             val valueParent = currencyRepository.readCurrency(args.currencyParentName).value
             val valueChild = currencyRepository.readCurrency(args.currencyChildName).value
             coefficient = valueChild / valueParent
+            // TODO: Сделать маппер инициализации
             val exchangerUiModel = ExchangerUiModel(
                 currencyNameParent = args.currencyParentName,
                 currencyValueParent = 1f,
@@ -83,7 +85,7 @@ class ExchangerViewModel(
         currencyValueParent: Float
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val historyUiModel = HistoryUiModel(
+            val historyUiModel = History(
                 currencyNameChild = currencyNameChild,
                 currencyNameParent = currencyNameParent,
                 currencyValueChild = currencyValueChild,
