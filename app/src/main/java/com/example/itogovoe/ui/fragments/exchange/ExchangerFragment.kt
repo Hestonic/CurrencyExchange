@@ -109,10 +109,10 @@ class ExchangerFragment : Fragment() {
 
     private fun addToHistory() {
         viewModel.addHistoryItem(
-            currencyNameChild = binding.currencyTextChild.text.toString(),
-            currencyNameParent = binding.currencyTextParent.text.toString(),
-            currencyValueChild = binding.currencyValueChild.text.toString().toFloat(),
-            currencyValueParent = binding.currencyValueParent.text.toString().toFloat()
+            nameChild = binding.currencyTextChild.text.toString(),
+            nameParent = binding.currencyTextParent.text.toString(),
+            valueChild = binding.currencyValueChild.text.toString().toFloat(),
+            valueParent = binding.currencyValueParent.text.toString().toFloat()
         )
         makeToast("Транзакция добавлена в историю")
     }

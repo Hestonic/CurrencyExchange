@@ -1,6 +1,6 @@
 package com.example.itogovoe.ui.fragments.filter
 
-import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itogovoe.App
+import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentFilterBinding
 import com.example.itogovoe.ui.main.FilterInstance
+import com.example.itogovoe.ui.model.TimeRangeUiModel
 import java.util.*
 
 class FilterFragment : Fragment(), FilterPassClick {
@@ -30,8 +32,7 @@ class FilterFragment : Fragment(), FilterPassClick {
         initViewModel()
 //        viewModel.getFilterItems()
     }
-
-    @SuppressLint("ResourceAsColor", "SetTextI18n")
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +45,7 @@ class FilterFragment : Fragment(), FilterPassClick {
         viewModel.filterLiveData.observe(viewLifecycleOwner) { filterUiModel ->
             currencyChipsAdapter.setData(filterUiModel.currencyChips)
             timeChipsAdapter.setData(filterUiModel.timeFilters)
+            setIsCheckedToDateChooser(filterUiModel.timeRange)
         }
         
         FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
@@ -57,30 +59,36 @@ class FilterFragment : Fragment(), FilterPassClick {
     }
 
     override fun passChipsClick(name: String) {
-        viewModel.updateFilter(name)
-        viewModel.setTimeFilterInInstance(name)
+        viewModel.updateTimeFilterChips(name)
+        viewModel.setTimeFilterChipsInInstance(name)
     }
-
+    
     private fun dateFromChooser() {
-        /*DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
-            binding.chooseDateFrom.text = "$mYear-$mMonth-$mDay"
-            year = mYear
-            month = mMonth
-            day = mDay
-            // TODO: Filter
-            renderState(FilterInstance)
-        }, year, month, day).show()*/
+        DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
+            val date = "$mDay.$mMonth.$mYear"
+            binding.chooseDateFrom.text = date
+            viewModel.dateFromChooser(mYear, mMonth, mDay)
+        }, year, month, day).show()
     }
 
     private fun dateToChooser() {
-        /*DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
-                binding.chooseDateTo.text = "$mYear-$mMonth-$mDay"
-                year = mYear
-                month = mMonth
-                day = mDay
-                FilterInstance.dateTo = LocalDateTime.of(year, month + 1, day, 23, 50, 59)
-                renderState(FilterInstance)
-            }, year, month, day).show()*/
+        DatePickerDialog(requireContext(), { _, mYear, mMonth, mDay ->
+            val date = "$mDay.$mMonth.$mYear"
+            binding.chooseDateTo.text = date
+            viewModel.dateToChooser(mYear, mMonth, mDay)
+        }, year, month, day).show()
+    }
+    
+    private fun setIsCheckedToDateChooser(timeRangeUiModel: TimeRangeUiModel) {
+        if (timeRangeUiModel.isChecked) {
+            binding.chooseDateFrom.setBackgroundResource(R.drawable.round_bg_filter_selected)
+            binding.chooseDateTo.setBackgroundResource(R.drawable.round_bg_filter_selected)
+        } else {
+            binding.chooseDateFrom.setBackgroundResource(R.drawable.round_bg_filter)
+            binding.chooseDateTo.setBackgroundResource(R.drawable.round_bg_filter)
+        }
+        binding.chooseDateTo.text = timeRangeUiModel.dateTo
+        binding.chooseDateFrom.text = timeRangeUiModel.dateFrom
     }
 
     private fun getDateCalendar() {
@@ -108,46 +116,4 @@ class FilterFragment : Fragment(), FilterPassClick {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.timeChipsRecyclerview.hasFixedSize()
     }
-
-
-    // TODO: восстановление состояния
-    /*with(filterUiModel) {
-                with(binding) {
-                    if (timeRange.isChecked) {
-
-                    }
-
-                    if (timeFilters.name == "За всё время" && timeFilters.isChecked)
-                        filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)
-                    else
-                        filterAllTime.setBackgroundResource(R.drawable.round_bg_filter)
-
-                    if (timeFilters.name == "За месяц" && timeFilters.isChecked)
-                        filterMonth.setBackgroundResource(R.drawable.round_bg_filter_selected)
-                    else
-                        filterMonth.setBackgroundResource(R.drawable.round_bg_filter)
-
-                    if (timeFilters.name == "За неделю" && timeFilters.isChecked)
-                        filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
-                    else
-                        filterWeek.setBackgroundResource(R.drawable.round_bg_filter)
-                }
-            }*/
-
-    /*private fun renderState(state: FilterInstance) = with(binding) {
-        if (state.allTimeFilter) filterAllTime.setBackgroundResource(R.drawable.round_bg_filter_selected)
-        else filterAllTime.setBackgroundResource(R.drawable.round_bg_filter)
-
-        if (state.monthFilter) filterMonth.setBackgroundResource(R.drawable.round_bg_filter_selected)
-        else filterMonth.setBackgroundResource(R.drawable.round_bg_filter)
-
-        if (state.weekFilter) filterWeek.setBackgroundResource(R.drawable.round_bg_filter_selected)
-        else filterWeek.setBackgroundResource(R.drawable.round_bg_filter)
-
-        binding.chooseDateTo.text = FilterInstance.dateTo.toLocalDate().toString()
-        if (FilterInstance.dateFrom != null)
-            binding.chooseDateFrom.text = FilterInstance.dateFrom?.toLocalDate().toString()
-        else
-            binding.chooseDateFrom.text = "Выбрать дату"
-    }*/
 }

@@ -1,18 +1,16 @@
 package com.example.itogovoe.ui.fragments.exchange
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.itogovoe.domain.repository.CurrencyRepository
 import com.example.itogovoe.domain.repository.HistoryRepository
+import com.example.itogovoe.ui.mapper.ExchangerUiModelMapper
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import com.example.itogovoe.ui.model.ExchangerUiModel
-import com.example.itogovoe.ui.model.History
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 class ExchangerViewModel(
     private val currencyRepository: CurrencyRepository,
@@ -28,7 +26,6 @@ class ExchangerViewModel(
     private val _isFreshOnTextChange = MutableLiveData<Boolean>()
     val isFreshOnTextChange: LiveData<Boolean> get() = _isFreshOnTextChange
 
-    // TODO: Избавиться от переменной при помощи LiveData
     private var coefficient = 0f
 
     fun initUiModel(args: ExchangerFragmentArgs) {
@@ -37,14 +34,7 @@ class ExchangerViewModel(
             val valueParent = currencyRepository.readCurrency(args.currencyParentName).value
             val valueChild = currencyRepository.readCurrency(args.currencyChildName).value
             coefficient = valueChild / valueParent
-            // TODO: Сделать маппер инициализации
-            val exchangerUiModel = ExchangerUiModel(
-                currencyNameParent = args.currencyParentName,
-                currencyValueParent = 1f,
-                currencyNameChild = args.currencyChildName,
-                currencyValueChild = coefficient,
-            )
-            _exchanger.postValue(exchangerUiModel)
+            _exchanger.postValue(ExchangerUiModelMapper.mapExchangeUiModel(args, coefficient))
         }
     }
 
@@ -57,7 +47,6 @@ class ExchangerViewModel(
                     currencyValueChild = valueParent * coefficient
                 )
             )
-            Log.d("refresh_ui_model_values_tag", oldExchangerUiModel.toString())
         }
     }
 
@@ -74,26 +63,18 @@ class ExchangerViewModel(
                     currencyValueChild = oldExchangerUiModel.currencyValueParent * coefficient
                 )
             )
-            Log.d("update_currencies_tag", oldExchangerUiModel.toString())
         }
     }
-
+    
     fun addHistoryItem(
-        currencyNameChild: String,
-        currencyNameParent: String,
-        currencyValueChild: Float,
-        currencyValueParent: Float
+        nameParent: String, nameChild: String,
+        valueParent: Float, valueChild: Float
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val historyUiModel = History(
-                currencyNameChild = currencyNameChild,
-                currencyNameParent = currencyNameParent,
-                currencyValueChild = currencyValueChild,
-                currencyValueParent = currencyValueParent,
-                date = LocalDateTime.now().toString(),
-            )
+            val historyUiModel =
+                HistoryUiModelMapper.mapHistoryModel(nameParent, nameChild, valueParent, valueChild)
             historyRepository.addHistoryItem(
-                HistoryUiModelMapper.mapHistoryUiModelToDomainModel(historyUiModel)
+                HistoryUiModelMapper.mapHistoryModelToDomainModel(historyUiModel)
             )
         }
     }
@@ -109,5 +90,4 @@ class ExchangerViewModel(
             _isFreshOnTextChange.postValue(currencyRepository.isFresh())
         }
     }
-
 }

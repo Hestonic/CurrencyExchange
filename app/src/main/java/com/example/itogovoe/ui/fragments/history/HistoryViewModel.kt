@@ -18,9 +18,6 @@ import java.time.LocalDateTime
 
 class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewModel() {
     
-    /*private val _historyItems: MutableLiveData<HistoryUiModel> = MutableLiveData()
-    val historyItems: LiveData<HistoryUiModel> get() = _historyItems
-    */
     private val _allHistory: MutableLiveData<List<History>> = MutableLiveData()
     val allHistory: LiveData<List<History>> get() = _allHistory
     
@@ -42,7 +39,6 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewM
                 val historyUiModel = HistoryUiModelMapper.mapHistoryEntityToUiModel(it)
                 _allHistory.postValue(historyUiModel.history)
                 setTimeChipsUi(historyUiModel.historyChips, FILTER_ALL_TIME)
-//                _historyItems.postValue(HistoryUiModelMapper.mapHistoryEntityToUiModel(it))
             }
         }
     }

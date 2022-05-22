@@ -48,12 +48,8 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
         viewModelScope.launch(Dispatchers.IO) {
             val currenciesList = _currenciesLiveData.value?.toMutableList()
             currenciesList?.remove(currencyUiModel)
-            val checkedCurrencyUiModel = CurrencyUiModel(
-                isChecked = true,
-                isFavourite = currencyUiModel.isFavourite,
-                lastUsedAt = currencyUiModel.lastUsedAt,
-                name = currencyUiModel.name
-            )
+            val checkedCurrencyUiModel =
+                CurrencyUiModelMapper.mapCurrencyUiModelIsChecked(currencyUiModel)
             currenciesList?.add(0, checkedCurrencyUiModel)
             _currenciesLiveData.postValue(currenciesList)
         }

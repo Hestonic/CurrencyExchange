@@ -17,8 +17,8 @@ data class CurrencyFilter(
 )
 
 data class CurrencyFilterModel(
-        val name: String,
-        val isChecked: Boolean
+    val name: String,
+    val isChecked: Boolean
 )
 
 sealed class TimeFilter {

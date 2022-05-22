@@ -28,10 +28,13 @@
 
     <TextView
         android:id="@+id/choose_date_from"
-        style="@style/date_choose"
+        style="@style/filter_currency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:background="@drawable/round_bg_filter"
         android:text="@string/date_choose"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/date_word" />
@@ -49,10 +52,13 @@
 
     <TextView
         android:id="@+id/choose_date_to"
-        style="@style/date_choose"
+        style="@style/filter_currency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:background="@drawable/round_bg_filter"
         android:text="@string/date"
         app:layout_constraintBottom_toBottomOf="@id/dash"
         app:layout_constraintLeft_toRightOf="@id/dash"
