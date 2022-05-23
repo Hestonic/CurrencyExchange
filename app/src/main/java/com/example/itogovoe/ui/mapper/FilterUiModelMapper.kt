@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 
 object FilterUiModelMapper {
 
-    fun mapHistoryDomainModelToCurrencyChipsUiModel(history: List<HistoryDtoModel>): List<CurrencyChipsUiModel> {
+    fun mapHistoryDtoToCurrencyChipsUiModel(history: List<HistoryDtoModel>): List<CurrencyChipsUiModel> {
         val filterList = mutableListOf<String>()
         history.map {
             filterList.add(it.currencyNameChild)

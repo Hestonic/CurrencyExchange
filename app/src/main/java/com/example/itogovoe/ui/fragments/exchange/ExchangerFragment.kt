@@ -32,11 +32,10 @@ class ExchangerFragment : Fragment() {
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
         setCurrenciesNames()
-        setProgressBarVisible()
 
         viewModel.exchanger.observe(viewLifecycleOwner) { exchangerUiModel ->
             binding.currencyValueChild.text = exchangerUiModel.currencyValueChild.toString()
-            setProgressBarGone()
+            updateProgressBarVisible(exchangerUiModel.isLoading)
         }
         viewModel.isFreshOnTextChange.observe(viewLifecycleOwner) { onValueParentTextChange(it) }
         viewModel.isFreshOnHistorySave.observe(viewLifecycleOwner) { onExchangeButtonClick(it) }
@@ -71,7 +70,6 @@ class ExchangerFragment : Fragment() {
             .setMessage("Данные устарели, поэтому перед обменом их необходимо обновить")
             .setCancelable(false)
             .setPositiveButton("Хорошо") { _, _ ->
-                setProgressBarVisible()
                 viewModel.updateCurrencies(args)
                 makeToast("Данные обновлены. Если вы согласны с курсом, сохраните в историю ещё раз")
             }.create().show()
@@ -106,7 +104,7 @@ class ExchangerFragment : Fragment() {
             }
         else showAlertDialogNotFreshValues()
     }
-
+    
     private fun addToHistory() {
         viewModel.addHistoryItem(
             nameChild = binding.currencyTextChild.text.toString(),
@@ -116,28 +114,23 @@ class ExchangerFragment : Fragment() {
         )
         makeToast("Транзакция добавлена в историю")
     }
-
-    private fun setProgressBarVisible() {
-        binding.blockParent.isVisible = false
-        binding.blockChild.isVisible = false
-        binding.exchangeButton.isVisible = false
-        binding.progressCircular.isVisible = true
+    
+    private fun updateProgressBarVisible(isLoading: Boolean) {
+        binding.progressCircular.isVisible = isLoading
+        binding.blockParent.isVisible = !isLoading
+        binding.blockChild.isVisible = !isLoading
+        binding.exchangeButton.isVisible = !isLoading
     }
-
-    private fun setProgressBarGone() {
-        binding.blockParent.isVisible = true
-        binding.blockChild.isVisible = true
-        binding.exchangeButton.isVisible = true
-        binding.progressCircular.isVisible = false
-    }
-
+    
     private fun makeToast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
-
+    
     private fun initViewModel() {
-        val currencyRepository = (requireActivity().application as App).dependencyInjection.currencyRepositoryImpl
-        val historyRepository = (requireActivity().application as App).dependencyInjection.historyRepositoryImpl
+        val currencyRepository =
+            (requireActivity().application as App).dependencyInjection.currencyRepositoryImpl
+        val historyRepository =
+            (requireActivity().application as App).dependencyInjection.historyRepositoryImpl
         val viewModelFactory = ExchangerViewModelFactory(currencyRepository, historyRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[ExchangerViewModel::class.java]
     }

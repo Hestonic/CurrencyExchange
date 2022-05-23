@@ -27,7 +27,7 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
     
     private fun getCurrenciesFilter(): List<CurrencyChipsUiModel> {
         historyRepository.getHistory().let { historyDtoModelList ->
-            return FilterUiModelMapper.mapHistoryDomainModelToCurrencyChipsUiModel(
+            return FilterUiModelMapper.mapHistoryDtoToCurrencyChipsUiModel(
                 historyDtoModelList
             )
         }

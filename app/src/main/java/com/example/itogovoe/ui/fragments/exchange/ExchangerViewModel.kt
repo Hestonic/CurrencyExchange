@@ -19,17 +19,22 @@ class ExchangerViewModel(
 
     private val _exchanger: MutableLiveData<ExchangerUiModel> = MutableLiveData()
     val exchanger: LiveData<ExchangerUiModel> get() = _exchanger
-
+    
     private val _isFreshOnHistorySave = MutableLiveData<Boolean>()
     val isFreshOnHistorySave: LiveData<Boolean> get() = _isFreshOnHistorySave
-
+    
     private val _isFreshOnTextChange = MutableLiveData<Boolean>()
     val isFreshOnTextChange: LiveData<Boolean> get() = _isFreshOnTextChange
-
+    
     private var coefficient = 0f
-
+    
+    private fun initLoadingUiModel() {
+        _exchanger.postValue(ExchangerUiModelMapper.mapLoadingExchangeUiModel())
+    }
+    
     fun initUiModel(args: ExchangerFragmentArgs) {
         viewModelScope.launch(Dispatchers.IO) {
+            initLoadingUiModel()
             currencyRepository.getCurrencies()
             val valueParent = currencyRepository.readCurrency(args.currencyParentName).value
             val valueChild = currencyRepository.readCurrency(args.currencyChildName).value
@@ -37,7 +42,7 @@ class ExchangerViewModel(
             _exchanger.postValue(ExchangerUiModelMapper.mapExchangeUiModel(args, coefficient))
         }
     }
-
+    
     fun refreshUiModelValues(valueParent: Float) {
         viewModelScope.launch {
             val oldExchangerUiModel = _exchanger.value
@@ -52,8 +57,9 @@ class ExchangerViewModel(
 
     fun updateCurrencies(args: ExchangerFragmentArgs) {
         viewModelScope.launch(Dispatchers.IO) {
-            currencyRepository.getCurrencies()
             val oldExchangerUiModel = _exchanger.value
+            initLoadingUiModel()
+            currencyRepository.getCurrencies()
             val valueParentDb = currencyRepository.readCurrency(args.currencyParentName).value
             val valueChildDb = currencyRepository.readCurrency(args.currencyChildName).value
             coefficient = valueChildDb / valueParentDb
@@ -74,7 +80,7 @@ class ExchangerViewModel(
             val historyUiModel =
                 HistoryUiModelMapper.mapHistoryModel(nameParent, nameChild, valueParent, valueChild)
             historyRepository.addHistoryItem(
-                HistoryUiModelMapper.mapHistoryModelToDomainModel(historyUiModel)
+                HistoryUiModelMapper.mapHistoryModelToDtoModel(historyUiModel)
             )
         }
     }

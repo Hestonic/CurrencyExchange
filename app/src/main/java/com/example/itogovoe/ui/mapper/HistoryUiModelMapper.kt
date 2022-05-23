@@ -29,7 +29,7 @@ object HistoryUiModelMapper {
         return HistoryUiModel(history = history, historyChips = historyChips)
     }
     
-    fun mapHistoryModelToDomainModel(history: History): HistoryDtoModel =
+    fun mapHistoryModelToDtoModel(history: History): HistoryDtoModel =
         HistoryDtoModel(
             date = LocalDateTime.parse(history.date),
             currencyNameParent = history.currencyNameParent,

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentHomeBinding
-import com.example.itogovoe.ui.model.CurrencyUiModel
 import com.example.itogovoe.ui.fragments.currency.CurrencyViewModel.ExchangeNavArgs
+import com.example.itogovoe.ui.model.CurrencyUiModel
 
 class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextListener {
 
@@ -26,6 +26,7 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         initViewModel()
+        viewModel.initUiModel()
         viewModel.getCurrencies()
     }
 
@@ -35,11 +36,11 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         setupRecycler()
-        setProgressBarVisible()
 
-        viewModel.currenciesLiveData.observe(viewLifecycleOwner) {
-            adapter.setData(it)
-            setProgressBarGone()
+        viewModel.currenciesLiveData.observe(viewLifecycleOwner) { currenciesUiModel ->
+            adapter.setData(currenciesUiModel.currencies)
+            updateProgressBarVisible(currenciesUiModel.isLoading)
+            updateErrorVisible(currenciesUiModel.isError)
         }
 
         lifecycleScope.launchWhenStarted {
@@ -48,7 +49,6 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
             }
         }
 
-        viewModel.errorLiveData.observe(viewLifecycleOwner) { binding.error.isGone = !it }
         return binding.root
     }
 
@@ -71,15 +71,15 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
     override fun passLongClick(currencyUiModel: CurrencyUiModel) {
         viewModel.handleLongClick(currencyUiModel)
     }
-
-    private fun setProgressBarVisible() {
-        binding.progressCircular.isGone = false
-        binding.recyclerview.isGone = true
+    
+    private fun updateProgressBarVisible(isLoading: Boolean) {
+        binding.progressCircular.isVisible = isLoading
+        binding.recyclerview.isVisible = !isLoading
     }
-
-    private fun setProgressBarGone() {
-        binding.progressCircular.isGone = true
-        binding.recyclerview.isGone = false
+    
+    private fun updateErrorVisible(isError: Boolean) {
+        binding.error.isVisible = isError
+        binding.recyclerview.isVisible  = !isError
     }
 
     private fun initViewModel() {
