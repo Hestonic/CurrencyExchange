@@ -5,10 +5,11 @@ import java.time.LocalDateTime
 
 object FilterInstance {
     var timeFilter: MutableLiveData<TimeFilter> = MutableLiveData()
-    var currencyFilter: CurrencyFilter = CurrencyFilter(emptyList())
+    var currencyFilter: MutableLiveData<CurrencyFilter> = MutableLiveData()
     
-    fun initTimeFilter() {
+    fun initFilterLiveData() {
         timeFilter.postValue(TimeFilter.AllTime)
+        currencyFilter.postValue(CurrencyFilter(emptyList()))
     }
 }
 

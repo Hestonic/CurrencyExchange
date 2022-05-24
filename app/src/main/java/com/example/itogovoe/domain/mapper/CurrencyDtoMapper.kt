@@ -7,7 +7,7 @@ import retrofit2.Response
 
 interface CurrencyDtoMapper {
     fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel>
-    fun mapCurrencyDtoModelListToCurrenciesEntityList(currencies: List<CurrencyDtoModel>?): List<CurrenciesEntity>?
+    fun mapCurrencyDtoModelListToCurrenciesEntityList(currencies: List<CurrencyDtoModel>): List<CurrenciesEntity>
     fun mapListCurrenciesEntityToDomainModelList(currenciesEntity: List<CurrenciesEntity>): List<CurrencyDtoModel>
     fun mapCurrencyEntityToDomainModel(currencyEntity: CurrenciesEntity): CurrencyDtoModel
 }

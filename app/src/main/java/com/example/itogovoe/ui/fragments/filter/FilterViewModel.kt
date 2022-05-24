@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.itogovoe.domain.repository.HistoryRepository
+import com.example.itogovoe.ui.main.CurrencyFilter
+import com.example.itogovoe.ui.main.CurrencyFilterModel
 import com.example.itogovoe.ui.main.FilterInstance
 import com.example.itogovoe.ui.main.TimeFilter
 import com.example.itogovoe.ui.mapper.FilterUiModelMapper
@@ -125,4 +127,28 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
             )
         )
     }
+    
+    fun updateCurrencyFilterChips(allCurrenciesAsFilter: List<CurrencyFilterModel>) {
+        if (allCurrenciesAsFilter.isNotEmpty()) {
+        
+        }
+    }
 }
+
+/*
+fun updateTimeFilterChips(name: String) {
+        viewModelScope.launch {
+            val oldFilters = _filtersLiveData.value
+            val timeFilterUiModelList = mutableListOf<TimeFilterUiModel>()
+            oldFilters?.timeFilters?.forEach { filter ->
+                if (filter.name == name) timeFilterUiModelList.add(TimeFilterUiModel(name, true))
+                else timeFilterUiModelList.add(TimeFilterUiModel(filter.name, false))
+            }
+            _filtersLiveData.postValue(
+                oldFilters?.copy(
+                    timeFilters = timeFilterUiModelList,
+                    timeRange = oldFilters.timeRange.copy(isChecked = false),
+                )
+            )
+        }
+    }*/

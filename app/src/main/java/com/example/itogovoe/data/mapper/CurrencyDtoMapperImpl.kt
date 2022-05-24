@@ -1,6 +1,5 @@
 package com.example.itogovoe.data.mapper
 
-import android.util.Log
 import com.example.itogovoe.data.api.CurrencyResponse
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 import com.example.itogovoe.domain.mapper.CurrencyDtoMapper
@@ -13,24 +12,25 @@ import java.time.ZoneId
 object CurrencyDtoMapperImpl : CurrencyDtoMapper {
 
     override fun mapCurrencyResponseToCurrencyDomainModelList(response: Response<CurrencyResponse>): List<CurrencyDtoModel> {
-        return if (response.isSuccessful) {
-            response.body()!!.rates.map {
-                CurrencyDtoModel(
-                    lastUsedAt = LocalDateTime.now(),
-                    updatedAt = timestampToLocalDateTime(response.body()!!.timestamp),
-                    name = it.key,
-                    value = it.value,
-                    isFavourite = false
-                )
+        var currencyDtoList: List<CurrencyDtoModel> = emptyList()
+        if (response.isSuccessful) {
+            response.body()?.let { currencyResponse ->
+                currencyDtoList = currencyResponse.rates.map { currency ->
+                    CurrencyDtoModel(
+                        lastUsedAt = LocalDateTime.now(),
+                        updatedAt = timestampToLocalDateTime(currencyResponse.timestamp),
+                        name = currency.key,
+                        value = currency.value,
+                        isFavourite = false
+                    )
+                }
             }
-        } else {
-            Log.d("CurrencyDtoMapper_response_error", response.errorBody().toString())
-            emptyList()
         }
+        return currencyDtoList
     }
 
-    override fun mapCurrencyDtoModelListToCurrenciesEntityList(currencies: List<CurrencyDtoModel>?): List<CurrenciesEntity>? {
-        return currencies?.map {
+    override fun mapCurrencyDtoModelListToCurrenciesEntityList(currencies: List<CurrencyDtoModel>): List<CurrenciesEntity> {
+        return currencies.map {
             CurrenciesEntity(
                 name = it.name,
                 value = it.value,

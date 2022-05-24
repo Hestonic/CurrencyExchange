@@ -27,13 +27,17 @@ object CurrencyUiModelMapper {
             currencies = mapCurrencies(currenciesDtoModel),
         )
     
-    fun mapCurrencyUiModelIsChecked(currencyUiModel: CurrencyUiModel): CurrencyUiModel =
-        CurrencyUiModel(
-            isChecked = true,
-            isFavourite = currencyUiModel.isFavourite,
-            lastUsedAt = currencyUiModel.lastUsedAt,
-            name = currencyUiModel.name
-        )
+    fun mapCurrencyUiModelIsChecked(
+        oldCurrencies: CurrenciesUiModel,
+        oldCurrency: CurrencyUiModel
+    ): CurrenciesUiModel {
+        val checkedCurrencyUiModel = oldCurrency.copy(isChecked = true)
+        oldCurrencies.currencies.toMutableList().let { currencies ->
+            currencies.remove(oldCurrency)
+            currencies.add(0, checkedCurrencyUiModel)
+            return oldCurrencies.copy(currencies = currencies)
+        }
+    }
     
     private fun mapCurrencies(currenciesDtoModel: List<CurrencyDtoModel>): List<CurrencyUiModel> =
         currenciesDtoModel.map {

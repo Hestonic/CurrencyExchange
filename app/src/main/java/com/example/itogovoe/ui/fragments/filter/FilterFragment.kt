@@ -30,7 +30,6 @@ class FilterFragment : Fragment(), FilterPassClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
-//        viewModel.getFilterItems()
     }
     
     override fun onCreateView(
@@ -45,11 +44,15 @@ class FilterFragment : Fragment(), FilterPassClick {
         viewModel.filterLiveData.observe(viewLifecycleOwner) { filterUiModel ->
             currencyChipsAdapter.setData(filterUiModel.currencyChips)
             timeChipsAdapter.setData(filterUiModel.timeFilters)
-            setIsCheckedToDateChooser(filterUiModel.timeRange)
+            updateDateChoosers(filterUiModel.timeRange)
         }
         
         FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
             viewModel.initFilterUiModel(timeFilter)
+        }
+        
+        FilterInstance.currencyFilter.observe(viewLifecycleOwner) { currencyFilter ->
+//            viewModel.updateCurrencyFilterChips(currencyFilter.allCurrenciesAsFilter)
         }
 
         binding.chooseDateFrom.setOnClickListener { dateFromChooser() }
@@ -79,7 +82,7 @@ class FilterFragment : Fragment(), FilterPassClick {
         }, year, month, day).show()
     }
     
-    private fun setIsCheckedToDateChooser(timeRangeUiModel: TimeRangeUiModel) {
+    private fun updateDateChoosers(timeRangeUiModel: TimeRangeUiModel) {
         if (timeRangeUiModel.isChecked) {
             binding.chooseDateFrom.setBackgroundResource(R.drawable.round_bg_filter_selected)
             binding.chooseDateTo.setBackgroundResource(R.drawable.round_bg_filter_selected)

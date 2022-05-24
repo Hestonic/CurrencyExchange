@@ -65,7 +65,7 @@ class CurrencyRepositoryImpl(
             CurrencyDtoMapperImpl.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
         val listCurrenciesTable =
             CurrencyDtoMapperImpl.mapCurrencyDtoModelListToCurrenciesEntityList(currencyDtoModelList)
-        listCurrenciesTable?.forEach { localDataSource.addCurrencyItem(it) }
+        listCurrenciesTable.forEach { localDataSource.addCurrencyItem(it) }
         Log.d("REPOSITORY_TAG", "Data has been added to database")
     }
 
@@ -80,6 +80,7 @@ class CurrencyRepositoryImpl(
         val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
         var minutes: Long = 0
+        // TODO: а если localCurrencies.size = 0?
         if (localCurrencies.isNotEmpty())
             minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
         Log.d("difference_date", minutes.toString())

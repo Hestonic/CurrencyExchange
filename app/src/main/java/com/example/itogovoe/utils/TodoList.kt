@@ -1,8 +1,5 @@
 package com.example.itogovoe.utils
 
-// TODO:
-//  Сделать отображение progressBar задействуя UiModel, добавив туда val isLoading: Boolean
-
 // TODO: HomeFragment
 //  - должен сохраняться выбранный элемент при перевороте экрана
 

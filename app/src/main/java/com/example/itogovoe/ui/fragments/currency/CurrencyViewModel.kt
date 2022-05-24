@@ -47,16 +47,12 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
         _currenciesLiveData.postValue(currenciesUiModelList.copy(currencies = sortedCurrencies))
     }
     
-    private fun isCheckedSort(currencyUiModel: CurrencyUiModel) {
+    private fun isCheckedSort(oldCurrency: CurrencyUiModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            val oldCurrency = _currenciesLiveData.value
-            val currencies = oldCurrency?.currencies?.toMutableList()
-            val checkedCurrencyUiModel =
-                CurrencyUiModelMapper.mapCurrencyUiModelIsChecked(currencyUiModel)
-            currencies?.remove(currencyUiModel)
-            currencies?.add(0, checkedCurrencyUiModel)
-            currencies?.let {
-                _currenciesLiveData.postValue(oldCurrency.copy(currencies = it))
+            _currenciesLiveData.value?.let { oldCurrencies ->
+                val freshCurrencies =
+                    CurrencyUiModelMapper.mapCurrencyUiModelIsChecked(oldCurrencies, oldCurrency)
+                _currenciesLiveData.postValue(freshCurrencies)
             }
         }
     }
@@ -70,12 +66,13 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
 
     fun handleSingleClick(currencyChildName: String) {
         _currenciesLiveData.value?.currencies?.let { currencyList ->
+            val firstCurrency = currencyList[0]
             when {
-                currencyList[0].isChecked ->
-                    postNavigationArgs(currencyList[0].name, currencyChildName)
-            
-                currencyList[0].isFavourite ->
-                    postNavigationArgs(currencyList[0].name, currencyChildName)
+                firstCurrency.isChecked ->
+                    postNavigationArgs(firstCurrency.name, currencyChildName)
+    
+                firstCurrency.isFavourite ->
+                    postNavigationArgs(firstCurrency.name, currencyChildName)
             
                 else -> currencyList.forEach { currency ->
                     if (currency.name == "RUB" || currency.name == "EUR" || currency.name == "USD") {
