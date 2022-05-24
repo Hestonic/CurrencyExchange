@@ -77,12 +77,11 @@ class CurrencyRepositoryImpl(
     }
 
     override fun isFresh(): Boolean {
-        val localCurrencies = localDataSource.readAllCurrencies()
         val dateNow = LocalDateTime.now()
         var minutes: Long = 0
-        // TODO: а если localCurrencies.size = 0?
-        if (localCurrencies.isNotEmpty())
-            minutes = ChronoUnit.MINUTES.between(localCurrencies[0].updatedAt, dateNow)
+        localDataSource.readAllCurrencies().firstOrNull()?.let {
+            minutes = ChronoUnit.MINUTES.between(it.updatedAt, dateNow)
+        }
         Log.d("difference_date", minutes.toString())
         return minutes < 6
     }

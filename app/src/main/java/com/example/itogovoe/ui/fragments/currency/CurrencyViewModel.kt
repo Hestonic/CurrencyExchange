@@ -46,16 +46,6 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
             .sortedByDescending { currency -> currency.isFavourite }
         _currenciesLiveData.postValue(currenciesUiModelList.copy(currencies = sortedCurrencies))
     }
-    
-    private fun isCheckedSort(oldCurrency: CurrencyUiModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _currenciesLiveData.value?.let { oldCurrencies ->
-                val freshCurrencies =
-                    CurrencyUiModelMapper.mapCurrencyUiModelIsChecked(oldCurrencies, oldCurrency)
-                _currenciesLiveData.postValue(freshCurrencies)
-            }
-        }
-    }
 
     fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -66,37 +56,51 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
 
     fun handleSingleClick(currencyChildName: String) {
         _currenciesLiveData.value?.currencies?.let { currencyList ->
-            val firstCurrency = currencyList[0]
-            when {
-                firstCurrency.isChecked ->
-                    postNavigationArgs(firstCurrency.name, currencyChildName)
-    
-                firstCurrency.isFavourite ->
-                    postNavigationArgs(firstCurrency.name, currencyChildName)
+            currencyList.firstOrNull()?.let { firstCurrency ->
+                when {
+                    firstCurrency.isChecked ->
+                        postNavigationArgs(firstCurrency.name, currencyChildName)
             
-                else -> currencyList.forEach { currency ->
-                    if (currency.name == "RUB" || currency.name == "EUR" || currency.name == "USD") {
-                        postNavigationArgs(currency.name, currencyChildName)
-                        return
+                    firstCurrency.isFavourite ->
+                        postNavigationArgs(firstCurrency.name, currencyChildName)
+            
+                    else -> currencyList.forEach { currency ->
+                        if (currency.name == "RUB" || currency.name == "EUR" || currency.name == "USD")
+                            postNavigationArgs(currency.name, currencyChildName)
                     }
                 }
             }
         }
     }
-
-    fun handleLongClick(currencyUiModel: CurrencyUiModel) {
+    
+    fun handleLongClick(clickedCurrency: CurrencyUiModel) {
         _currenciesLiveData.value?.currencies?.let { currencyList ->
-            if (!currencyList[0].isChecked) isCheckedSort(currencyUiModel)
-            else updateCurrencyLastUsedAt(currencyUiModel.name)
+            currencyList.firstOrNull()?.let { firstCurrency ->
+                if (firstCurrency.isChecked && firstCurrency.name == clickedCurrency.name)
+                    updateCurrencyLastUsedAt(firstCurrency.name)
+                else if (!firstCurrency.isChecked)
+                    isCheckedSort(clickedCurrency)
+            }
         }
     }
-
+    
+    
+    private fun isCheckedSort(oldCurrency: CurrencyUiModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _currenciesLiveData.value?.let { oldCurrencies ->
+                val freshCurrencies =
+                    CurrencyUiModelMapper.mapCurrencyUiModelIsChecked(oldCurrencies, oldCurrency)
+                _currenciesLiveData.postValue(freshCurrencies)
+            }
+        }
+    }
+    
     private fun postNavigationArgs(currencyParentName: String, currencyChildName: String) {
         updateCurrencyLastUsedAt(currencyParentName)
         updateCurrencyLastUsedAt(currencyChildName)
         navigationWithArgs(currencyParentName, currencyChildName)
     }
-
+    
     private fun updateCurrencyLastUsedAt(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             currencyRepository.updateCurrencyLastUsedAt(name)
