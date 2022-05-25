@@ -39,10 +39,11 @@ class HistoryFragment : Fragment() {
         viewModel.historyChips.observe(viewLifecycleOwner) { chips ->
             historyChipsAdapter.setData(chips)
         }
-        FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
-            viewModel.getData(timeFilter)
+        FilterInstance.filters.observe(viewLifecycleOwner) { filtersModel ->
+            viewModel.getData(filtersModel.timeFilter)
         }
-        
+    
+    
         return binding.root
     }
     

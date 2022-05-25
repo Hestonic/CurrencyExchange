@@ -1,10 +1,14 @@
 package com.example.itogovoe.data.sources.local_source
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
-import com.example.itogovoe.data.sources.local_source.entities.*
+import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
+import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 
 @Database(
     entities = [HistoryEntity::class, CurrenciesEntity::class],

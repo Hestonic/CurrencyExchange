@@ -15,16 +15,18 @@ class HistoryRepositoryImpl(private val localDataSource: LocalDataSource) : Hist
             )
         )
     }
-
+    
     override fun getHistory(): List<HistoryDtoModel> =
         HistoryDtoMapperImpl.mapHistoryEntityToDomainModel(localDataSource.readAllHistory())
-
-
+    
     override fun searchDateHistory(
-        dateFrom: LocalDateTime,
-        dateTo: LocalDateTime
+        dateFrom: LocalDateTime, dateTo: LocalDateTime
     ): List<HistoryDtoModel> = HistoryDtoMapperImpl.mapHistoryEntityToDomainModel(
         localDataSource.searchDateHistory(dateFrom, dateTo)
     )
-
+    
+    override fun searchCurrenciesHistory(currency: String): List<HistoryDtoModel> =
+        HistoryDtoMapperImpl.mapHistoryEntityToDomainModel(
+            localDataSource.searchCurrenciesHistory(currency)
+        )
 }

@@ -48,8 +48,8 @@ class FilterFragment : Fragment(), FilterPassClick {
             updateDateChoosers(filterUiModel.timeRange)
         }
         
-        FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
-            viewModel.initFilterUiModel(timeFilter)
+        FilterInstance.filters.observe(viewLifecycleOwner) { filtersModel ->
+            viewModel.initFilterUiModel(filtersModel)
         }
 
         binding.chooseDateFrom.setOnClickListener { dateFromChooser() }

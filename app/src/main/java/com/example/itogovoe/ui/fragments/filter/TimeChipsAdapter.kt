@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemCurrencyFilterBinding
-import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 import com.example.itogovoe.ui.model.TimeFilterUiModel
 
 class TimeChipsAdapter(private val listener: FilterPassClick) : RecyclerView.Adapter<TimeChipsViewHolder>() {

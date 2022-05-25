@@ -3,7 +3,6 @@ package com.example.itogovoe.ui.fragments.history
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemHistoryBinding
 import com.example.itogovoe.ui.model.History
-import com.example.itogovoe.ui.model.HistoryUiModel
 
 class HistoryViewHolder(private val binding: ItemHistoryBinding) :
     RecyclerView.ViewHolder(binding.root) {

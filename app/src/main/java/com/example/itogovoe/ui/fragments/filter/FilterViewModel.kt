@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.itogovoe.domain.repository.HistoryRepository
 import com.example.itogovoe.ui.main.FilterInstance
+import com.example.itogovoe.ui.main.FiltersModel
 import com.example.itogovoe.ui.main.TimeFilter
 import com.example.itogovoe.ui.mapper.FilterUiModelMapper
 import com.example.itogovoe.ui.mapper.UiDateConverter
@@ -20,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+// TODO: Сделать мапперы где надо
 class FilterViewModel(private val historyRepository: HistoryRepository) : ViewModel() {
     
     private val _filtersLiveData: MutableLiveData<FilterUiModel> = MutableLiveData()
@@ -33,10 +35,10 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
         }
     }
     
-    fun initFilterUiModel(timeFilter: TimeFilter) {
+    fun initFilterUiModel(filtersModel: FiltersModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val allCurrenciesAsFilter =
-                FilterInstance.currencyFilter.allCurrenciesAsFilter
+                filtersModel.currencyFilter.allCurrenciesAsFilter
             if (_filtersLiveData.value == null) {
                 if (allCurrenciesAsFilter.isEmpty()) {
                     val filterUiModel =
@@ -51,7 +53,7 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
                     _filtersLiveData.postValue(filterUiModel)
                 }
             }
-            chooseTimeFilter(timeFilter)
+            chooseTimeFilter(filtersModel.timeFilter)
         }
     }
     
@@ -102,43 +104,57 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
     }
     
     fun setTimeFilterChipsInInstance(name: String) {
+        val oldFiltersModel = FilterInstance.filters.value
         when (name) {
-            FILTER_ALL_TIME -> FilterInstance.timeFilter.postValue(TimeFilter.AllTime)
-            FILTER_MONTH -> FilterInstance.timeFilter.postValue(TimeFilter.Month)
-            FILTER_WEEK -> FilterInstance.timeFilter.postValue(TimeFilter.Week)
+            FILTER_ALL_TIME ->
+                FilterInstance.filters.postValue(oldFiltersModel?.copy(timeFilter = TimeFilter.AllTime))
+            FILTER_MONTH ->
+                FilterInstance.filters.postValue(oldFiltersModel?.copy(timeFilter = TimeFilter.Month))
+            FILTER_WEEK ->
+                FilterInstance.filters.postValue(oldFiltersModel?.copy(timeFilter = TimeFilter.Week))
         }
     }
     
     fun dateFromChooser(year: Int, month: Int, day: Int) {
-        val oldTimeFilterRange = FilterInstance.timeFilter.value
-        if (oldTimeFilterRange is TimeFilter.Range)
-            FilterInstance.timeFilter.postValue(
-                TimeFilter.Range(
-                    from = LocalDateTime.of(year, month + 1, day, 0, 0, 1),
-                    to = oldTimeFilterRange.to,
+        val oldFiltersModel = FilterInstance.filters.value
+        val oldTimeFilter = oldFiltersModel?.timeFilter
+        if (oldTimeFilter is TimeFilter.Range)
+            FilterInstance.filters.postValue(
+                oldFiltersModel.copy(
+                    timeFilter = TimeFilter.Range(
+                        from = LocalDateTime.of(year, month + 1, day, 0, 0, 1),
+                        to = oldTimeFilter.to,
+                    )
                 )
             )
-        else FilterInstance.timeFilter.postValue(
-            TimeFilter.Range(
-                from = LocalDateTime.of(year, month + 1, day, 0, 0, 1),
-                to = LocalDateTime.now(),
+        else FilterInstance.filters.postValue(
+            oldFiltersModel?.copy(
+                timeFilter = TimeFilter.Range(
+                    from = LocalDateTime.of(year, month + 1, day, 0, 0, 1),
+                    to = LocalDateTime.now(),
+                )
             )
         )
     }
     
     fun dateToChooser(year: Int, month: Int, day: Int) {
-        val timeFilterRange = FilterInstance.timeFilter.value
-        if (timeFilterRange is TimeFilter.Range)
-            FilterInstance.timeFilter.postValue(
-                TimeFilter.Range(
-                    from = timeFilterRange.from,
-                    to = LocalDateTime.of(year, month + 1, day, 23, 50, 59),
+        val timeFilterRange = FilterInstance.filters.value
+        val oldTimeFilter = timeFilterRange?.timeFilter
+        if (oldTimeFilter is TimeFilter.Range)
+            FilterInstance.filters.postValue(
+                timeFilterRange.copy(
+                    timeFilter = TimeFilter.Range(
+                        from = oldTimeFilter.from,
+                        to = LocalDateTime.of(year, month + 1, day, 23, 50, 59),
+                    )
                 )
             )
-        else FilterInstance.timeFilter.postValue(
-            TimeFilter.Range(
-                from = LocalDateTime.now(),
-                to = LocalDateTime.of(year, month + 1, day, 23, 50, 59),
+        else FilterInstance.filters.postValue(
+            timeFilterRange?.copy(
+                timeFilter = TimeFilter.Range(
+                    from = LocalDateTime.now(),
+                    to = LocalDateTime.of(year, month + 1, day, 23, 50, 59),
+                )
             )
         )
     }
@@ -149,7 +165,10 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
                 FilterUiModelMapper.handleCurrencyChipClick(oldFilter, clickedElement)
             val freshCurrencyChips =
                 FilterUiModelMapper.mapCurrenciesAsFilterToCurrencyChips(freshCurrencyFilter.allCurrenciesAsFilter)
-            FilterInstance.currencyFilter = freshCurrencyFilter
+            val oldFiltersModel = FilterInstance.filters.value
+            FilterInstance.filters.postValue(
+                oldFiltersModel?.copy(currencyFilter = freshCurrencyFilter)
+            )
             _filtersLiveData.postValue(oldFilter.copy(currencyChips = freshCurrencyChips))
         }
     }

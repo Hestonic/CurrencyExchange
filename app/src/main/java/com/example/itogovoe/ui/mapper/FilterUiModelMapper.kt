@@ -1,6 +1,5 @@
 package com.example.itogovoe.ui.mapper
 
-import android.util.Log
 import com.example.itogovoe.domain.model.HistoryDtoModel
 import com.example.itogovoe.ui.main.CurrencyFilter
 import com.example.itogovoe.ui.main.CurrencyFilterModel
@@ -44,12 +43,6 @@ object FilterUiModelMapper {
             currencyChips = currencyChips,
         )
     
-    fun mapCurrencyChipsUiModelToCurrencyFilter(currenciesChips: List<CurrencyChipsUiModel>): CurrencyFilter {
-        val currencyFilterModel =
-            currenciesChips.map { CurrencyFilterModel(isChecked = it.isChecked, name = it.name) }
-        return CurrencyFilter(allCurrenciesAsFilter = currencyFilterModel)
-    }
-    
     fun mapCurrenciesAsFilterToCurrencyChips(
         allCurrenciesAsFilter: List<CurrencyFilterModel>
     ): List<CurrencyChipsUiModel> =
@@ -64,45 +57,12 @@ object FilterUiModelMapper {
         if (clickedElement.isChecked)
             currencyChips[indexOfCheckedElement] = clickedElement.copy(isChecked = false)
         else currencyChips[indexOfCheckedElement] = clickedElement.copy(isChecked = true)
-        return CurrencyFilter(
-            currencyChips.map { CurrencyFilterModel(isChecked = it.isChecked, name = it.name) }
-        )
-        
-        
-        /*return CurrencyFilter(
-            CurrencyFilterModel(
-                isChecked =
-            )
-        )
-        return oldFilter.copy(currencyChips = currencyChips)*/
+        return mapCurrencyChipsUiModelToCurrencyFilter(currencyChips)
     }
     
-    
-    /*fun mapFilterUiModel(allCurrenciesAsFilter: List<CurrencyFilterModel>): FilterUiModel =
-        FilterUiModel(
-            timeFilters = listOf(
-                TimeFilterUiModel(FILTER_ALL_TIME, true),
-                TimeFilterUiModel(FILTER_MONTH, false),
-                TimeFilterUiModel(FILTER_WEEK, false),
-            ),
-            timeRange = TimeRangeUiModel(
-                "Выбрать дату",
-                UiDateConverter.localDateTimeToLocalDateString(LocalDateTime.now()),
-                false
-            ),
-            currencyChips = allCurrenciesAsFilter.map {
-                CurrencyChipsUiModel(
-                    isChecked = it.isChecked,
-                    name = it.name
-                )
-            },
-        )
-    
-    
-    
-    
-    // TODO: не забыть удалить
-    fun mapFilterUiModelWithUpdatedCurrenciesChips(allCurrenciesAsFilter: List<CurrencyFilterModel>): FilterUiModel {
-    
-    }*/
+    private fun mapCurrencyChipsUiModelToCurrencyFilter(currenciesChips: List<CurrencyChipsUiModel>): CurrencyFilter {
+        val currencyFilterModel =
+            currenciesChips.map { CurrencyFilterModel(isChecked = it.isChecked, name = it.name) }
+        return CurrencyFilter(allCurrenciesAsFilter = currencyFilterModel)
+    }
 }

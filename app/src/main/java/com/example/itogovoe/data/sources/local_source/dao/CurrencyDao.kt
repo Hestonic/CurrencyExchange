@@ -2,7 +2,6 @@ package com.example.itogovoe.data.sources.local_source.dao
 
 import androidx.room.*
 import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
-import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 
 @Dao
 interface CurrencyDao {

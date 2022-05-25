@@ -4,13 +4,22 @@ import androidx.lifecycle.MutableLiveData
 import java.time.LocalDateTime
 
 object FilterInstance {
-    var timeFilter: MutableLiveData<TimeFilter> = MutableLiveData()
-    var currencyFilter: CurrencyFilter = CurrencyFilter(emptyList())
+    val filters: MutableLiveData<FiltersModel> = MutableLiveData()
     
     fun initFilterLiveData() {
-        timeFilter.postValue(TimeFilter.AllTime)
+        filters.postValue(
+            FiltersModel(
+                timeFilter = TimeFilter.AllTime,
+                currencyFilter = CurrencyFilter(emptyList())
+            )
+        )
     }
 }
+
+data class FiltersModel(
+    val timeFilter: TimeFilter = TimeFilter.AllTime,
+    val currencyFilter: CurrencyFilter = CurrencyFilter(emptyList())
+)
 
 data class CurrencyFilter(
     val allCurrenciesAsFilter: List<CurrencyFilterModel>,

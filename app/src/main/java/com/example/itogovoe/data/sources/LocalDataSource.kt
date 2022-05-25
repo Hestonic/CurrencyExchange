@@ -15,23 +15,27 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
     suspend fun addHistoryItem(history: HistoryEntity) {
         historyDao.addHistoryItem(history)
     }
-
+    
     fun readAllHistory(): List<HistoryEntity> {
         return historyDao.readAllHistory()
     }
-
+    
     fun searchDateHistory(dateFrom: LocalDateTime, dateTo: LocalDateTime): List<HistoryEntity> {
         val dateFromTimestamp = DateConverter().localDateTimeToTimestamp(dateFrom)
         val dateToTimestamp = DateConverter().localDateTimeToTimestamp(dateTo)
         return historyDao.searchDateHistory(dateFromTimestamp, dateToTimestamp)
     }
-
-
+    
+    fun searchCurrenciesHistory(currency: String): List<HistoryEntity> {
+        return historyDao.searchCurrenciesHistory(currency)
+    }
+    
+    
     // CurrenciesEntity
     suspend fun addCurrencyItem(currencies: CurrenciesEntity) {
         currencyDao.addCurrencyItem(currencies)
     }
-
+    
     fun searchCurrenciesDatabase(searchQuery: String) =
         currencyDao.searchCurrenciesDatabase(searchQuery)
 

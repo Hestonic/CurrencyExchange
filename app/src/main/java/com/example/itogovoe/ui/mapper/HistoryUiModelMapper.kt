@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 
 object HistoryUiModelMapper {
     
-    fun mapHistoryEntityToUiModel(historyDtoModelList: List<HistoryDtoModel>): HistoryUiModel {
+    fun mapHistoryDtoToUiModel(historyDtoModelList: List<HistoryDtoModel>): HistoryUiModel {
         val history = historyDtoModelList.map { historyDtoModel ->
             History(
                 date = UiDateConverter.localDateTimeToLocalDateTimeString(historyDtoModel.date),

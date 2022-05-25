@@ -13,7 +13,6 @@ object ExchangerUiModelMapper {
             currencyValueChild = 0f,
         )
     
-    
     fun mapExchangeUiModel(args: ExchangerFragmentArgs, coefficient: Float): ExchangerUiModel =
         ExchangerUiModel(
             isLoading = false,
