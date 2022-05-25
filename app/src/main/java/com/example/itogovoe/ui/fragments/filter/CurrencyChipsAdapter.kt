@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemCurrencyFilterBinding
 import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 
-class CurrencyChipsAdapter : RecyclerView.Adapter<CurrencyChipsViewHolder>() {
+class CurrencyChipsAdapter(private val listener: FilterPassClick) : RecyclerView.Adapter<CurrencyChipsViewHolder>() {
 
     private var currencyChipsList: List<CurrencyChipsUiModel> = listOf()
 
@@ -22,7 +22,7 @@ class CurrencyChipsAdapter : RecyclerView.Adapter<CurrencyChipsViewHolder>() {
 
     override fun onBindViewHolder(holder: CurrencyChipsViewHolder, position: Int) {
         currencyChipsList.getOrNull(position)?.let {
-            holder.bind(it)
+            holder.bind(it, listener)
         }
     }
 

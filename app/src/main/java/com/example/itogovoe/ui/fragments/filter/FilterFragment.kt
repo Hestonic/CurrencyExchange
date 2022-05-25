@@ -12,6 +12,7 @@ import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentFilterBinding
 import com.example.itogovoe.ui.main.FilterInstance
+import com.example.itogovoe.ui.model.CurrencyChipsUiModel
 import com.example.itogovoe.ui.model.TimeRangeUiModel
 import java.util.*
 
@@ -20,7 +21,7 @@ class FilterFragment : Fragment(), FilterPassClick {
     private lateinit var viewModel: FilterViewModel
     private lateinit var binding: FragmentFilterBinding
     // TODO: попробовать сделать через один адаптер (адаптер делегат)
-    private val currencyChipsAdapter = CurrencyChipsAdapter()
+    private val currencyChipsAdapter = CurrencyChipsAdapter(this)
     private val timeChipsAdapter = TimeChipsAdapter(this)
 
     private var year = 0
@@ -50,10 +51,6 @@ class FilterFragment : Fragment(), FilterPassClick {
         FilterInstance.timeFilter.observe(viewLifecycleOwner) { timeFilter ->
             viewModel.initFilterUiModel(timeFilter)
         }
-        
-        FilterInstance.currencyFilter.observe(viewLifecycleOwner) { currencyFilter ->
-//            viewModel.updateCurrencyFilterChips(currencyFilter.allCurrenciesAsFilter)
-        }
 
         binding.chooseDateFrom.setOnClickListener { dateFromChooser() }
         binding.chooseDateTo.setOnClickListener { dateToChooser() }
@@ -64,6 +61,10 @@ class FilterFragment : Fragment(), FilterPassClick {
     override fun passChipsClick(name: String) {
         viewModel.updateTimeFilterChips(name)
         viewModel.setTimeFilterChipsInInstance(name)
+    }
+    
+    override fun passCurrencyChipsClick(clickedElement: CurrencyChipsUiModel) {
+        viewModel.updateCurrencyChips(clickedElement)
     }
     
     private fun dateFromChooser() {
