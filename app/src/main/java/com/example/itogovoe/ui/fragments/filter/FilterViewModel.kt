@@ -116,47 +116,51 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
     }
     
     fun dateFromChooser(year: Int, month: Int, day: Int) {
-        val oldFiltersModel = FilterInstance.filters.value
-        val oldTimeFilter = oldFiltersModel?.timeFilter
-        if (oldTimeFilter is TimeFilter.Range)
-            FilterInstance.filters.postValue(
-                oldFiltersModel.copy(
-                    timeFilter = TimeFilter.Range(
-                        from = LocalDateTime.of(year, month + 1, day, 0, 0, 1),
-                        to = oldTimeFilter.to,
+        FilterInstance.filters.value?.let { oldFiltersModel ->
+            val oldTimeFilter = oldFiltersModel.timeFilter
+            if (oldTimeFilter is TimeFilter.Range) {
+                FilterInstance.filters.postValue(
+                    FilterUiModelMapper.refreshTimeFiltersModelByRange(
+                        oldFiltersModel,
+                        LocalDateTime.of(year, month + 1, day, 0, 0, 1),
+                        oldTimeFilter.to
                     )
                 )
-            )
-        else FilterInstance.filters.postValue(
-            oldFiltersModel?.copy(
-                timeFilter = TimeFilter.Range(
-                    from = LocalDateTime.of(year, month + 1, day, 0, 0, 1),
-                    to = LocalDateTime.now(),
+            } else {
+                FilterInstance.filters.postValue(
+                    FilterUiModelMapper.refreshTimeFiltersModelByRange(
+                        oldFiltersModel,
+                        LocalDateTime.of(year, month + 1, day, 0, 0, 1),
+                        LocalDateTime.now()
+                    )
                 )
-            )
-        )
+            }
+        }
+    
     }
     
     fun dateToChooser(year: Int, month: Int, day: Int) {
-        val timeFilterRange = FilterInstance.filters.value
-        val oldTimeFilter = timeFilterRange?.timeFilter
-        if (oldTimeFilter is TimeFilter.Range)
-            FilterInstance.filters.postValue(
-                timeFilterRange.copy(
-                    timeFilter = TimeFilter.Range(
-                        from = oldTimeFilter.from,
-                        to = LocalDateTime.of(year, month + 1, day, 23, 50, 59),
+        FilterInstance.filters.value?.let { oldFiltersModel ->
+            val oldTimeFilter = oldFiltersModel.timeFilter
+            if (oldTimeFilter is TimeFilter.Range) {
+                FilterInstance.filters.postValue(
+                    FilterUiModelMapper.refreshTimeFiltersModelByRange(
+                        oldFiltersModel,
+                        oldTimeFilter.from,
+                        LocalDateTime.of(year, month + 1, day, 23, 50, 59)
                     )
                 )
-            )
-        else FilterInstance.filters.postValue(
-            timeFilterRange?.copy(
-                timeFilter = TimeFilter.Range(
-                    from = LocalDateTime.now(),
-                    to = LocalDateTime.of(year, month + 1, day, 23, 50, 59),
+            } else {
+                FilterInstance.filters.postValue(
+                    FilterUiModelMapper.refreshTimeFiltersModelByRange(
+                        oldFiltersModel,
+                        LocalDateTime.now(),
+                        LocalDateTime.of(year, month + 1, day, 23, 50, 59)
+                    )
                 )
-            )
-        )
+            }
+        }
+        
     }
     
     fun updateCurrencyChips(clickedElement: CurrencyChipsUiModel) {
@@ -165,11 +169,14 @@ class FilterViewModel(private val historyRepository: HistoryRepository) : ViewMo
                 FilterUiModelMapper.handleCurrencyChipClick(oldFilter, clickedElement)
             val freshCurrencyChips =
                 FilterUiModelMapper.mapCurrenciesAsFilterToCurrencyChips(freshCurrencyFilter.allCurrenciesAsFilter)
-            val oldFiltersModel = FilterInstance.filters.value
-            FilterInstance.filters.postValue(
-                oldFiltersModel?.copy(currencyFilter = freshCurrencyFilter)
-            )
-            _filtersLiveData.postValue(oldFilter.copy(currencyChips = freshCurrencyChips))
+            
+            FilterInstance.filters.value?.let { oldFiltersModel ->
+                FilterInstance.filters.postValue(
+                    oldFiltersModel.copy(currencyFilter = freshCurrencyFilter)
+                )
+                _filtersLiveData.postValue(oldFilter.copy(currencyChips = freshCurrencyChips))
+            }
+            
         }
     }
 }

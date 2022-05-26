@@ -12,6 +12,7 @@ import com.example.itogovoe.ui.main.TimeFilter
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import com.example.itogovoe.ui.model.History
 import com.example.itogovoe.ui.model.HistoryChips
+import com.example.itogovoe.ui.model.HistoryUiModel
 import com.example.itogovoe.utils.Constants.Companion.FILTER_ALL_TIME
 import com.example.itogovoe.utils.Constants.Companion.FILTER_MONTH
 import com.example.itogovoe.utils.Constants.Companion.FILTER_WEEK
@@ -33,14 +34,14 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewM
     
     fun getData(timeFilter: TimeFilter) {
         return when (timeFilter) {
-            is TimeFilter.AllTime -> getAllHistory()
+            is TimeFilter.AllTime -> getData()
             is TimeFilter.Month -> getData(TimeFilter.Month.from, TimeFilter.Month.to, FILTER_MONTH)
             is TimeFilter.Week -> getData(TimeFilter.Week.from, TimeFilter.Week.to, FILTER_WEEK)
             is TimeFilter.Range -> getData(timeFilter.from, timeFilter.to, "По выбранной дате")
         }
     }
     
-    private fun getAllHistory() {
+    private fun getData() {
         viewModelScope.launch(Dispatchers.IO) {
             historyRepository.getHistory().let { historyDto ->
                 FilterInstance.filters.value?.let { filtersModel ->
@@ -48,19 +49,7 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewM
                         filtersModel.currencyFilter.allCurrenciesAsFilter
                     val allHistoryUiModel = HistoryUiModelMapper.mapHistoryDtoToUiModel(historyDto)
                     if (currenciesAsFilterContainsSelectedItems(allCurrenciesAsFilter)) {
-                        val allHistoryFilteredByCurrencies: MutableList<HistoryDtoModel> =
-                            mutableListOf()
-                        allCurrenciesAsFilter.forEach { currencyFilterModel ->
-                            if (currencyFilterModel.isChecked)
-                                historyRepository.searchCurrenciesHistory(currencyFilterModel.name)
-                                    .forEach {
-                                        allHistoryFilteredByCurrencies.add(it)
-                                    }
-                        }
-                        val filteredHistory =
-                            HistoryUiModelMapper.mapHistoryDtoToUiModel(
-                                allHistoryFilteredByCurrencies
-                            )
+                        val filteredHistory = getFilteredHistoryByCurrencies(allCurrenciesAsFilter)
                         _allHistory.postValue(filteredHistory.history)
                         setTimeChipsUi(FILTER_ALL_TIME)
                     } else {
@@ -80,30 +69,49 @@ class HistoryViewModel(private val historyRepository: HistoryRepository) : ViewM
                         filtersModel.currencyFilter.allCurrenciesAsFilter
                     val allHistoryUiModel = HistoryUiModelMapper.mapHistoryDtoToUiModel(historyDto)
                     if (currenciesAsFilterContainsSelectedItems(allCurrenciesAsFilter)) {
-                        val allHistoryFilteredByCurrencies: MutableList<HistoryDtoModel> =
-                            mutableListOf()
-                        allCurrenciesAsFilter.forEach { currencyFilterModel ->
-                            if (currencyFilterModel.isChecked)
-                                historyRepository.searchCurrenciesHistory(currencyFilterModel.name)
-                                    .forEach {
-                                        if (to.isAfter(it.date) && from.isBefore(it.date))
-                                            allHistoryFilteredByCurrencies.add(it)
-                                    }
-                        }
                         val filteredHistory =
-                            HistoryUiModelMapper.mapHistoryDtoToUiModel(
-                                allHistoryFilteredByCurrencies
-                            )
+                            getFilteredHistoryByCurrencies(allCurrenciesAsFilter, from, to)
                         _allHistory.postValue(filteredHistory.history)
                         setTimeChipsUi(name)
                     } else {
                         _allHistory.postValue(allHistoryUiModel.history)
                         setTimeChipsUi(allHistoryUiModel.historyChips, name)
                     }
-                    
+    
                 }
             }
         }
+    }
+    
+    private fun getFilteredHistoryByCurrencies(allCurrenciesAsFilter: List<CurrencyFilterModel>): HistoryUiModel {
+        val allHistoryFilteredByCurrencies: MutableList<HistoryDtoModel> =
+            mutableListOf()
+        allCurrenciesAsFilter.forEach { currencyFilterModel ->
+            if (currencyFilterModel.isChecked)
+                historyRepository.searchCurrenciesHistory(currencyFilterModel.name)
+                    .forEach {
+                        allHistoryFilteredByCurrencies.add(it)
+                    }
+        }
+        return HistoryUiModelMapper.mapHistoryDtoToUiModel(allHistoryFilteredByCurrencies)
+    }
+    
+    private fun getFilteredHistoryByCurrencies(
+        allCurrenciesAsFilter: List<CurrencyFilterModel>,
+        from: LocalDateTime,
+        to: LocalDateTime
+    ): HistoryUiModel {
+        val allHistoryFilteredByCurrencies: MutableList<HistoryDtoModel> =
+            mutableListOf()
+        allCurrenciesAsFilter.forEach { currencyFilterModel ->
+            if (currencyFilterModel.isChecked)
+                historyRepository.searchCurrenciesHistory(currencyFilterModel.name)
+                    .forEach {
+                        if (to.isAfter(it.date) && from.isBefore(it.date))
+                            allHistoryFilteredByCurrencies.add(it)
+                    }
+        }
+        return HistoryUiModelMapper.mapHistoryDtoToUiModel(allHistoryFilteredByCurrencies)
     }
     
     private fun currenciesAsFilterContainsSelectedItems(
