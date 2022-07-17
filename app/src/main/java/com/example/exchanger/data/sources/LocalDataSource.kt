@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 class LocalDataSource(private val currencyDao: CurrencyDao, private val historyDao: HistoryDao) {
 
     //HistoryEntity
-    suspend fun addHistoryItem(history: HistoryEntity) {
+    fun addHistoryItem(history: HistoryEntity) {
         historyDao.addHistoryItem(history)
     }
     
@@ -32,7 +32,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
     
     
     // CurrenciesEntity
-    suspend fun addCurrencyItem(currencies: CurrenciesEntity) {
+    fun addCurrencyItem(currencies: CurrenciesEntity) {
         currencyDao.addCurrencyItem(currencies)
     }
     
@@ -44,14 +44,14 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
         return currencyDao.readAllCurrencies()
     }
 
-    suspend fun updateCurrency(currencyDtoModel: CurrencyDtoModel) {
+    fun updateCurrency(currencyDtoModel: CurrencyDtoModel) {
         val localCurrencyNotFresh = readCurrency(currencyDtoModel.name)
         val localCurrencyFresh =
             HistoryDtoMapperImpl.mapCurrenciesEntityNotFreshToFresh(localCurrencyNotFresh, currencyDtoModel)
         currencyDao.updateCurrency(localCurrencyFresh)
     }
 
-    suspend fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
+    fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
         val currencyFromDb = readCurrency(name)
         currencyDao.updateCurrency(
             CurrenciesEntity(
@@ -65,7 +65,7 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
         )
     }
 
-    suspend fun updateCurrencyLastUsedAt(name: String) {
+    fun updateCurrencyLastUsedAt(name: String) {
         val currencyFromDb = readCurrency(name)
         currencyDao.updateCurrency(
             CurrenciesEntity(

@@ -59,7 +59,7 @@ class CurrencyRepositoryImpl(
         }
     }
 
-    private suspend fun saveCurrencies(remoteCurrency: Response<CurrencyResponse>) {
+    private fun saveCurrencies(remoteCurrency: Response<CurrencyResponse>) {
         val currencyDtoModelList =
             CurrencyDtoMapperImpl.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
         val listCurrenciesTable =
@@ -68,7 +68,7 @@ class CurrencyRepositoryImpl(
         Log.d("REPOSITORY_TAG", "Data has been added to database")
     }
 
-    private suspend fun updateCurrenciesData(remoteCurrency: Response<CurrencyResponse>) {
+    private fun updateCurrenciesData(remoteCurrency: Response<CurrencyResponse>) {
         val currencyDtoModelList =
             CurrencyDtoMapperImpl.mapCurrencyResponseToCurrencyDomainModelList(remoteCurrency)
         currencyDtoModelList.forEach { localDataSource.updateCurrency(it) }
