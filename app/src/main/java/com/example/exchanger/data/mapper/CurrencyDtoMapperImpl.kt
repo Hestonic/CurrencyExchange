@@ -21,7 +21,8 @@ object CurrencyDtoMapperImpl : CurrencyDtoMapper {
                         updatedAt = timestampToLocalDateTime(currencyResponse.timestamp),
                         name = currency.key,
                         value = currency.value,
-                        isFavourite = false
+                        isFavourite = false,
+                        isChecked = false
                     )
                 }
             }
@@ -38,6 +39,7 @@ object CurrencyDtoMapperImpl : CurrencyDtoMapper {
                 updatedAt = LocalDateTime.now(),
                 lastUsedAt = LocalDateTime.now(),
                 isFavourite = false,
+                isChecked = false
             )
         }
     }
@@ -50,6 +52,7 @@ object CurrencyDtoMapperImpl : CurrencyDtoMapper {
                 name = it.name,
                 value = it.value,
                 isFavourite = it.isFavourite,
+                isChecked = it.isChecked
             )
         }
     }
@@ -60,7 +63,8 @@ object CurrencyDtoMapperImpl : CurrencyDtoMapper {
             lastUsedAt = currencyEntity.lastUsedAt,
             updatedAt = currencyEntity.updatedAt,
             name = currencyEntity.name,
-            value = currencyEntity.value
+            value = currencyEntity.value,
+            isChecked = currencyEntity.isChecked
         )
     }
 

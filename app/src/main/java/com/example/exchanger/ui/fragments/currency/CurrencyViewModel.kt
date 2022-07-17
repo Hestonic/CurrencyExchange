@@ -44,6 +44,7 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
         val sortedCurrencies = currenciesUiModelList.currencies
             .sortedByDescending { currency -> currency.lastUsedAt }
             .sortedByDescending { currency -> currency.isFavourite }
+            .sortedByDescending { currency -> currency.isChecked }
         _currenciesLiveData.postValue(currenciesUiModelList.copy(currencies = sortedCurrencies))
     }
 
@@ -77,21 +78,17 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
         _currenciesLiveData.value?.currencies?.let { currencyList ->
             currencyList.firstOrNull()?.let { firstCurrency ->
                 if (firstCurrency.isChecked && firstCurrency.name == clickedCurrency.name)
-                    updateCurrencyLastUsedAt(firstCurrency.name)
+                    updateIsCheckedCurrency(firstCurrency.name)
                 else if (!firstCurrency.isChecked)
-                    isCheckedSort(clickedCurrency)
+                    updateIsCheckedCurrency(clickedCurrency.name)
             }
         }
     }
     
-    
-    private fun isCheckedSort(oldCurrency: CurrencyUiModel) {
+    private fun updateIsCheckedCurrency(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _currenciesLiveData.value?.let { oldCurrencies ->
-                val freshCurrencies =
-                    CurrencyUiModelMapper.mapCurrencyUiModelIsChecked(oldCurrencies, oldCurrency)
-                _currenciesLiveData.postValue(freshCurrencies)
-            }
+            currencyRepository.updateCurrencyIsChecked(name)
+            getCurrencies()
         }
     }
     

@@ -98,6 +98,10 @@ class CurrencyRepositoryImpl(
     override suspend fun updateCurrencyLastUsedAt(name: String) {
         localDataSource.updateCurrencyLastUsedAt(name)
     }
+    
+    override suspend fun updateCurrencyIsChecked(name: String) {
+        localDataSource.updateCurrencyIsChecked(name)
+    }
 
     override fun searchCurrenciesDatabase(searchQuery: String) =
         CurrencyDtoMapperImpl.mapListCurrenciesEntityToDomainModelList(

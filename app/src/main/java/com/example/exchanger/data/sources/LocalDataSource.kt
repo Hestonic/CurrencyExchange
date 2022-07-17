@@ -52,33 +52,30 @@ class LocalDataSource(private val currencyDao: CurrencyDao, private val historyD
     }
 
     fun updateCurrencyIsFavourite(name: String, isFavourite: Boolean) {
-        val currencyFromDb = readCurrency(name)
+        val localCurrency = readCurrency(name)
         currencyDao.updateCurrency(
-            CurrenciesEntity(
-                name = name,
-                value = currencyFromDb.value,
-                createdAt = currencyFromDb.createdAt,
-                updatedAt = currencyFromDb.updatedAt,
-                lastUsedAt = currencyFromDb.lastUsedAt,
-                isFavourite = isFavourite
+            localCurrency.copy(
+                isFavourite = isFavourite,
+                lastUsedAt = LocalDateTime.now()
             )
         )
     }
-
+    
     fun updateCurrencyLastUsedAt(name: String) {
-        val currencyFromDb = readCurrency(name)
+        val localCurrency = readCurrency(name)
+        currencyDao.updateCurrency(localCurrency.copy(lastUsedAt = LocalDateTime.now()))
+    }
+    
+    fun updateCurrencyIsChecked(name: String) {
+        val localCurrency = readCurrency(name)
         currencyDao.updateCurrency(
-            CurrenciesEntity(
-                name = name,
-                value = currencyFromDb.value,
-                createdAt = currencyFromDb.createdAt,
-                updatedAt = currencyFromDb.updatedAt,
-                lastUsedAt = LocalDateTime.now(),
-                isFavourite = currencyFromDb.isFavourite
+            localCurrency.copy(
+                isChecked = !localCurrency.isChecked,
+                lastUsedAt = LocalDateTime.now()
             )
         )
     }
-
+    
     fun readCurrency(name: String): CurrenciesEntity {
         return currencyDao.readCurrency(name)
     }

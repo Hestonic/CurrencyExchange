@@ -12,7 +12,7 @@ import com.example.exchanger.data.sources.local_source.entities.HistoryEntity
 
 @Database(
     entities = [HistoryEntity::class, CurrenciesEntity::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)

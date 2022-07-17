@@ -45,6 +45,7 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
         setupRecycler()
 
         viewModel.currenciesLiveData.observe(viewLifecycleOwner) { currenciesUiModel ->
+            Log.d("currencies", currenciesUiModel.toString())
             adapter.setData(currenciesUiModel.currencies)
             updateProgressBarVisible(currenciesUiModel.isLoading)
             updateErrorVisible(currenciesUiModel.isError)
@@ -133,7 +134,6 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
 
     private fun searchCurrenciesDatabase(query: String) {
         val searchQuery = "%$query%"
-        Log.d("asd", "searchQuery")
         viewModel.searchCurrencies(searchQuery)
     }
 }

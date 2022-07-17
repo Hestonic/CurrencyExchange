@@ -42,7 +42,8 @@ object HistoryDtoMapperImpl : HistoryDtoMapper {
             createdAt = localCurrencyNotFresh.createdAt,
             updatedAt = LocalDateTime.now(),
             lastUsedAt = localCurrencyNotFresh.lastUsedAt,
-            isFavourite = localCurrencyNotFresh.isFavourite
+            isFavourite = localCurrencyNotFresh.isFavourite,
+            isChecked = localCurrencyNotFresh.isChecked
         )
     }
 }

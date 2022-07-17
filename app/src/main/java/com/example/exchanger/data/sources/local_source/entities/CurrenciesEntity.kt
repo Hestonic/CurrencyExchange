@@ -12,4 +12,5 @@ data class CurrenciesEntity(
     val updatedAt: LocalDateTime,
     val lastUsedAt: LocalDateTime,
     val isFavourite: Boolean,
+    val isChecked: Boolean,
 )
