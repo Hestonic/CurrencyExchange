@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.itogovoe.ui.fragments.currency.CurrencyFragment"
+        android:name="com.example.exchanger.ui.fragments.currency.CurrencyFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -15,12 +15,12 @@
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
-        android:name="com.example.itogovoe.ui.fragments.analytics.AnalyticsFragment"
+        android:name="com.example.exchanger.ui.fragments.analytics.AnalyticsFragment"
         android:label="Analytics"
         tools:layout="@layout/fragment_analytics" />
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.itogovoe.ui.fragments.history.HistoryFragment"
+        android:name="com.example.exchanger.ui.fragments.history.HistoryFragment"
         android:label="History"
         tools:layout="@layout/fragment_history" >
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/exchangeFragment"
-        android:name="com.example.itogovoe.ui.fragments.exchange.ExchangerFragment"
+        android:name="com.example.exchanger.ui.fragments.exchange.ExchangerFragment"
         android:label="Exchange" >
         <action
             android:id="@+id/action_exchangeFragment_to_homeFragment"
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/filterFragment"
-        android:name="com.example.itogovoe.ui.fragments.filter.FilterFragment"
+        android:name="com.example.exchanger.ui.fragments.filter.FilterFragment"
         android:label="Filter" >
         <action
             android:id="@+id/action_filterFragment_to_historyFragment"
