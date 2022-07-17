@@ -2,6 +2,7 @@ package com.example.itogovoe.ui.fragments.exchange
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.itogovoe.App
 import com.example.itogovoe.databinding.FragmentExchangeBinding
+import com.example.itogovoe.ui.model.ExchangerUiModel
 
 class ExchangerFragment : Fragment() {
 
@@ -32,26 +34,37 @@ class ExchangerFragment : Fragment() {
     ): View {
         binding = FragmentExchangeBinding.inflate(inflater, container, false)
         setCurrenciesNames()
-
+    
         viewModel.exchanger.observe(viewLifecycleOwner) { exchangerUiModel ->
-            binding.currencyValueChild.text = exchangerUiModel.currencyValueChild.toString()
+            updateUi(exchangerUiModel)
             updateProgressBarVisible(exchangerUiModel.isLoading)
         }
         viewModel.isFreshOnTextChange.observe(viewLifecycleOwner) { onValueParentTextChange(it) }
         viewModel.isFreshOnHistorySave.observe(viewLifecycleOwner) { onExchangeButtonClick(it) }
-
-        binding.currencyValueParent.addTextChangedListener { viewModel.checkIsFreshOnTextChange() }
+    
+        binding.icExchange.setOnClickListener { viewModel.reverseCurrencies() }
         binding.exchangeButton.setOnClickListener { viewModel.checkIsFreshOnHistorySave() }
-
+        binding.currencyValueParent.addTextChangedListener { viewModel.checkIsFreshOnTextChange() }
+    
         return binding.root
     }
-
+    
     private fun setCurrenciesNames() {
         binding.currencyTextChild.text = args.currencyChildName
         binding.currencyTextParent.text = args.currencyParentName
         binding.currencyValueParent.setText("1.0")
     }
-
+    
+    private fun updateUi(exchangerUiModel: ExchangerUiModel) {
+        binding.currencyTextParent.text = exchangerUiModel.currencyNameParent
+        binding.currencyTextChild.text = exchangerUiModel.currencyNameChild
+        val oldParentValue = binding.currencyValueParent.text.toString().toFloat().toString()
+        val freshParentValue = exchangerUiModel.currencyValueParent.toString()
+        if (oldParentValue != freshParentValue)
+            binding.currencyValueParent.setText(exchangerUiModel.currencyValueParent.toString())
+        binding.currencyValueChild.text = exchangerUiModel.currencyValueChild.toString()
+    }
+    
     private fun onExchangeButtonClick(dataIsFresh: Boolean) {
         try {
             when {

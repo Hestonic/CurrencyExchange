@@ -9,7 +9,7 @@ import com.example.itogovoe.data.sources.RemoteDataSource
 import com.example.itogovoe.data.sources.local_source.dao.CurrencyDao
 import com.example.itogovoe.data.sources.local_source.CurrencyDatabase
 import com.example.itogovoe.data.sources.local_source.dao.HistoryDao
-
+// TODO: попробовать через фабрику
 class DependencyInjection {
 
     val remoteDataSource = RetrofitInstance.remoteDataSource

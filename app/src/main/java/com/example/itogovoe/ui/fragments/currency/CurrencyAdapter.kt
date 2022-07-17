@@ -10,9 +10,9 @@ import com.example.itogovoe.ui.model.CurrencyUiModel
 
 class CurrencyAdapter(private val listener: CurrencyPassClick) :
     RecyclerView.Adapter<CurrencyViewHolder>() {
-
+    
     private var currencyList: List<CurrencyUiModel> = listOf()
-
+    
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

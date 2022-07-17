@@ -10,8 +10,7 @@ class DateConverter {
     @TypeConverter
     fun localDateTimeToTimestamp(date: LocalDateTime): Long =
         date.toEpochSecond(OffsetDateTime.now().offset)
-
-
+    
     @TypeConverter
     fun timestampToLocalDateTime(timestamp: Long): LocalDateTime =
         Instant.ofEpochSecond(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()

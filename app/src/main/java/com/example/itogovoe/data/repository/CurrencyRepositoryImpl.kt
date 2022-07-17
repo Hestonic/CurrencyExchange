@@ -18,21 +18,20 @@ class CurrencyRepositoryImpl(
 ) : CurrencyRepository {
 
     override suspend fun getCurrencies(): List<CurrencyDtoModel> {
-        try {
+        return try {
             val localCurrencies = localDataSource.readAllCurrencies()
             Log.d("REPOSITORY_TAG", "localCurrencies: ${localCurrencies.size}")
-            return when {
+            when {
                 localCurrencies.isEmpty() -> saveResponseAndReturnUpdatedLocalCurrencies()
                 isFresh() -> {
                     Log.d("REPOSITORY_TAG", "Data is fresh")
                     getLocalCurrencies()
                 }
                 else -> updateAndReturnUpdatedLocalCurrencies()
-
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return emptyList()
+            emptyList()
         }
     }
 

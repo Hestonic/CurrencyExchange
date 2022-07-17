@@ -21,4 +21,27 @@ object ExchangerUiModelMapper {
             currencyNameChild = args.currencyChildName,
             currencyValueChild = coefficient,
         )
+    
+    fun reverseCurrencyUiModel(oldExchangerUiModel: ExchangerUiModel) =
+        oldExchangerUiModel.copy(
+            currencyNameParent = oldExchangerUiModel.currencyNameChild,
+            currencyNameChild = oldExchangerUiModel.currencyNameParent,
+            currencyValueParent = oldExchangerUiModel.currencyValueChild,
+            currencyValueChild = oldExchangerUiModel.currencyValueParent
+        )
+    
+    fun mapUpdateUiModel(oldExchangerUiModel: ExchangerUiModel, coefficient: Float) =
+        oldExchangerUiModel.copy(
+            currencyValueParent = oldExchangerUiModel.currencyValueParent,
+            currencyValueChild = oldExchangerUiModel.currencyValueParent * coefficient
+        )
+    
+    fun refreshUiModel(
+        oldExchangerUiModel: ExchangerUiModel,
+        valueParent: Float,
+        coefficient: Float
+    ) = oldExchangerUiModel.copy(
+            currencyValueParent = valueParent,
+            currencyValueChild = valueParent * coefficient
+        )
 }

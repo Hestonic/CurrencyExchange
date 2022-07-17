@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.itogovoe.domain.repository.CurrencyRepository
 import com.example.itogovoe.domain.repository.HistoryRepository
+import com.example.itogovoe.ui.mapper.CurrencyUiModelMapper
 import com.example.itogovoe.ui.mapper.ExchangerUiModelMapper
 import com.example.itogovoe.ui.mapper.HistoryUiModelMapper
 import com.example.itogovoe.ui.model.ExchangerUiModel
@@ -36,39 +37,37 @@ class ExchangerViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             initLoadingUiModel()
             currencyRepository.getCurrencies()
-            val valueParent = currencyRepository.readCurrency(args.currencyParentName).value
-            val valueChild = currencyRepository.readCurrency(args.currencyChildName).value
-            coefficient = valueChild / valueParent
+            val valueParent = readCurrency(args.currencyParentName)
+            val valueChild = readCurrency(args.currencyChildName)
+            calculateCoefficient(valueParent, valueChild)
             _exchanger.postValue(ExchangerUiModelMapper.mapExchangeUiModel(args, coefficient))
         }
     }
     
     fun refreshUiModelValues(valueParent: Float) {
         viewModelScope.launch {
-            val oldExchangerUiModel = _exchanger.value
-            _exchanger.postValue(
-                oldExchangerUiModel?.copy(
-                    currencyValueParent = valueParent,
-                    currencyValueChild = valueParent * coefficient
-                )
-            )
+            _exchanger.value?.let { oldExchangerUiModel ->
+                val refreshedExchangerUiModel =
+                    ExchangerUiModelMapper.refreshUiModel(oldExchangerUiModel, valueParent, coefficient)
+                _exchanger.postValue(refreshedExchangerUiModel)
+            }
+            
         }
     }
 
     fun updateCurrencies(args: ExchangerFragmentArgs) {
         viewModelScope.launch(Dispatchers.IO) {
-            val oldExchangerUiModel = _exchanger.value
-            initLoadingUiModel()
-            currencyRepository.getCurrencies()
-            val valueParentDb = currencyRepository.readCurrency(args.currencyParentName).value
-            val valueChildDb = currencyRepository.readCurrency(args.currencyChildName).value
-            coefficient = valueChildDb / valueParentDb
-            _exchanger.postValue(
-                oldExchangerUiModel?.copy(
-                    currencyValueParent = oldExchangerUiModel.currencyValueParent,
-                    currencyValueChild = oldExchangerUiModel.currencyValueParent * coefficient
-                )
-            )
+            _exchanger.value?.let { oldExchangerUiModel ->
+                initLoadingUiModel()
+                currencyRepository.getCurrencies()
+                val valueParentDb = readCurrency(args.currencyParentName)
+                val valueChildDb = readCurrency(args.currencyChildName)
+                calculateCoefficient(valueParentDb, valueChildDb)
+                val freshExchangerUiModel =
+                    ExchangerUiModelMapper.mapUpdateUiModel(oldExchangerUiModel, coefficient)
+                _exchanger.postValue(freshExchangerUiModel)
+            }
+    
         }
     }
     
@@ -90,10 +89,28 @@ class ExchangerViewModel(
             _isFreshOnHistorySave.postValue(currencyRepository.isFresh())
         }
     }
-
+    
     fun checkIsFreshOnTextChange() {
         viewModelScope.launch(Dispatchers.IO) {
             _isFreshOnTextChange.postValue(currencyRepository.isFresh())
         }
     }
+    
+    fun reverseCurrencies() {
+        _exchanger.value?.let { oldExchangerUiModel ->
+            val freshExchangerUiModel =
+                ExchangerUiModelMapper.reverseCurrencyUiModel(oldExchangerUiModel)
+            calculateCoefficient(
+                freshExchangerUiModel.currencyValueParent,
+                freshExchangerUiModel.currencyValueChild
+            )
+            _exchanger.postValue(freshExchangerUiModel)
+        }
+    }
+    
+    private fun calculateCoefficient(parentValue: Float, childValue: Float) {
+        coefficient = childValue / parentValue
+    }
+    
+    private fun readCurrency(name: String) = currencyRepository.readCurrency(name).value
 }

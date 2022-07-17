@@ -7,7 +7,7 @@ import com.example.itogovoe.data.sources.local_source.entities.CurrenciesEntity
 interface CurrencyDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addCurrencyItem(currencies: CurrenciesEntity)
+    fun addCurrencyItem(currencies: CurrenciesEntity)
 
     @Query("SELECT * FROM CurrenciesEntity WHERE name LIKE :searchQuery")
     fun searchCurrenciesDatabase(searchQuery: String): List<CurrenciesEntity>
@@ -16,9 +16,9 @@ interface CurrencyDao {
     fun readAllCurrencies(): List<CurrenciesEntity>
 
     @Update
-    suspend fun updateCurrency(currency: CurrenciesEntity)
+    fun updateCurrency(currency: CurrenciesEntity)
 
-    @Query("SELECT * FROM CurrenciesEntity WHERE name = :name")
+    @Query("SELECT * FROM CurrenciesEntity WHERE name = :name LIMIT 1")
     fun readCurrency(name: String): CurrenciesEntity
 
 }

@@ -10,7 +10,7 @@ import com.example.itogovoe.data.sources.local_source.entities.HistoryEntity
 interface HistoryDao {
     
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addHistoryItem(history: HistoryEntity)
+    fun addHistoryItem(history: HistoryEntity)
     
     @Query("SELECT * FROM HistoryEntity ORDER BY date DESC")
     fun readAllHistory(): List<HistoryEntity>
