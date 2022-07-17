@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,10 +27,14 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         initViewModel()
         viewModel.initUiModel()
         viewModel.getCurrencies()
+    }
+    
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupOptionsMenu()
     }
 
     override fun onCreateView(
@@ -94,12 +101,24 @@ class CurrencyFragment : Fragment(), CurrencyPassClick, SearchView.OnQueryTextLi
         binding.recyclerview.layoutManager = GridLayoutManager(requireContext(), 3)
         (binding.recyclerview.layoutManager as GridLayoutManager).scrollToPosition(0)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        activity?.menuInflater?.inflate(R.menu.currency_menu, menu)
-        val search = menu.findItem(R.id.menu_search)
-        val searchView = search?.actionView as? SearchView
-        searchView?.setOnQueryTextListener(this)
+    
+    private fun setupOptionsMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                activity?.menuInflater?.inflate(R.menu.currency_menu, menu)
+                val search = menu.findItem(R.id.menu_search)
+                val searchView = search?.actionView as? SearchView
+                searchView?.setOnQueryTextListener(this@CurrencyFragment)
+            }
+        
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_search -> true
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
