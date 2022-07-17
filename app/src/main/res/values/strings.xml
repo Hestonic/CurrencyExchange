@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Itogovoe</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="currency">USD</string>
+    <string name="currency">EUR</string>
     <string name="filter_all_time">За всё время</string>
     <string name="filter_week">За неделю</string>
     <string name="filter_month">За месяц</string>
@@ -15,4 +15,12 @@
     <string name="analytics">analytics</string>
     <string name="history">history</string>
     <string name="home">home</string>
+    <string name="search">search</string>
+    <string name="apply">Применить</string>
+    <string name="filter_time_range">В выбранном промежутке</string>
+    <string name="filter_currency_name">По выбранным валютам</string>
+    <string name="date_choose">Выбрать дату</string>
+    <string name="network_error">Не удалось получить данные из сети. Возможны проблемы с сервером.
+        Попробуйте проверить подключение к интернету, либо подождите устранение неисправности
+        с нашей стороны</string>
 </resources>

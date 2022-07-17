@@ -1,39 +1,35 @@
 package com.example.itogovoe.ui.fragments.history
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.itogovoe.databinding.ItemHistoryBinding
 import com.example.itogovoe.ui.model.History
 
-class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter : RecyclerView.Adapter<HistoryViewHolder>() {
 
-    var historyList: List<History> = emptyList()
+    private var historyList: List<History> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HistoryAdapter.HistoryViewHolder {
+    ): HistoryViewHolder {
         val binding = ItemHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HistoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val history = historyList[position]
-        holder.bind(history)
+        historyList.getOrNull(position)?.let {
+            holder.bind(it)
+        }
     }
 
     override fun getItemCount(): Int = historyList.size
 
-    inner class HistoryViewHolder(private val binding: ItemHistoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(history: History) = binding.run {
-
-            binding.date.text = history.date.toString()
-            binding.currencyNameChild.text = history.currencyNameChild
-            binding.currencyValueChild.text = history.currencyValueChild.toString()
-            binding.currencyNameParent.text = history.currencyNameParent
-            binding.currencyValueParent.text = history.currencyValueParent.toString()
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(historyList: List<History>) {
+        this.historyList = historyList
+        notifyDataSetChanged()
     }
 }

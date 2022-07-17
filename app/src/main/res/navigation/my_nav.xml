@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.itogovoe.ui.fragments.home.HomeFragment"
+        android:name="com.example.itogovoe.ui.fragments.currency.CurrencyFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -29,18 +29,18 @@
     </fragment>
     <fragment
         android:id="@+id/exchangeFragment"
-        android:name="com.example.itogovoe.ui.fragments.exchange.ExchangeFragment"
+        android:name="com.example.itogovoe.ui.fragments.exchange.ExchangerFragment"
         android:label="Exchange" >
         <action
             android:id="@+id/action_exchangeFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
         <argument
-            android:name="currencyName"
+            android:name="currencyParentName"
             app:argType="string"
             android:defaultValue="EUR" />
-        <argument android:name="currencyValue"
-            app:argType="float"
-            android:defaultValue="1" />
+        <argument
+            android:name="currencyChildName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/filterFragment"

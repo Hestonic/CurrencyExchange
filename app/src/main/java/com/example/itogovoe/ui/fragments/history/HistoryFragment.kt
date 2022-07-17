@@ -3,82 +3,68 @@ package com.example.itogovoe.ui.fragments.history
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.itogovoe.App
 import com.example.itogovoe.R
 import com.example.itogovoe.databinding.FragmentHistoryBinding
-import com.example.itogovoe.ui.model.History
-import java.time.LocalDate
+import com.example.itogovoe.ui.main.FilterInstance
 
 class HistoryFragment : Fragment() {
-
+    
+    private lateinit var viewModel: HistoryViewModel
     private lateinit var binding: FragmentHistoryBinding
-
+    
+    // TODO: попробовать сделать через адаптер делегат
+    private val historyAdapter = HistoryAdapter()
+    private val historyChipsAdapter = HistoryChipsAdapter()
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initViewModel()
+        setHasOptionsMenu(true)
+    }
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
+        setupRecyclerHistory()
+        setupRecyclerHistoryChips()
+        viewModel.allHistory.observe(viewLifecycleOwner) { history ->
+            historyAdapter.setData(history)
+        }
+        viewModel.historyChips.observe(viewLifecycleOwner) { chips ->
+            historyChipsAdapter.setData(chips)
+        }
+        FilterInstance.filters.observe(viewLifecycleOwner) { filtersModel ->
+            viewModel.getData(filtersModel.timeFilter)
+        }
+    
+    
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val adapter = HistoryAdapter()
-        binding.recyclerview.adapter = adapter
-        binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
-
-        // TODO: сделать RoomDB данных для History
-        val date = LocalDate.parse("2018-12-12")
-        val historyList: List<History> = listOf(
-            History(
-                date,
-                "EUR",
-                3.22,
-                "RUB",
-                331.02
-            ),
-            History(
-                date,
-                "ASF",
-                4.43,
-                "FSA",
-                53.23
-            ),
-            History(
-                date,
-                "BNF",
-                3.10,
-                "HTR",
-                2.89
-            ),
-            History(
-                date,
-                "HGE",
-                234453.78,
-                "XZC",
-                202.09
-            ),
-            History(
-                date,
-                "NBV",
-                2.23,
-                "RUB",
-                21.09
-            ),
-            History(
-                date,
-                "TRE",
-                22.00,
-                "MJU",
-                12.42
-            )
-        )
-        adapter.historyList = historyList
+    
+    private fun setupRecyclerHistory() {
+        binding.recyclerviewHistory.adapter = historyAdapter
+        binding.recyclerviewHistory.layoutManager = LinearLayoutManager(requireContext())
     }
-
+    
+    private fun setupRecyclerHistoryChips() {
+        binding.recyclerviewChips.adapter = historyChipsAdapter
+        binding.recyclerviewChips.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    }
+    
+    private fun initViewModel() {
+        val historyRepository =
+            (requireActivity().application as App).dependencyInjection.historyRepositoryImpl
+        val viewModelFactory = HistoryViewModelFactory(historyRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[HistoryViewModel::class.java]
+    }
+    
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.filter_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
