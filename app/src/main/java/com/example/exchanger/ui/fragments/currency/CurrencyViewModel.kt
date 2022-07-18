@@ -63,7 +63,7 @@ class CurrencyViewModel(private val currencyRepository: CurrencyRepository) : Vi
                         postNavigationArgs(firstCurrency.name, currencyChildName)
             
                     firstCurrency.isFavourite ->
-                        postNavigationArgs(firstCurrency.name, currencyChildName)
+                        postNavigationArgs(currencyChildName, firstCurrency.name)
             
                     else -> currencyList.forEach { currency ->
                         if (currency.name == "RUB" || currency.name == "EUR" || currency.name == "USD")
